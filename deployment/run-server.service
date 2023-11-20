@@ -5,7 +5,6 @@ Description=Your Spring Boot Service
 After=syslog.target
 
 [Service]
-User=your-username
 Environment="SPRING_PROFILES_ACTIVE=deploy"
 ExecStart=/usr/bin/java -jar /home/ubuntu/hh/backend/hanghaero-0.0.1-SNAPSHOT.jar
 SuccessExitStatus=143
