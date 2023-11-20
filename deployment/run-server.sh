@@ -16,4 +16,5 @@ fi
 
 # 4. 서비스 시작
 echo "Starting $SERVICE_NAME..."
+sudo systemctl enable $SERVICE_NAME
 sudo systemctl start $SERVICE_NAME
