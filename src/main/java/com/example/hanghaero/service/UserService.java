@@ -45,7 +45,7 @@ public class UserService {
 		);
 
 		if (user.getId() != userId) {
-			throw new IllegalArgumentException("본인 계정만 삭제 할 수 있습니다.");
+			throw new IllegalArgumentException("계정 삭제에 대한 권한이 없습니다.");
 		}
 
 		userRepository.delete(user);

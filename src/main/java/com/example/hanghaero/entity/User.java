@@ -1,5 +1,8 @@
 package com.example.hanghaero.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.hanghaero.dto.user.UserRequestDto;
 
 import jakarta.persistence.Column;
@@ -9,6 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,9 +50,8 @@ public class User {
 	@Enumerated(value = EnumType.STRING)
 	private UserRoleEnum role;
 
-	// @ManyToMany
-	// private Board board;
-	//
+	@OneToMany(mappedBy = "user")
+	private List<BoardUser> boardUserList = new ArrayList<>();
 	// @OneToMany(mappedBy = "user",  cascade = CascadeType.PERSIST, orphanRemoval = true)
 	// private List<Comment> commentList = new ArrayList<>();
 	//
