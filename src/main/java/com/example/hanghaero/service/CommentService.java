@@ -50,6 +50,7 @@ public class CommentService {
 		return ResponseEntity.ok("댓글을 수정하였습니다.");
 	}
 
+	@Transactional
 	public ResponseEntity<String> deleteComment(Long commentId, UserDetails userDetails) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));

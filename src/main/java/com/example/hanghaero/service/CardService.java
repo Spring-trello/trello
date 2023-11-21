@@ -15,7 +15,6 @@ import com.example.hanghaero.entity.User;
 import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
-import com.example.hanghaero.repository.CommentRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,6 @@ public class CardService {
 	private final CardRepository cardRepository;
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
-	private final CommentRepository commentRepository;
 
 	public ResponseEntity<String> createCard(Long boardId, Long columnId, CardRequestDto requestDto,
 		UserDetails userDetails) {
