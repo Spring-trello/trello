@@ -1,0 +1,9 @@
+### 1. 보드 등록 API
+POST http://localhost:8080/boards
+Content-Type: application/json
+
+{
+  "name": "Spring 업무공유",
+  "bgColor": "white",
+  "description": "hanghaero 업무공유"
+}
