@@ -39,4 +39,16 @@ public class UserService {
 		return new UpdateUserResponseDto(user);
 	}
 
+	public void deleteUser(Long id, Long userId) {
+		User user = userRepository.findById(id).orElseThrow(() ->
+			new EntityNotFoundException("존재하지않는 회원입니다.")
+		);
+
+		if (user.getId() != userId) {
+			throw new IllegalArgumentException("본인 계정만 삭제 할 수 있습니다.");
+		}
+
+		userRepository.delete(user);
+	}
+
 }
