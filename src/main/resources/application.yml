@@ -2,8 +2,8 @@ spring:
   profiles:
     active: local
     group:
-      dev:
       local:
+      dev:
       deploy:
     include:
       - secret
