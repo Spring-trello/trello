@@ -1,5 +1,7 @@
 package com.example.hanghaero.entity;
 
+import com.example.hanghaero.dto.CommentRequestDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,9 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
+	private String comment;
+
 	@ManyToOne
 	@JoinColumn(name = "card_id")
 	private Card card;
@@ -30,10 +35,17 @@ public class Comment {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(nullable = false)
-	private String comment;
+	// @ManyToOne
+	// @JoinColumn(name = "parent_comment_id")
+	// private Comment parentComment;
 
-	@ManyToOne
-	@JoinColumn(name = "parent_comment_id")
-	private Comment parentComment;
+	public Comment(Card card, CommentRequestDto requestDto) {
+		this.comment = requestDto.getContents();
+		this.card = card;
+		this.user = card.getUser();
+	}
+
+	public void update(CommentRequestDto requestDto) {
+		this.comment = requestDto.getContents();
+	}
 }

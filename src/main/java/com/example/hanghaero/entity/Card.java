@@ -1,9 +1,13 @@
 package com.example.hanghaero.entity;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import com.example.hanghaero.dto.CardRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,14 +41,49 @@ public class Card {
 	@ColumnDefault("#FFFFFF")
 	private String color;
 
-	@OneToMany(mappedBy = "card")
-	private List<User> userList = new ArrayList<>();
+	@Column(nullable = false)
+	private LocalDate dueDate;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@ManyToOne
+	@JoinColumn(name = "board_id")
+	private Board board;
+
+	@ManyToOne
+	@JoinColumn(name = "column_id")
+	private Col column;
 
 	@OneToMany(mappedBy = "card")
 	private List<Comment> commentList = new ArrayList<>();
 
-	@ManyToOne
-	@JoinColumn(name = "column_id")
-	private Column column;
+	private LocalDate StringToLocalDate(String dueDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate date = LocalDate.parse(dueDate, formatter);
 
+		return date;
+	}
+
+	public Card(CardRequestDto requestDto, User user, Board board, Col column) {
+		this.name = requestDto.getName();
+		this.description = requestDto.getDescription();
+		this.color = requestDto.getColor();
+		this.dueDate = StringToLocalDate(requestDto.getDueDate());
+		this.user = user;
+		this.board = board;
+		this.column = column;
+	}
+
+	public void update(CardRequestDto requestDto) {
+		this.name = requestDto.getName();
+		this.description = requestDto.getDescription();
+		this.color = requestDto.getColor();
+		this.dueDate = StringToLocalDate(requestDto.getDueDate());
+	}
+
+	public void move(Col column) {
+		this.column = column;
+	}
 }
