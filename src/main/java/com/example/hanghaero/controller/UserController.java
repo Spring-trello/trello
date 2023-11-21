@@ -23,4 +23,5 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body("회원가입에 성공하였습니다.");
 	}
 
+	@Post
 }

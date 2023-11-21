@@ -2,7 +2,6 @@ package com.example.hanghaero.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.jwt.JwtUtil;
 import com.example.hanghaero.security.JwtAuthenticationFilter;
 import com.example.hanghaero.security.JwtAuthorizationFilter;
@@ -68,9 +66,8 @@ public class WebSecurityConfig {
 			authorizeHttpRequests
 				//                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
 				.requestMatchers("/").permitAll() // 메인 페이지 요청 허가
-				.requestMatchers("/signup").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
-				.requestMatchers("/signin").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
-				.requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(UserRoleEnum.Authority.ADMIN)
+				.requestMatchers("/signup").permitAll()
+				.requestMatchers("/signin").permitAll()
 				.anyRequest().authenticated() // 그 외 모든 요청 인증처리
 		);
 
