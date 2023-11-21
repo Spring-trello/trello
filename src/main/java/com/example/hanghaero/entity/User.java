@@ -44,6 +44,15 @@ public class User {
 	@Enumerated(value = EnumType.STRING)
 	private UserRoleEnum role;
 
+	// @ManyToMany
+	// private Board board;
+	//
+	// @OneToMany(mappedBy = "user",  cascade = CascadeType.PERSIST, orphanRemoval = true)
+	// private List<Comment> commentList = new ArrayList<>();
+	//
+	// @OneToMany(mappedBy = "user",  cascade = CascadeType.PERSIST, orphanRemoval = true)
+	// private List<Card> cardList = new ArrayList<>();
+
 	public User(UserRequestDto userRequestDto) {
 		this.email = userRequestDto.getEmail();
 		this.password = userRequestDto.getPassword();
@@ -51,5 +60,10 @@ public class User {
 		this.phoneNumber = userRequestDto.getPhoneNumber();
 		this.address = userRequestDto.getAddress();
 		this.role = userRequestDto.getRole();
+	}
+
+	public void update(UserRequestDto userRequestDto) {
+		this.phoneNumber = userRequestDto.getPhoneNumber();
+		this.address = userRequestDto.getAddress();
 	}
 }

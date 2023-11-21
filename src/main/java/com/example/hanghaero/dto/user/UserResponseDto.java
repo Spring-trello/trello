@@ -12,4 +12,5 @@ public class UserResponseDto {
 	private String phoneNumber;
 	private String address;
 	private UserRoleEnum role;
+
 }
