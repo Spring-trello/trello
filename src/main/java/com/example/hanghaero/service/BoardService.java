@@ -46,6 +46,7 @@ public class BoardService {
 
 		if (UserRoleEnum.ADMIN.equals(user.getRole())) {
 			board.update(boardRequestDto);
+			return new BoardResponseDto(board);
 		}
 
 		if (userId != board.getUser().getId()) {
@@ -57,9 +58,19 @@ public class BoardService {
 	}
 
 	public void deleteBoard(Long id, Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() ->
+			new EntityNotFoundException("존재하지않는 유저입니다.")
+		);
+
 		Board board = boardRepository.findById(id).orElseThrow(() ->
 			new EntityNotFoundException("존재하지않는 보드입니다.")
 		);
+
+		if (UserRoleEnum.ADMIN.equals(user.getRole())) {
+			boardRepository.delete(board);
+			return;
+		}
+
 		if (userId != board.getUser().getId()) {
 			throw new EntityNotFoundException("보드를 삭제 할 수 있는 권한이 없습니다.");
 		}
@@ -78,6 +89,12 @@ public class BoardService {
 		Board board = boardRepository.findById(boardId).orElseThrow(() ->
 			new EntityNotFoundException("존재하지않는 보드입니다.")
 		);
+
+		if (UserRoleEnum.ADMIN.equals(user.getRole())) {
+			BoardUser boardUser = new BoardUser(board, inviteUser);
+			boardUserRepository.save(boardUser);
+			return;
+		}
 
 		if (user.getId() != board.getUser().getId()) {
 			throw new IllegalArgumentException("초대 할 수 있는 권한이 없습니다.");
