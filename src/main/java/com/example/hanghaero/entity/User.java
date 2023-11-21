@@ -40,6 +40,8 @@ public class User {
 	@Column(nullable = false)
 	private String address;
 
+	private String inviteColumn;
+
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private UserRoleEnum role;
