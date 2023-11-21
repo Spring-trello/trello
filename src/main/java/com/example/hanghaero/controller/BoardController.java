@@ -2,6 +2,7 @@ package com.example.hanghaero.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,5 +29,10 @@ public class BoardController {
 	@PutMapping("/{boardId}")
 	public ResponseEntity updateBoard(@PathVariable Long boardId, @RequestBody BoardRequestDto requestDto) {
 		return new ResponseEntity<>(boardService.upDateBoard(boardId, requestDto), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{boardId}")
+	public ResponseEntity deleteBoard(@PathVariable Long boardId) {
+		return new ResponseEntity(boardService.deleteBoard(boardId), HttpStatus.OK);
 	}
 }
