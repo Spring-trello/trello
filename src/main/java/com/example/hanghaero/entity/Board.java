@@ -35,4 +35,10 @@ public class Board {
 		this.bgColor = requestDto.getBgColor();
 		this.description = requestDto.getDescription();
 	}
+
+	public void update(BoardRequestDto requestDto) {
+		this.name = requestDto.getName();
+		this.bgColor = requestDto.getBgColor();
+		this.description = requestDto.getDescription();
+	}
 }

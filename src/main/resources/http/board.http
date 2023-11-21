@@ -7,3 +7,13 @@ Content-Type: application/json
   "bgColor": "white",
   "description": "hanghaero 업무공유"
 }
+
+### 2. 보드 수정 API
+PUT http://localhost:8080/boards/1
+Content-Type: application/json
+
+{
+  "name": "Spring project",
+  "bgColor": "black",
+  "description": "hanghaero 업무공유 update"
+}
