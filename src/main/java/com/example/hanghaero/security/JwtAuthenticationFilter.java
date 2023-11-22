@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.hanghaero.dto.user.UserRequestDto;
+import com.example.hanghaero.dto.user.SigninRequestDto;
 import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "로그인 및 JWT 생성")
+@Slf4j(topic = "JwtAuthenticationFilter")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private final JwtUtil jwtUtil;
 
@@ -30,9 +30,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
 		AuthenticationException {
 		try {
-			UserRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
-				UserRequestDto.class);
-			log.info("JWT 생성 ?");
+			SigninRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+				SigninRequestDto.class);
+			log.info("requestDto : " + requestDto);
 
 			return getAuthenticationManager().authenticate(
 				new UsernamePasswordAuthenticationToken(
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			UserRoleEnum role = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getRole();
 
 			String token = jwtUtil.createToken(username, role);
-			log.info("[JwtAuthenticationFilter] token : " + token);
+			log.info("token : " + token);
 
 			// 응답 헤더에 토큰 추가
 			response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
