@@ -3,7 +3,7 @@ package com.example.hanghaero.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.hanghaero.dto.user.UserRequestDto;
+import com.example.hanghaero.dto.user.SignupRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,17 +58,17 @@ public class User {
 	// @OneToMany(mappedBy = "user",  cascade = CascadeType.PERSIST, orphanRemoval = true)
 	// private List<Card> cardList = new ArrayList<>();
 
-	public User(UserRequestDto userRequestDto) {
-		this.email = userRequestDto.getEmail();
-		this.password = userRequestDto.getPassword();
-		this.username = userRequestDto.getUsername();
-		this.phoneNumber = userRequestDto.getPhoneNumber();
-		this.address = userRequestDto.getAddress();
-		this.role = userRequestDto.getRole();
+	public User(SignupRequestDto signupRequestDto) {
+		this.email = signupRequestDto.getEmail();
+		this.password = signupRequestDto.getPassword();
+		this.username = signupRequestDto.getUsername();
+		this.phoneNumber = signupRequestDto.getPhoneNumber();
+		this.address = signupRequestDto.getAddress();
+		this.role = signupRequestDto.getRole();
 	}
 
-	public void update(UserRequestDto userRequestDto) {
-		this.phoneNumber = userRequestDto.getPhoneNumber();
-		this.address = userRequestDto.getAddress();
+	public void update(SignupRequestDto signupRequestDto) {
+		this.phoneNumber = signupRequestDto.getPhoneNumber();
+		this.address = signupRequestDto.getAddress();
 	}
 }
