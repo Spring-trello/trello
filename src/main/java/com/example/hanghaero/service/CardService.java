@@ -3,15 +3,18 @@ package com.example.hanghaero.service;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.hanghaero.dto.CardRequestDto;
+import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Col;
+import com.example.hanghaero.entity.User;
+import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
+import com.example.hanghaero.security.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +26,7 @@ public class CardService {
 	private final ColRepository colRepository;
 
 	public ResponseEntity<String> createCard(Long boardId, Long columnId, CardRequestDto requestDto,
-		UserDetails userDetails) {
+		UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();
 		Board board = boardRepository.findById(boardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 보드"));
@@ -38,7 +41,7 @@ public class CardService {
 
 	@Transactional
 	public ResponseEntity<String> updateCard(Long cardId, CardRequestDto requestDto,
-		UserDetails userDetails) {
+		UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));
 
@@ -66,7 +69,7 @@ public class CardService {
 	}
 
 	@Transactional
-	public ResponseEntity<String> deleteCard(Long cardId, UserDetails userDetails) {
+	public ResponseEntity<String> deleteCard(Long cardId, UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));
 
@@ -79,7 +82,7 @@ public class CardService {
 		return ResponseEntity.ok("카드가 삭제되었습니다.");
 	}
 
-	private boolean AuthCheck(Card card, UserDetails userDetails) {
+	private boolean AuthCheck(Card card, UserDetailsImpl userDetails) {
 		if (!Objects.equals(userDetails.getUser(), card.getUser()) &&
 			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
 			return false;

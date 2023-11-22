@@ -3,7 +3,6 @@ package com.example.hanghaero.service;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +11,7 @@ import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.CommentRepository;
+import com.example.hanghaero.security.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +21,8 @@ public class CommentService {
 	private final CardRepository cardRepository;
 	private final CommentRepository commentRepository;
 
-	public ResponseEntity<String> createComment(Long cardId, CommentRequestDto requestDto, UserDetails userDetails) {
+	public ResponseEntity<String> createComment(Long cardId, CommentRequestDto requestDto,
+		UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));
 
@@ -36,7 +37,8 @@ public class CommentService {
 	}
 
 	@Transactional
-	public ResponseEntity<String> updateComment(Long commentId, CommentRequestDto requestDto, UserDetails userDetails) {
+	public ResponseEntity<String> updateComment(Long commentId, CommentRequestDto requestDto,
+		UserDetailsImpl userDetails) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));
 
@@ -51,7 +53,7 @@ public class CommentService {
 	}
 
 	@Transactional
-	public ResponseEntity<String> deleteComment(Long commentId, UserDetails userDetails) {
+	public ResponseEntity<String> deleteComment(Long commentId, UserDetailsImpl userDetails) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));
 
@@ -64,7 +66,7 @@ public class CommentService {
 		return ResponseEntity.ok("댓글을 삭제하였습니다.");
 	}
 
-	private boolean cardAuthCheck(Card card, UserDetails userDetails) {
+	private boolean cardAuthCheck(Card card, UserDetailsImpl userDetails) {
 		if (!Objects.equals(userDetails.getUser(), card.getUser()) &&
 			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
 			return false;
@@ -72,7 +74,7 @@ public class CommentService {
 		return true;
 	}
 
-	private boolean commentAuthCheck(Comment comment, UserDetails userDetails) {
+	private boolean commentAuthCheck(Comment comment, UserDetailsImpl userDetails) {
 		if (!Objects.equals(userDetails.getUser(), comment.getUser()) &&
 			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
 			return false;
