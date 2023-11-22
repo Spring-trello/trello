@@ -15,6 +15,6 @@ public class ColResponseDto {
 	public ColResponseDto(Col columns) {
 		this.title = columns.getTitle();
 		this.position = columns.getPosition();
-		this.boardId = columns.getBoard().getBoardId();
+		this.boardId = columns.getBoard().getId();
 	}
 }

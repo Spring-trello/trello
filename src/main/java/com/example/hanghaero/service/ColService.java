@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.hanghaero.dto.column.ColRequestDto;
 import com.example.hanghaero.dto.column.ColResponseDto;
+import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Col;
+import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.ColRepository;
 
 import jakarta.persistence.EntityNotFoundException;
