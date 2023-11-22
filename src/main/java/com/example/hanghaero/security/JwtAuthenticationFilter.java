@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	public JwtAuthenticationFilter(JwtUtil jwtUtil) {
 		this.jwtUtil = jwtUtil;
-		setFilterProcessesUrl("/signin");
+		setFilterProcessesUrl("/api/user/signin"); // 실제로 로그인을 수행하는 url
 	}
 
 	@Override

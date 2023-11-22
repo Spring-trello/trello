@@ -76,12 +76,18 @@ public class WebSecurityConfig {
 			(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers(
-				PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-			.requestMatchers("/").permitAll() // 메인 페이지 요청 허가
-			.requestMatchers("/login").permitAll()
-			.requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
-			.requestMatchers("/api/admin/**").hasRole("ADMIN") // admin Role
-			.anyRequest().authenticated() // 그 외 모든 요청 인증처리
+				PathRequest.toStaticResources().atCommonLocations())
+			.permitAll() // resources 접근 허용 설정
+			.requestMatchers("/")
+			.permitAll() // 메인 페이지 요청 허가
+			.requestMatchers("/login")
+			.permitAll() // 실제로는 JwtAuthenticationFilter가 /api/user/signin url에서 로그인 요청을 받지만 스프링 시큐리티 기본 url이 /login이라서 버그 방지로 넣음
+			.requestMatchers("/api/user/**")
+			.permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+			.requestMatchers("/api/admin/**")
+			.hasRole("ADMIN") // admin Role
+			.anyRequest()
+			.authenticated() // 그 외 모든 요청 인증처리
 		);
 
 		http.formLogin(Customizer.withDefaults());
