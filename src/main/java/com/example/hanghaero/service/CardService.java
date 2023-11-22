@@ -8,11 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.hanghaero.dto.CardRequestDto;
-import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Col;
-import com.example.hanghaero.entity.User;
-import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
 
