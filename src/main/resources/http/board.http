@@ -1,3 +1,17 @@
+### 1.로그인후 토큰 받기
+POST http://localhost:8080/api/user/login
+Content-Type: application/json
+
+{
+  "email":"pjm9673@gmail.com",
+  "password":"@Qkrwjdals96"
+}
+
+> {%
+    client.global.set("access_token", response.headers.valueOf("Authorization"));
+    client.log(client.global.get("access_token"));
+%}
+
 ### 1. 보드 등록 API
 POST http://localhost:8080/boards
 Content-Type: application/json
