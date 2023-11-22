@@ -5,7 +5,7 @@ import com.example.hanghaero.entity.UserRoleEnum;
 import lombok.Getter;
 
 @Getter
-public class UserResponseDto {
+public class UserDetailsResponseDto {
 	private String email;
 	private String password;
 	private String username;
