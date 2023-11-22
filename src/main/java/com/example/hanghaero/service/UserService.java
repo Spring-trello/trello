@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.user.SignupRequestDto;
+import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UserUpdateResponseDto;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.repository.UserRepository;
@@ -18,7 +18,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public void signup(SignupRequestDto signupRequestDto) {
+	public void signup(SignUpRequestDto signupRequestDto) {
 		String encodedPwd = passwordEncoder.encode(signupRequestDto.getPassword());
 		User user = new User(signupRequestDto);
 		user.setPassword(encodedPwd);
@@ -31,7 +31,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserUpdateResponseDto updateUser(Long id, SignupRequestDto signupRequestDto, Long userId) {
+	public UserUpdateResponseDto updateUser(Long id, SignUpRequestDto signupRequestDto, Long userId) {
 		User user = userRepository.findById(id).orElseThrow(() ->
 			new EntityNotFoundException("존재하지않은 회원입니다.")
 		);

@@ -3,7 +3,7 @@ package com.example.hanghaero.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.hanghaero.dto.user.SignupRequestDto;
+import com.example.hanghaero.dto.user.SignUpRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,7 +58,7 @@ public class User {
 	// @OneToMany(mappedBy = "user",  cascade = CascadeType.PERSIST, orphanRemoval = true)
 	// private List<Card> cardList = new ArrayList<>();
 
-	public User(SignupRequestDto signupRequestDto) {
+	public User(SignUpRequestDto signupRequestDto) {
 		this.email = signupRequestDto.getEmail();
 		this.password = signupRequestDto.getPassword();
 		this.username = signupRequestDto.getUsername();
@@ -67,7 +67,7 @@ public class User {
 		this.role = signupRequestDto.getRole();
 	}
 
-	public void update(SignupRequestDto signupRequestDto) {
+	public void update(SignUpRequestDto signupRequestDto) {
 		this.phoneNumber = signupRequestDto.getPhoneNumber();
 		this.address = signupRequestDto.getAddress();
 	}
