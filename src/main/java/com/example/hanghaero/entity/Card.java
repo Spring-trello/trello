@@ -38,7 +38,7 @@ public class Card {
 	@Column(nullable = false)
 	private String description;
 
-	@ColumnDefault("#FFFFFF")
+	@ColumnDefault("'#FFFFFF'")
 	private String color;
 
 	@Column(nullable = false)

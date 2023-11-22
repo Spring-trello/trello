@@ -42,10 +42,7 @@ public class Board {
 
 	@OneToMany(mappedBy = "board", orphanRemoval = true)
 	private List<BoardUser> boardUserList = new ArrayList<>();
-
-	@OneToMany(mappedBy = "board")
-	private List<Comment> commentBoardList = new ArrayList<>();
-
+	
 	public Board(BoardRequestDto boardRequestDto) {
 		this.name = boardRequestDto.getName();
 		this.bgColor = boardRequestDto.getBgColor();
