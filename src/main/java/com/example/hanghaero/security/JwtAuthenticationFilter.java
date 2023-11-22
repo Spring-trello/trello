@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.hanghaero.dto.user.UserRequestDto;
+import com.example.hanghaero.dto.user.SignInRequestDto;
 import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,8 +30,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
 		AuthenticationException {
 		try {
-			UserRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
-				UserRequestDto.class);
+			SignInRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+				SignInRequestDto.class);
 			log.info("JWT 생성 ?");
 
 			return getAuthenticationManager().authenticate(

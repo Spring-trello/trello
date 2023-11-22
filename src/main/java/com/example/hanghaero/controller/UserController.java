@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UpdateUserResponseDto;
-import com.example.hanghaero.dto.user.UserRequestDto;
 import com.example.hanghaero.security.UserDetailsImpl;
 import com.example.hanghaero.service.UserService;
 
@@ -24,18 +24,18 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/signup")
-	public ResponseEntity signup(@Valid @RequestBody UserRequestDto userRequestDto) {
-		userService.signup(userRequestDto);
+	public ResponseEntity signup(@Valid @RequestBody SignUpRequestDto requestDto) {
+		userService.signup(requestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body("회원가입에 성공하였습니다.");
 	}
 
 	@PutMapping("/users/{id}")
-	public ResponseEntity<UpdateUserResponseDto> updateUser(@RequestBody UserRequestDto userRequestDto,
+	public ResponseEntity<UpdateUserResponseDto> updateUser(@RequestBody SignUpRequestDto requestDto,
 		@PathVariable Long id,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		Long userId = userDetails.getUser().getId();
 
-		return new ResponseEntity<>(userService.updateUser(id, userRequestDto, userId), HttpStatus.OK);
+		return new ResponseEntity<>(userService.updateUser(id, requestDto, userId), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/users/{id}")

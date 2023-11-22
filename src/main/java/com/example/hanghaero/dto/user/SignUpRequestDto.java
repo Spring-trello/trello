@@ -1,12 +1,16 @@
 package com.example.hanghaero.dto.user;
 
+import com.example.hanghaero.annotation.Password;
 import com.example.hanghaero.entity.UserRoleEnum;
 
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 
 @Getter
-public class UserResponseDto {
+public class SignUpRequestDto {
+	@Email
 	private String email;
+	@Password
 	private String password;
 	private String username;
 	private String phoneNumber;

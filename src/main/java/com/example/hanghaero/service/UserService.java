@@ -4,8 +4,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UpdateUserResponseDto;
-import com.example.hanghaero.dto.user.UserRequestDto;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.repository.UserRepository;
 
@@ -18,15 +18,15 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public void signup(UserRequestDto userRequestDto) {
-		String encodedPwd = passwordEncoder.encode(userRequestDto.getPassword());
-		User user = new User(userRequestDto);
+	public void signup(SignUpRequestDto requestDto) {
+		String encodedPwd = passwordEncoder.encode(requestDto.getPassword());
+		User user = new User(requestDto);
 		user.setPassword(encodedPwd);
 		userRepository.save(user);
 	}
 
 	@Transactional
-	public UpdateUserResponseDto updateUser(Long id, UserRequestDto userRequestDto, Long userId) {
+	public UpdateUserResponseDto updateUser(Long id, SignUpRequestDto requestDto, Long userId) {
 		User user = userRepository.findById(id).orElseThrow(() ->
 			new EntityNotFoundException("존재하지않은 회원입니다.")
 		);
@@ -35,7 +35,7 @@ public class UserService {
 			throw new IllegalArgumentException("본인 계정만 수정 할 수 있습니다.");
 		}
 
-		user.update(userRequestDto);
+		user.update(requestDto);
 		return new UpdateUserResponseDto(user);
 	}
 
