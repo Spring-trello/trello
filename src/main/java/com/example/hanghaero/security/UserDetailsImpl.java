@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.entity.UserRoleEnum;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j(topic = "UserDetailsImpl")
 public class UserDetailsImpl implements UserDetails {
 
 	private final User user;
@@ -41,6 +44,7 @@ public class UserDetailsImpl implements UserDetails {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(simpleGrantedAuthority);
 
+		log.info("simpleGrantedAuthority.getAuthority() : " + simpleGrantedAuthority.getAuthority());
 		return authorities;
 	}
 

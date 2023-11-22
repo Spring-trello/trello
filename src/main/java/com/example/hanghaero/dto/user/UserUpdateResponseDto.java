@@ -5,11 +5,11 @@ import com.example.hanghaero.entity.User;
 import lombok.Getter;
 
 @Getter
-public class UpdateUserResponseDto {
+public class UserUpdateResponseDto {
 	private String phoneNumber;
 	private String address;
 
-	public UpdateUserResponseDto(User user) {
+	public UserUpdateResponseDto(User user) {
 		this.phoneNumber = user.getPhoneNumber();
 		this.address = user.getAddress();
 	}
