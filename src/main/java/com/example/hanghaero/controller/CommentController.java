@@ -21,8 +21,10 @@ public class CommentController {
 	private final CommentService commentService;
 
 	// 댓글 생성
-	@PostMapping("/boards/{boardId}/columns/{columId}/cards/{cardId}/comment")
-	public ResponseEntity<String> createComment(@PathVariable Long cardId, @RequestBody CommentRequestDto requestDto,
+	@PostMapping("/cards/{cardId}/comment")
+	public ResponseEntity<String> createComment(
+		@PathVariable Long cardId,
+		@RequestBody CommentRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		return commentService.createComment(cardId, requestDto, userDetails);
 	}
