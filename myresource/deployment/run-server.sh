@@ -10,7 +10,7 @@ sudo systemctl daemon-reload
 
 # 3. 서비스 상태 확인
 if sudo systemctl is-active --quiet $SERVICE_NAME; then
-    echo "Stopping the existing $SERVICE_NAME..."
+    echo "Stopping the running $SERVICE_NAME..."
     sudo systemctl stop $SERVICE_NAME
 fi
 
