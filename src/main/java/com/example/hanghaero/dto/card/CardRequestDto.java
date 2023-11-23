@@ -1,4 +1,4 @@
-package com.example.hanghaero.dto;
+package com.example.hanghaero.dto.card;
 
 import lombok.Getter;
 

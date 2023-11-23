@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.hanghaero.dto.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentRequestDto;
 import com.example.hanghaero.security.UserDetailsImpl;
 import com.example.hanghaero.service.CommentService;
 
@@ -25,7 +25,7 @@ public class CommentController {
 	// 서비스 로직에서 board, column를 알 필요 없다.
 	// 댓글 생성
 	@PostMapping("/{cardId}/comment")
-	public ResponseEntity<String> createComment(
+	public ResponseEntity<?> createComment(
 		@PathVariable Long cardId,
 		@RequestBody CommentRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -34,7 +34,7 @@ public class CommentController {
 
 	// 댓글 수정
 	@PutMapping("/{cardId}/comment/{commentId}")
-	public ResponseEntity<String> updateComment(@PathVariable String cardId, @PathVariable Long commentId,
+	public ResponseEntity<?> updateComment(@PathVariable String cardId, @PathVariable Long commentId,
 		@RequestBody CommentRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		return commentService.updateComment(commentId, requestDto, userDetails);

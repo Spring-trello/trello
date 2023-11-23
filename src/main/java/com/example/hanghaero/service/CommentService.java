@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentResponseDto;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
 import com.example.hanghaero.exception.entity.comment.CardNotFoundException;
@@ -22,7 +23,7 @@ public class CommentService {
 	private final CardRepository cardRepository;
 	private final CommentRepository commentRepository;
 
-	public ResponseEntity<String> createComment(Long cardId, CommentRequestDto requestDto,
+	public ResponseEntity<?> createComment(Long cardId, CommentRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
 
@@ -33,11 +34,11 @@ public class CommentService {
 		Comment comment = new Comment(card, requestDto);
 		commentRepository.save(comment);
 
-		return ResponseEntity.ok("댓글을 작성하였습니다.");
+		return ResponseEntity.ok().body(new CommentResponseDto(comment));
 	}
 
 	@Transactional
-	public ResponseEntity<String> updateComment(Long commentId, CommentRequestDto requestDto,
+	public ResponseEntity<?> updateComment(Long commentId, CommentRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));
@@ -49,7 +50,7 @@ public class CommentService {
 		comment.update(requestDto);
 		commentRepository.save(comment);
 
-		return ResponseEntity.ok("댓글을 수정하였습니다.");
+		return ResponseEntity.ok().body(new CommentResponseDto(comment));
 	}
 
 	@Transactional

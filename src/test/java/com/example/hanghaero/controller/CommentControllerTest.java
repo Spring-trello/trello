@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.hanghaero.auth.AuthInterceptor;
-import com.example.hanghaero.dto.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentRequestDto;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.security.UserDetailsImpl;
 import com.example.hanghaero.security.UserDetailsServiceImpl;

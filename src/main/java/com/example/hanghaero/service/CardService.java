@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.CardRequestDto;
+import com.example.hanghaero.dto.card.CardRequestDto;
+import com.example.hanghaero.dto.card.CardResponseDto;
 import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Col;
@@ -25,7 +26,7 @@ public class CardService {
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
 
-	public ResponseEntity<String> createCard(Long boardId, Long columnId, CardRequestDto requestDto,
+	public ResponseEntity<?> createCard(Long boardId, Long columnId, CardRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();
 		Board board = boardRepository.findById(boardId).orElseThrow(
@@ -35,12 +36,11 @@ public class CardService {
 
 		Card card = new Card(requestDto, user, board, column);
 		cardRepository.save(card);
-
-		return ResponseEntity.ok("카드가 생성되었습니다.");
+		return ResponseEntity.ok().body(new CardResponseDto(card));
 	}
 
 	@Transactional
-	public ResponseEntity<String> updateCard(Long cardId, CardRequestDto requestDto,
+	public ResponseEntity<?> updateCard(Long cardId, CardRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));
@@ -52,11 +52,11 @@ public class CardService {
 		card.update(requestDto);
 		cardRepository.save(card);
 
-		return ResponseEntity.ok("카드가 수정되었습니다.");
+		return ResponseEntity.ok().body(new CardResponseDto(card));
 	}
 
 	@Transactional
-	public ResponseEntity<String> moveCard(Long cardId, Long toColumnId) {
+	public ResponseEntity<?> moveCard(Long cardId, Long toColumnId) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));
 		Col column = colRepository.findById(toColumnId).orElseThrow(
@@ -65,7 +65,7 @@ public class CardService {
 		card.move(column);
 		cardRepository.save(card);
 
-		return ResponseEntity.ok("카드가 이동되었습니다.");
+		return ResponseEntity.ok().body(new CardResponseDto(card));
 	}
 
 	@Transactional
