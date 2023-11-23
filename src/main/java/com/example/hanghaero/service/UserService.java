@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UserUpdateResponseDto;
 import com.example.hanghaero.entity.User;
+import com.example.hanghaero.exception.entity.user.DuplicateEmailException;
 import com.example.hanghaero.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,10 +22,10 @@ public class UserService {
 	public void signup(SignUpRequestDto signupRequestDto) {
 		String encodedPwd = passwordEncoder.encode(signupRequestDto.getPassword());
 		User user = new User(signupRequestDto);
-		user.setPassword(encodedPwd);
+		user.update(encodedPwd);
 
-		userRepository.findByEmail(user.getEmail()).ifPresent(p -> {
-			throw new RuntimeException("이미 가입한 이메일 입니다.");
+		userRepository.findByEmail(user.getEmail()).ifPresent((p) -> {
+			throw new DuplicateEmailException();
 		});
 
 		userRepository.save(user);

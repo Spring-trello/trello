@@ -14,15 +14,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Table(name = "users")
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 로직에서 Entity 사용은 허용하고, 무분별한 객체 생성 제한
 public class User {
 
 	@Id
@@ -35,8 +35,11 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
+	// username -> name field명 변경
+	// SpringSecurity 내부적으로 사용되는 username은 현재 User Entity의 email 필드이다.
+	// 혼동이 오지 않기 위해 name으로 이름 변경
 	@Column(nullable = false)
-	private String username;
+	private String name;
 
 	@Column(nullable = false)
 	private String phoneNumber;
@@ -61,14 +64,29 @@ public class User {
 	public User(SignUpRequestDto signupRequestDto) {
 		this.email = signupRequestDto.getEmail();
 		this.password = signupRequestDto.getPassword();
-		this.username = signupRequestDto.getUsername();
+		this.name = signupRequestDto.getName();
 		this.phoneNumber = signupRequestDto.getPhoneNumber();
 		this.address = signupRequestDto.getAddress();
 		this.role = signupRequestDto.getRole();
 	}
 
+	// Test를 위해 빌더 패턴 사용
+	@Builder
+	public User(String email, String password, String name, String phoneNumber, String address, UserRoleEnum role) {
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.address = address;
+		this.role = role;
+	}
+
 	public void update(SignUpRequestDto signupRequestDto) {
 		this.phoneNumber = signupRequestDto.getPhoneNumber();
 		this.address = signupRequestDto.getAddress();
+	}
+
+	public void update(String password) {
+		this.password = password;
 	}
 }

@@ -13,7 +13,7 @@ public class SignUpRequestDto {
 	private String email;
 	@Password
 	private String password;
-	private String username;
+	private String name;
 	private String phoneNumber;
 	private String address;
 	private UserRoleEnum role;
