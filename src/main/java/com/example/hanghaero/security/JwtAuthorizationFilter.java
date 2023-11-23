@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.hanghaero.jwt.JwtUtil;
+import com.example.hanghaero.Util.JwtUtil;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -32,33 +32,33 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+		FilterChain filterChain) throws
 		ServletException,
 		IOException {
 
-		String tokenValue = jwtUtil.getJwtFromHeader(req);
+		String tokenValue = jwtUtil.getJwtFromHeader(request);
 		log.info("tokenValue : " + tokenValue);
 		if (StringUtils.hasText(tokenValue)) {
-			if (!jwtUtil.validateToken(tokenValue)) {
-				log.error("tokenValue :" + tokenValue);
-				return;
-			}
+
+			jwtUtil.checkTokenValidation(tokenValue); // 예외 발생시 JwtExceptionHandlerFilter가 Handle
 
 			Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
 
 			try {
 				setAuthentication(info.getSubject());
 			} catch (Exception e) {
-				log.error("e.getMessage() :" + e.getMessage());
-				return;
+				throw new RuntimeException(e);
 			}
 		}
-
-		filterChain.doFilter(req, res);
+		filterChain.doFilter(request, response);
 	}
 
 	// 인증 처리
-	public void setAuthentication(String username) {
+	public void setAuthentication(String username) throws Exception {
+		if (username == null) {
+			throw new Exception("토큰 payload에 username이 없음");
+		}
 		SecurityContext context = SecurityContextHolder.createEmptyContext();
 		Authentication authentication = createAuthentication(username);
 		context.setAuthentication(authentication);
@@ -72,4 +72,5 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 		log.info("userDetails : " + userDetails);
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
+
 }
