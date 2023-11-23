@@ -15,8 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.DisableEncodeUrlFilter;
 
 import com.example.hanghaero.filter.HttpLoggingFilter;
+import com.example.hanghaero.filter.JwtExceptionHandlerFilter;
 import com.example.hanghaero.jwt.JwtUtil;
 import com.example.hanghaero.security.JwtAuthenticationFilter;
 import com.example.hanghaero.security.JwtAuthorizationFilter;
@@ -25,7 +27,7 @@ import com.example.hanghaero.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity // Spring Security 지원을 가능하게 함
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -55,6 +57,11 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
+	public JwtExceptionHandlerFilter jwtExceptionHandlerFilter() throws Exception {
+		return new JwtExceptionHandlerFilter();
+	}
+
+	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
 		filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
@@ -75,15 +82,20 @@ public class WebSecurityConfig {
 		http.sessionManagement(
 			(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+		http.addFilterBefore(httpLoggingFilter(), DisableEncodeUrlFilter.class);
+
 		http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers(
 				PathRequest.toStaticResources().atCommonLocations())
 			.permitAll() // resources 접근 허용 설정
 			.requestMatchers("/")
 			.permitAll() // 메인 페이지 요청 허가
 			.requestMatchers("/login")
-			.permitAll() // 실제로는 JwtAuthenticationFilter가 /api/user/signin url에서 로그인 요청을 받지만 스프링 시큐리티 기본 url이 /login이라서 버그 방지로 넣음
-			.requestMatchers("/api/user/**")
-			.permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+			// 실제로는 JwtAuthenticationFilter가 /api/user/signin url에서 로그인 요청을 받지만 스프링 시큐리티 기본 url이 /login이라서 버그 방지로 넣음
+			.permitAll()
+			.requestMatchers("/api/user/**") // '/api/user/'로 시작하는 요청 모두 접근 허가
+			.permitAll()
+			.requestMatchers("/error") // 인증 Exception이 발생할경우 /error로 간다.
+			.permitAll()
 			.requestMatchers("/api/admin/**")
 			.hasRole("ADMIN") // admin Role
 			.anyRequest()
@@ -92,14 +104,11 @@ public class WebSecurityConfig {
 
 		http.formLogin(Customizer.withDefaults());
 
-		// role 관련 예외 처리
-		http.exceptionHandling((exception) -> exception.accessDeniedHandler(accessDeniedHandler()));
-
-		// 필터 관리
-		// httpLoggingFilter, JwtAuthorizationFilter 모두 OncePerRequestFilter를 상속받고잇으므로 클래스에 @Order 붙여서 순서 지정
-		http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-		// UsernamePasswordAuthenticationFilter 를 상속받는 authentiacationfilter를 그 앞에
+		// JWT 예외처리 필터 추가
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+		http.addFilterBefore(jwtExceptionHandlerFilter(), JwtAuthorizationFilter.class);
+
 		return http.build();
 	}
 }
