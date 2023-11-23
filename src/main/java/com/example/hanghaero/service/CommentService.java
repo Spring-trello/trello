@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.hanghaero.dto.CommentRequestDto;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
+import com.example.hanghaero.exception.entity.comment.CardNotFoundException;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.CommentRepository;
 import com.example.hanghaero.security.UserDetailsImpl;
@@ -23,8 +24,7 @@ public class CommentService {
 
 	public ResponseEntity<String> createComment(Long cardId, CommentRequestDto requestDto,
 		UserDetailsImpl userDetails) {
-		Card card = cardRepository.findById(cardId).orElseThrow(
-			() -> new IllegalArgumentException("존재하지 않는 카드"));
+		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
 
 		if (!cardAuthCheck(card, userDetails)) {
 			return ResponseEntity.status(401).body("권한이 없습니다.");
