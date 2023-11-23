@@ -34,13 +34,14 @@ public class CommentController {
 
 	// 댓글 수정
 	@PutMapping("/{cardId}/comment/{commentId}")
-	public ResponseEntity<String> updateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto requestDto,
+	public ResponseEntity<String> updateComment(@PathVariable String cardId, @PathVariable Long commentId,
+		@RequestBody CommentRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		return commentService.updateComment(commentId, requestDto, userDetails);
 	}
 
 	@DeleteMapping("/{cardId}/comment/{commentId}")
-	public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
+	public ResponseEntity<String> deleteComment(@PathVariable String cardId, @PathVariable Long commentId,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		return commentService.deleteComment(commentId, userDetails);
 	}
