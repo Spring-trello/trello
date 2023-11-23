@@ -12,9 +12,10 @@ import lombok.RequiredArgsConstructor;
 public class WebMvcConfig implements WebMvcConfigurer {
 	@Autowired
 	private final AuthInterceptor authInterceptor;
+
 	@Override
-	public void addInterceptors(InterceptorRegistry registry){
-		registry.addInterceptor(authInterceptor)
-			.addPathPatterns("/boards/**");
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(authInterceptor).addPathPatterns("/dummy");
+		//.addPathPatterns("/boards/**");
 	}
 }
