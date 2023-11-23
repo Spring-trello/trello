@@ -37,10 +37,11 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (UnsupportedJwtException e) {
 			log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
 			setErrorResponse(response, JwtErrorCode.TOKEN_UNSUPPORTED);
-		} catch (Exception e) {
-			log.error("e :" + e);
-			setErrorResponse(response, JwtErrorCode.TOKEN_EMPTY_CLAIM);
 		}
+		// catch (Exception e) {
+		// 	log.error("e :" + e);
+		// 	setErrorResponse(response, JwtErrorCode.TOKEN_EMPTY_CLAIM);
+		// }
 	}
 
 	private void setErrorResponse(HttpServletResponse response, JwtErrorCode jwtErrorCode) {

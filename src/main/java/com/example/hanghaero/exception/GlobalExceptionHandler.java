@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.example.hanghaero.exception.entity.User.DuplicateEmailException;
-import com.example.hanghaero.exception.entity.User.EmailNotFoundException;
-import com.example.hanghaero.exception.entity.User.PasswordNotAvailableByRuleException;
-import com.example.hanghaero.exception.entity.User.PasswordNotMatchedException;
+import com.example.hanghaero.exception.entity.user.DuplicateEmailException;
+import com.example.hanghaero.exception.entity.user.EmailNotFoundException;
+import com.example.hanghaero.exception.entity.user.PasswordNotAvailableByRuleException;
+import com.example.hanghaero.exception.entity.user.PasswordNotMatchedException;
 
 import lombok.extern.slf4j.Slf4j;
 

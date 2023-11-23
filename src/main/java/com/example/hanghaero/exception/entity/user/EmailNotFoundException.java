@@ -1,4 +1,4 @@
-package com.example.hanghaero.exception.entity.User;
+package com.example.hanghaero.exception.entity.user;
 
 public class EmailNotFoundException extends RuntimeException {
 	public EmailNotFoundException() {
