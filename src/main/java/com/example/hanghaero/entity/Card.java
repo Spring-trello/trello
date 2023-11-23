@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.example.hanghaero.dto.CardRequestDto;
+import com.example.hanghaero.dto.card.CardRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

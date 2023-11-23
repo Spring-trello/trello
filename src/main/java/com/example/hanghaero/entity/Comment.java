@@ -1,6 +1,6 @@
 package com.example.hanghaero.entity;
 
-import com.example.hanghaero.dto.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
