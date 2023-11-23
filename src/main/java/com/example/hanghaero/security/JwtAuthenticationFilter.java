@@ -7,9 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.hanghaero.Util.JwtUtil;
 import com.example.hanghaero.dto.user.SignInRequestDto;
 import com.example.hanghaero.entity.UserRoleEnum;
+import com.example.hanghaero.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;

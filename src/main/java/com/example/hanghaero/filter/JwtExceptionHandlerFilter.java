@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.hanghaero.error.JwtErrorCode;
+import com.example.hanghaero.jwt.error.JwtErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.ExpiredJwtException;

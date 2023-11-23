@@ -1,4 +1,4 @@
-package com.example.hanghaero.error;
+package com.example.hanghaero.jwt.error;
 
 import org.springframework.http.HttpStatus;
 
