@@ -1,28 +1,21 @@
 package com.example.hanghaero.factory;
 
+import java.util.List;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-
-import com.example.hanghaero.entity.User;
-import com.example.hanghaero.entity.UserRoleEnum;
-import com.example.hanghaero.security.UserDetailsImpl;
 
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
 	@Override
 	public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
-		SecurityContext context = SecurityContextHolder.createEmptyContext();
-
-		User user = new User();
-		user.setEmail("email");
-		user.setUsername("username");
-		user.setRole(UserRoleEnum.USER);
-		UserDetails principal = new UserDetailsImpl(user);
-		Authentication auth = new UsernamePasswordAuthenticationToken(principal, "password",
-			principal.getAuthorities());
+		String email = annotation.email();
+		Authentication auth = new UsernamePasswordAuthenticationToken(email, "",
+			List.of(new SimpleGrantedAuthority("ROLE_USER")));
+		SecurityContext context = SecurityContextHolder.getContext();
 		context.setAuthentication(auth);
 		return context;
 	}
