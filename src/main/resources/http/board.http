@@ -1,9 +1,9 @@
 ### 1.로그인후 토큰 받기
-POST http://localhost:8080/api/user/login
+POST http://localhost:8080/api/user/signin
 Content-Type: application/json
 
 {
-  "email":"pjm9673@gmail.com",
+  "email":"admin@test.com",
   "password":"@Qkrwjdals96"
 }
 
@@ -15,11 +15,12 @@ Content-Type: application/json
 ### 1. 보드 등록 API
 POST http://localhost:8080/boards
 Content-Type: application/json
+Authorization: {{access_token}}
 
 {
-  "name": "Spring 업무공유",
-  "bgColor": "white",
-  "description": "hanghaero 업무공유"
+  "name": "React project",
+  "bgColor": "black",
+  "description": "Spring hanghaero 업무공유"
 }
 
 ### 2. 보드 수정 API
