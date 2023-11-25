@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.card.CardRequestDto;
+import com.example.hanghaero.dto.card.CardCreateRequestDto;
 import com.example.hanghaero.dto.card.CardResponseDto;
 import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Card;
@@ -26,7 +26,7 @@ public class CardService {
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
 
-	public ResponseEntity<?> createCard(Long boardId, Long columnId, CardRequestDto requestDto,
+	public ResponseEntity<?> createCard(Long boardId, Long columnId, CardCreateRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();
 		Board board = boardRepository.findById(boardId).orElseThrow(
@@ -40,7 +40,7 @@ public class CardService {
 	}
 
 	@Transactional
-	public ResponseEntity<?> updateCard(Long cardId, CardRequestDto requestDto,
+	public ResponseEntity<?> updateCard(Long cardId, CardCreateRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));

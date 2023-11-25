@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColRequestDto {
+public class ColCreateRequestDto {
+	private Long boardId;
 	private String title;
 }

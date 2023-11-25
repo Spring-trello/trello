@@ -3,7 +3,8 @@ package com.example.hanghaero.dto.card;
 import lombok.Getter;
 
 @Getter
-public class CardRequestDto {
+public class CardCreateRequestDto {
+	private Long columnId;
 	private String name;
 	private String description;
 	private String color;

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.example.hanghaero.dto.card.CardRequestDto;
+import com.example.hanghaero.dto.card.CardCreateRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,14 +59,7 @@ public class Card {
 	@OneToMany(mappedBy = "card")
 	private List<Comment> commentList = new ArrayList<>();
 
-	private LocalDate StringToLocalDate(String dueDate) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate date = LocalDate.parse(dueDate, formatter);
-
-		return date;
-	}
-
-	public Card(CardRequestDto requestDto, User user, Board board, Col column) {
+	public Card(CardCreateRequestDto requestDto, User user, Board board, Col column) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
 		this.color = requestDto.getColor();
@@ -76,7 +69,14 @@ public class Card {
 		this.column = column;
 	}
 
-	public void update(CardRequestDto requestDto) {
+	private LocalDate StringToLocalDate(String dueDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate date = LocalDate.parse(dueDate, formatter);
+
+		return date;
+	}
+
+	public void update(CardCreateRequestDto requestDto) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
 		this.color = requestDto.getColor();

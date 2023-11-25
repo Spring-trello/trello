@@ -3,7 +3,8 @@ package com.example.hanghaero.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.hanghaero.dto.board.BoardRequestDto;
+import com.example.hanghaero.dto.board.BoardCreateRequestDto;
+import com.example.hanghaero.dto.board.BoardModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,13 +46,19 @@ public class Board {
 	@OneToMany(mappedBy = "board", orphanRemoval = true)
 	private List<BoardUser> boardUserList = new ArrayList<>();
 
-	public Board(BoardRequestDto boardRequestDto) {
+	public Board(BoardCreateRequestDto boardRequestDto) {
 		this.name = boardRequestDto.getName();
 		this.bgColor = boardRequestDto.getBgColor();
 		this.description = boardRequestDto.getDescription();
 	}
 
-	public void update(BoardRequestDto boardRequestDto) {
+	public void update(BoardCreateRequestDto boardRequestDto) {
+		this.name = boardRequestDto.getName();
+		this.bgColor = boardRequestDto.getBgColor();
+		this.description = boardRequestDto.getDescription();
+	}
+
+	public void update(BoardModifyRequestDto boardRequestDto) {
 		this.name = boardRequestDto.getName();
 		this.bgColor = boardRequestDto.getBgColor();
 		this.description = boardRequestDto.getDescription();

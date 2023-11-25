@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class BoardRequestDto {
+public class BoardCreateRequestDto {
 
 	private String name;
 

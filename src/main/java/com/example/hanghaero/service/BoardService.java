@@ -5,7 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.board.BoardRequestDto;
+import com.example.hanghaero.dto.board.BoardCreateRequestDto;
+import com.example.hanghaero.dto.board.BoardModifyRequestDto;
 import com.example.hanghaero.dto.board.BoardResponseDto;
 import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.BoardUser;
@@ -25,7 +26,7 @@ public class BoardService {
 	private final UserRepository userRepository;
 	private final BoardUserRepository boardUserRepository;
 
-	public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, Long userId) {
+	public BoardResponseDto createBoard(BoardCreateRequestDto boardRequestDto, Long userId) {
 		Optional<User> user = userRepository.findById(userId);
 		Board board = new Board(boardRequestDto);
 		board.setUser(user.get());
@@ -35,7 +36,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long userId, Long id) {
+	public BoardResponseDto updateBoard(BoardModifyRequestDto boardRequestDto, Long userId, Long id) {
 		User user = userRepository.findById(userId).orElseThrow(() ->
 			new EntityNotFoundException("존재하지않는 유저입니다.")
 		);

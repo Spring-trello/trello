@@ -83,7 +83,9 @@
             var onStartEvent = function (e) {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
+
                     if (handle.closest('.' + list.options.noDragClass).length) {
+                        console.log("잡히지않는 클래스")
                         return;
                     }
                     handle = handle.closest('.' + list.options.handleClass);
@@ -230,10 +232,26 @@
         },
 
         dragStart: function (e) {
+
             var mouse = this.mouse,
                 target = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
+            //dragItem이 드래그할 아이템이다
+            $.ajax({
+                type: 'POST',
+                url: '/boards/',
+                contentType: 'application/json',
+                data: JSON.stringify(itemDto),
+                success: function (response) {
+                    // 2. 응답 함수에서 modal을 뜨게 하고, targetId 를 reponse.id 로 설정
+                    $('#container').addClass('active');
+                    targetId = response.id;
+                },
+                error(error, status, request) {
+                    logout();
+                }
+            });
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
