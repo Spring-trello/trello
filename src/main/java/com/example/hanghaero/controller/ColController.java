@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.hanghaero.dto.column.ColCreateRequestDto;
 import com.example.hanghaero.dto.column.ColModifyRequestDto;
@@ -30,12 +31,12 @@ public class ColController {
 	@PutMapping("/{columnId}")
 	public ResponseEntity<?> updateColumn(@PathVariable Long columnId,
 		@RequestBody ColModifyRequestDto columnRequestDto) {
-		return new ResponseEntity(columnService.updateColumn(boardId, columnId, columnRequestDto), HttpStatus.OK);
+		return new ResponseEntity(columnService.updateColumn(columnId, columnRequestDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{columnId}")
-	public ResponseEntity<?> deleteColumn(@PathVariable Long boardId, @PathVariable Long columnId) {
-		return new ResponseEntity(columnService.deleteColumn(boardId, columnId), HttpStatus.OK);
+	public ResponseEntity<?> deleteColumn(@PathVariable Long columnId, @RequestParam("boardId") Long boardId) {
+		return new ResponseEntity(columnService.deleteColumn(columnId, boardId), HttpStatus.OK);
 	}
 
 	// TODO: 2023-11-25 현재는 column position을 변경하면 해당 position에 있는 column과 위치를 맞바꾼다.
@@ -44,7 +45,9 @@ public class ColController {
 	@PutMapping("/{columnId}/to/{newPosition}")
 	public ResponseEntity<?> moveColumn(
 		@PathVariable Long columnId,
-		@PathVariable int newPosition) {
-		return new ResponseEntity(columnService.moveColumn(boardId, columnId, newPosition), HttpStatus.OK);
+		@PathVariable int newPosition,
+		@RequestParam("boardId") Long boardId
+		) {
+		return new ResponseEntity(columnService.moveColumn(columnId, newPosition, boardId), HttpStatus.OK);
 	}
 }

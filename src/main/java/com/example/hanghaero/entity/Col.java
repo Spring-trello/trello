@@ -1,6 +1,7 @@
 package com.example.hanghaero.entity;
 
 import com.example.hanghaero.dto.column.ColCreateRequestDto;
+import com.example.hanghaero.dto.column.ColModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +41,7 @@ public class Col {
 		this.board = board;
 	}
 
-	public void update(ColCreateRequestDto requestDto) {
+	public void update(ColModifyRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 	}
 

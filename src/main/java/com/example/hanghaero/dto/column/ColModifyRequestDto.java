@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ColModifyRequestDto {
+	private Long boardId;
 	private String title;
 }

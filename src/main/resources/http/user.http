@@ -1,0 +1,25 @@
+### 0.회원가입 - ADMIN
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "email":"admin@test.com",
+  "password":"@Qkrwjdals96",
+  "name": "administrator",
+  "address" : "111-400",
+  "phoneNumber": "010-1111-1111",
+  "role" : "ADMIN"
+}
+
+### 0.회원가입 - USER
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "email":"user@test.com",
+  "password":"@Qkrwjdals96",
+  "name": "user",
+  "address" : "111-400",
+  "phoneNumber" : "010-2222-2222",
+  "role" : "USER"
+}
