@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.hanghaero.dto.comment.CommentCreateRequestDto;
 import com.example.hanghaero.dto.comment.CommentModifyRequestDto;
 import com.example.hanghaero.dto.comment.CommentResponseDto;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
+import com.example.hanghaero.entity.User;
+import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.exception.entity.comment.CardNotFoundException;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.CommentRepository;
@@ -23,34 +26,31 @@ public class CommentService {
 	private final CardRepository cardRepository;
 	private final CommentRepository commentRepository;
 
-	public ResponseEntity<?> createComment(Long cardId, CommentModifyRequestDto requestDto,
+	public CommentResponseDto createComment(CommentCreateRequestDto requestDto,
 		UserDetailsImpl userDetails) {
-		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
+		Card card = cardRepository.findById(requestDto.getCardId()).orElseThrow(CardNotFoundException::new);
+		User user = userDetails.getUser();
 
-		if (!cardAuthCheck(card, userDetails)) {
-			return ResponseEntity.status(401).body("권한이 없습니다.");
-		}
-
-		Comment comment = new Comment(card, requestDto);
+		Comment comment = new Comment(card, user, requestDto);
 		commentRepository.save(comment);
 
-		return ResponseEntity.ok().body(new CommentResponseDto(comment));
+		return new CommentResponseDto(comment);
 	}
 
 	@Transactional
-	public ResponseEntity<?> updateComment(Long commentId, CommentModifyRequestDto requestDto,
+	public CommentResponseDto updateComment(Long commentId, CommentModifyRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));
 
 		if (!commentAuthCheck(comment, userDetails)) {
-			return ResponseEntity.status(401).body("권한이 없습니다.");
+			throw new IllegalArgumentException("댓글을 수정할 권한이 없습니다.");
 		}
 
 		comment.update(requestDto);
 		commentRepository.save(comment);
 
-		return ResponseEntity.ok().body(new CommentResponseDto(comment));
+		return new CommentResponseDto(comment);
 	}
 
 	@Transactional
@@ -59,7 +59,7 @@ public class CommentService {
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));
 
 		if (!commentAuthCheck(comment, userDetails)) {
-			return ResponseEntity.status(401).body("권한이 없습니다.");
+			throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
 		}
 
 		commentRepository.delete(comment);
@@ -67,20 +67,8 @@ public class CommentService {
 		return ResponseEntity.ok("댓글을 삭제하였습니다.");
 	}
 
-	private boolean cardAuthCheck(Card card, UserDetailsImpl userDetails) {
-		if (!Objects.equals(userDetails.getUser(), card.getUser()) &&
-			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
-			return false;
-		}
-		return true;
-	}
-
 	private boolean commentAuthCheck(Comment comment, UserDetailsImpl userDetails) {
-		if (!Objects.equals(userDetails.getUser(), comment.getUser()) &&
-			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
-			return false;
-		}
-		return true;
+		return Objects.equals(userDetails.getUser(), comment.getUser()) ||
+			Objects.equals(userDetails.getUser().getRole(), UserRoleEnum.ADMIN);
 	}
-
 }

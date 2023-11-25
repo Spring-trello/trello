@@ -29,7 +29,7 @@ public class CommentController {
 	public ResponseEntity<?> createComment(
 		@RequestBody CommentCreateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return commentService.createComment(cardId, requestDto, userDetails);
+		return ResponseEntity.status(201).body(commentService.createComment(requestDto, userDetails));
 	}
 
 	// 댓글 수정
@@ -38,7 +38,7 @@ public class CommentController {
 		@PathVariable Long commentId,
 		@RequestBody CommentModifyRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return commentService.updateComment(commentId, requestDto, userDetails);
+		return ResponseEntity.ok().body(commentService.updateComment(commentId, requestDto, userDetails));
 	}
 
 	@DeleteMapping("/{commentId}")
