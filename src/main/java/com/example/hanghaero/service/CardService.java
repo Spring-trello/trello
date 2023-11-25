@@ -67,7 +67,8 @@ public class CardService {
 		Col column = colRepository.findById(toColumnId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 컬럼"));
 
-		// 옮기려는 컬럼의 마지막 포지션보다 더 큰 포지션으로 이동을 요청하면 가장 마지막 포지션으로 변경
+		// newPosition이 옮기려는 컬럼의 포지션 범위를 벗어나면 수정
+		newPosition = Math.max(0, newPosition);
 		newPosition = Math.min(lastPosition(toColumnId), newPosition);
 
 		// 카드를 다른 컬럼으로 옮길 경우, 먼저 현재 컬럼에서 옮길 카드를 제외한 나머지 카드의 포지션을 수정
