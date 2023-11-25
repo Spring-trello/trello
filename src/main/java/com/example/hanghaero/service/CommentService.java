@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.comment.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentModifyRequestDto;
 import com.example.hanghaero.dto.comment.CommentResponseDto;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
@@ -23,7 +23,7 @@ public class CommentService {
 	private final CardRepository cardRepository;
 	private final CommentRepository commentRepository;
 
-	public ResponseEntity<?> createComment(Long cardId, CommentRequestDto requestDto,
+	public ResponseEntity<?> createComment(Long cardId, CommentModifyRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
 
@@ -38,7 +38,7 @@ public class CommentService {
 	}
 
 	@Transactional
-	public ResponseEntity<?> updateComment(Long commentId, CommentRequestDto requestDto,
+	public ResponseEntity<?> updateComment(Long commentId, CommentModifyRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 댓글"));

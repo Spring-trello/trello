@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CommentRequestDto {
+public class CommentModifyRequestDto {
 	private String contents;
 }

@@ -1,6 +1,6 @@
 package com.example.hanghaero.entity;
 
-import com.example.hanghaero.dto.comment.CommentRequestDto;
+import com.example.hanghaero.dto.comment.CommentModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,13 +39,13 @@ public class Comment {
 	// @JoinColumn(name = "parent_comment_id")
 	// private Comment parentComment;
 
-	public Comment(Card card, CommentRequestDto requestDto) {
+	public Comment(Card card, CommentModifyRequestDto requestDto) {
 		this.comment = requestDto.getContents();
 		this.card = card;
 		this.user = card.getUser();
 	}
 
-	public void update(CommentRequestDto requestDto) {
+	public void update(CommentModifyRequestDto requestDto) {
 		this.comment = requestDto.getContents();
 	}
 }

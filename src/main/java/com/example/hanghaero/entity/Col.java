@@ -1,6 +1,6 @@
 package com.example.hanghaero.entity;
 
-import com.example.hanghaero.dto.column.ColRequestDto;
+import com.example.hanghaero.dto.column.ColCreateRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,29 +18,29 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="columns")
+@Table(name = "columns")
 public class Col {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long columnId;
 
-	@Column(name="title")
+	@Column(name = "title")
 	String title;
 
-	@Column(name="position")
+	@Column(name = "position")
 	int position = 0;
 
 	@ManyToOne
-	@JoinColumn(name="board_id")
+	@JoinColumn(name = "board_id")
 	private Board board;
 
-	public Col(Board board, ColRequestDto requestDto, int lastPosition) {
+	public Col(Board board, ColCreateRequestDto requestDto, int lastPosition) {
 		this.title = requestDto.getTitle();
-		this.position = lastPosition+1;
+		this.position = lastPosition + 1;
 		this.board = board;
 	}
 
-	public void update(ColRequestDto requestDto) {
+	public void update(ColCreateRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 	}
 

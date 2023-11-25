@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.hanghaero.dto.column.ColRequestDto;
+import com.example.hanghaero.dto.column.ColCreateRequestDto;
 import com.example.hanghaero.dto.column.ColResponseDto;
 import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Col;
@@ -20,7 +20,8 @@ public class ColService {
 	private final BoardRepository boardRepository;
 	private final ColRepository columnRepository;
 
-	public ColResponseDto createColumn(Long boardId, ColRequestDto requestDto) {
+	public ColResponseDto createColumn(ColCreateRequestDto requestDto) {
+		Long boardId = requestDto.getBoardId();
 		Board findBoard = findBoard(boardId);
 		int position = 0;
 		if (columnRepository.lastPosition(boardId) != null) {
@@ -32,7 +33,7 @@ public class ColService {
 	}
 
 	@Transactional
-	public ColResponseDto updateColumn(Long boardId, Long columnId, ColRequestDto requestDto) {
+	public ColResponseDto updateColumn(Long boardId, Long columnId, ColCreateRequestDto requestDto) {
 		findBoard(boardId);
 		Col findColumnObject = findColumn(columnId);
 		try {

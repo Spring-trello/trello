@@ -3,6 +3,7 @@ package com.example.hanghaero.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -92,11 +93,11 @@ public class WebSecurityConfig {
 			.requestMatchers("/login")
 			// 실제로는 JwtAuthenticationFilter가 /api/user/signin url에서 로그인 요청을 받지만 스프링 시큐리티 기본 url이 /login이라서 버그 방지로 넣음
 			.permitAll()
-			.requestMatchers("/api/user/**") // '/api/user/'로 시작하는 요청 모두 접근 허가
+			.requestMatchers(HttpMethod.POST, "/users/**") // '/api/user/'로 시작하는 요청 모두 접근 허가
 			.permitAll()
 			.requestMatchers("/error") // 인증 Exception이 발생할경우 /error로 간다.
 			.permitAll()
-			.requestMatchers("/api/admin/**")
+			.requestMatchers("/admin/**")
 			.hasRole("ADMIN") // admin Role
 			.anyRequest()
 			.authenticated() // 그 외 모든 요청 인증처리

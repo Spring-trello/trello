@@ -21,17 +21,17 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/users")
 public class UserController {
 	private final UserService userService;
 
-	@PostMapping("/user/signup")
+	@PostMapping("/signup")
 	public ResponseEntity signup(@Valid @RequestBody SignUpRequestDto signupRequestDto) {
 		userService.signup(signupRequestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body("회원가입에 성공하였습니다.");
 	}
 
-	@PutMapping("/users/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<UserUpdateResponseDto> updateUser(@RequestBody SignUpRequestDto signupRequestDto,
 		@PathVariable Long id,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -40,7 +40,7 @@ public class UserController {
 		return new ResponseEntity<>(userService.updateUser(id, signupRequestDto, userId), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity deleteUser(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		Long userId = userDetails.getUser().getId();
 		userService.deleteUser(id, userId);
