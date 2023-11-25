@@ -26,8 +26,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.example.hanghaero.auth.AuthInterceptor;
 import com.example.hanghaero.dto.comment.CommentRequestDto;
 import com.example.hanghaero.entity.User;
-import com.example.hanghaero.security.UserDetailsImpl;
-import com.example.hanghaero.security.UserDetailsServiceImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsServiceImpl;
 import com.example.hanghaero.service.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

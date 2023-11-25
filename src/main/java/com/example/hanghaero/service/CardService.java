@@ -15,7 +15,7 @@ import com.example.hanghaero.entity.User;
 import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
-import com.example.hanghaero.security.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 

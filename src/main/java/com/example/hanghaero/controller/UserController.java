@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UserUpdateResponseDto;
-import com.example.hanghaero.security.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.example.hanghaero.service.UserService;
 
 import jakarta.validation.Valid;

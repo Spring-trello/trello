@@ -4,7 +4,6 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,14 +19,15 @@ import org.springframework.security.web.session.DisableEncodeUrlFilter;
 import com.example.hanghaero.filter.HttpLoggingFilter;
 import com.example.hanghaero.filter.JwtExceptionHandlerFilter;
 import com.example.hanghaero.jwt.JwtUtil;
-import com.example.hanghaero.security.JwtAuthenticationFilter;
-import com.example.hanghaero.security.JwtAuthorizationFilter;
-import com.example.hanghaero.security.UserDetailsServiceImpl;
+import com.example.hanghaero.security.filter.JwtAuthenticationFilter;
+import com.example.hanghaero.security.filter.JwtAuthorizationFilter;
+import com.example.hanghaero.security.handler.LoginSuccessHandler;
+import com.example.hanghaero.security.userdetails.UserDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -74,6 +74,11 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
+	public LoginSuccessHandler loginSuccessHandler() {
+		return new LoginSuccessHandler();
+	}
+
+	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		// CSRF 설정
 		http.csrf(AbstractHttpConfigurer::disable);
@@ -102,7 +107,8 @@ public class WebSecurityConfig {
 			.authenticated() // 그 외 모든 요청 인증처리
 		);
 
-		http.formLogin(Customizer.withDefaults());
+		// TODO: 2023-11-25 login form 수정
+		//http.formLogin(() ->);
 
 		// JWT 예외처리 필터 추가
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -1,4 +1,4 @@
-package com.example.hanghaero.security;
+package com.example.hanghaero.security.userdetails;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hanghaero.dto.comment.CommentRequestDto;
-import com.example.hanghaero.security.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.example.hanghaero.service.CommentService;
 
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.hanghaero.security;
+package com.example.hanghaero.security.filter;
 
 import java.io.IOException;
 
@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.hanghaero.dto.user.SignInRequestDto;
 import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.jwt.JwtUtil;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;

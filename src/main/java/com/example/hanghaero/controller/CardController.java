@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hanghaero.dto.card.CardRequestDto;
-import com.example.hanghaero.security.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.example.hanghaero.service.CardService;
 
 import lombok.RequiredArgsConstructor;
