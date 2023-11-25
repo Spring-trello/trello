@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.example.hanghaero.dto.card.CardCreateRequestDto;
+import com.example.hanghaero.dto.card.CardModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,6 +45,9 @@ public class Card {
 	@Column(nullable = false)
 	private LocalDate dueDate;
 
+	@Column(nullable = false)
+	private int position;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -59,11 +63,12 @@ public class Card {
 	@OneToMany(mappedBy = "card")
 	private List<Comment> commentList = new ArrayList<>();
 
-	public Card(CardCreateRequestDto requestDto, User user, Board board, Col column) {
+	public Card(CardCreateRequestDto requestDto, User user, Board board, Col column, int pos) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
 		this.color = requestDto.getColor();
 		this.dueDate = StringToLocalDate(requestDto.getDueDate());
+		this.position = pos;
 		this.user = user;
 		this.board = board;
 		this.column = column;
@@ -76,14 +81,15 @@ public class Card {
 		return date;
 	}
 
-	public void update(CardCreateRequestDto requestDto) {
+	public void update(CardModifyRequestDto requestDto) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
 		this.color = requestDto.getColor();
 		this.dueDate = StringToLocalDate(requestDto.getDueDate());
 	}
 
-	public void move(Col column) {
+	public void move(Col column, int position) {
 		this.column = column;
+		this.position = position;
 	}
 }
