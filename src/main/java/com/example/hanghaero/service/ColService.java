@@ -1,5 +1,6 @@
 package com.example.hanghaero.service;
 
+import org.hibernate.annotations.Columns;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,9 +59,12 @@ public class ColService {
 	@Transactional
 	public Object moveColumn(Long boardId, Long columnId, int newPosition) {
 		findBoard(boardId); //보드조회
-		Col findColumnObject = findColumn(columnId); //칼럼조회
+		Col findColumnObject = columnRepository.findColumnsofBoard(boardId,columnId).orElseThrow(
+			() -> new NullPointerException("조회되는 칼럼이 없습니다.")
+		);  //칼럼조회
+
 		System.out.println("현재 칼럼의 위치 = " + findColumnObject.getPosition());
-		Col CurrentColumns = columnRepository.getPosition(newPosition);
+		Col CurrentColumns = columnRepository.getPosition(boardId, newPosition);
 		if (CurrentColumns != null) {
 			try {
 				// "중복된 칼럼으로 기존에 위차한 칼럼 바뀔 칼럼과 change");
