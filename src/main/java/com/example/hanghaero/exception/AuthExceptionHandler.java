@@ -4,11 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,27 +18,13 @@ import com.example.hanghaero.exception.entity.user.PasswordNotAvailableByRuleExc
 import com.example.hanghaero.exception.entity.user.PasswordNotMatchedException;
 import com.example.hanghaero.exception.entity.user.UserNotHasAdminRoleException;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestControllerAdvice
-@Slf4j(topic = "GlobalExceptionHandler")
-public class GlobalExceptionHandler {
+public class AuthExceptionHandler {
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	protected ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		BindingResult bindingResult = e.getBindingResult();
-
-		StringBuilder builder = new StringBuilder();
-		for (FieldError fieldError : bindingResult.getFieldErrors()) {
-			builder.append(" 올바르지 않은 입력 :");
-			builder.append(fieldError.getRejectedValue());
-			builder.append('\n');
-			builder.append(fieldError.getField());
-			builder.append(" (은)는 ");
-			builder.append(fieldError.getDefaultMessage());
-		}
-		return new ResponseEntity<>(builder.toString(), HttpStatus.BAD_REQUEST);
+	// Jwt 관련 예외는 Handling 없이
+	@ExceptionHandler(InsufficientAuthenticationException.class)
+	public ResponseEntity<?> handleAuthenticationException() {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인이 필요합니다.");
 	}
 
 	@ExceptionHandler(DuplicateEmailException.class)
@@ -102,5 +86,4 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleAuthenticationCredentialsNotFoundException() {
 		return new ResponseEntity<>("AUTHENTICATION_CREDENTIALS_NOT_FOUND", HttpStatus.UNAUTHORIZED);
 	}
-
 }
