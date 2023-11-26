@@ -26,6 +26,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		HttpServletResponse response,
 		FilterChain filterChain
 	) throws ServletException, IOException {
+		// Jwt관련 예외는 여기서 catch하여 ErrorResponse로 Response 반환
 		try {
 			filterChain.doFilter(request, response);
 		} catch (SecurityException | MalformedJwtException e) {
