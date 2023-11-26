@@ -67,7 +67,6 @@ public class User {
 		this.name = signupRequestDto.getName();
 		this.phoneNumber = signupRequestDto.getPhoneNumber();
 		this.address = signupRequestDto.getAddress();
-		this.role = signupRequestDto.getRole();
 	}
 
 	// Test를 위해 빌더 패턴 사용
@@ -88,5 +87,9 @@ public class User {
 
 	public void update(String password) {
 		this.password = password;
+	}
+
+	public void update(UserRoleEnum role) {
+		this.role = role;
 	}
 }
