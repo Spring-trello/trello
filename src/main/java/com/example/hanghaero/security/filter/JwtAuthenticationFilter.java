@@ -2,14 +2,17 @@ package com.example.hanghaero.security.filter;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.example.hanghaero.dto.user.SignInRequestDto;
 import com.example.hanghaero.entity.UserRoleEnum;
-import com.example.hanghaero.jwt.JwtUtil;
+import com.example.hanghaero.security.JwtUtil;
 import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,9 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private final JwtUtil jwtUtil;
 
+	@Qualifier("handlerExceptionResolver")
+	@Autowired
+	private HandlerExceptionResolver resolver;
+
 	public JwtAuthenticationFilter(JwtUtil jwtUtil) {
 		this.jwtUtil = jwtUtil;
-		setFilterProcessesUrl("/api/user/signin"); // 실제로 로그인을 수행하는 url
+		setFilterProcessesUrl("/processing-signin"); // 실제로 로그인을 수행하는 url
 	}
 
 	@Override
@@ -76,17 +83,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) {
-		try {
-			//        response.setStatus(401);
-			// 응답 상태 코드 및 메시지 설정
-			response.setContentType("application/json;charset=UTF-8");
-			response.setCharacterEncoding("UTF-8");
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().write("이메일 및 패스워드를 확인해주세요.");
-			response.getWriter().flush();
-			response.getWriter().close();
-		} catch (IOException e) {
-			log.error("IOException 발생 : " + e.getMessage());
-		}
+		resolver.resolveException(request, response, null, failed);
 	}
 }
