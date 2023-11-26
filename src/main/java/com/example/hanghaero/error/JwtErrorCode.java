@@ -1,4 +1,4 @@
-package com.example.hanghaero.jwt.error;
+package com.example.hanghaero.error;
 
 import org.springframework.http.HttpStatus;
 
@@ -43,15 +43,15 @@ public enum JwtErrorCode {
 
 		public static final int TOKEN_INVALID_SIGNATURE_HTTPSTATUS = HttpStatus.BAD_REQUEST.value();
 		public static final int TOKEN_INVALID_SIGNATURE_CODE = HttpStatus.BAD_REQUEST.value();
-		public static final String TOKEN_INVALID_SIGNATURE_MESSAGE = "로그인 정보가 잘못되었습니다.";
+		public static final String TOKEN_INVALID_SIGNATURE_MESSAGE = "로그인 토큰 서명이 올바르지 않습니다.";
 
 		public static final int TOKEN_UNSUPPORTED_HTTPSTATUS = HttpStatus.BAD_REQUEST.value();
 		public static final int TOKEN_UNSUPPORTED_CODE = HttpStatus.BAD_REQUEST.value();
-		public static final String TOKEN_UNSUPPORTED_MESSAGE = "로그인 정보가 잘못되었습니다.";
+		public static final String TOKEN_UNSUPPORTED_MESSAGE = "지원하지 않는 인증 토큰입니다.";
 
 		public static final int TOKEN_EMPTY_CLAIM_HTTPSTATUS = HttpStatus.BAD_REQUEST.value();
 		public static final int TOKEN_EMPTY_CLAIM_CODE = HttpStatus.BAD_REQUEST.value();
-		public static final String TOKEN_EMPTY_CLAIM_MESSAGE = "로그인 정보가 잘못되었습니다.";
+		public static final String TOKEN_EMPTY_CLAIM_MESSAGE = "토큰에 유저의 정보가 없습니다.";
 
 		public static final int TOKEN_ROLE_NOTFOUND_HTTPSTATUS = HttpStatus.NOT_FOUND.value();
 		public static final int TOKEN_ROLE_NOTFOUND_CODE = HttpStatus.NOT_FOUND.value();
