@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.hanghaero.jwt.JwtUtil;
+import com.example.hanghaero.security.JwtUtil;
 import com.example.hanghaero.security.userdetails.UserDetailsServiceImpl;
 
 import io.jsonwebtoken.Claims;
