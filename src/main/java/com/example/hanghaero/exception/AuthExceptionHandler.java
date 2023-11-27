@@ -24,7 +24,7 @@ public class AuthExceptionHandler {
 	// Jwt 관련 예외는 Handling 없이
 	@ExceptionHandler(InsufficientAuthenticationException.class)
 	public ResponseEntity<?> handleAuthenticationException() {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인이 필요합니다.");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 	}
 
 	@ExceptionHandler(DuplicateEmailException.class)

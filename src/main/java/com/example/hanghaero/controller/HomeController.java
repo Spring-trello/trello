@@ -12,6 +12,11 @@ public class HomeController {
 		return "index";
 	}
 
+	@GetMapping("/boards")
+	public String boardPage() {
+		return "board";
+	}
+
 	@GetMapping("/admin")
 	public ResponseEntity<?> adminTest() {
 		return new ResponseEntity<>("admin", HttpStatus.OK);
