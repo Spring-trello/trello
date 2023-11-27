@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 	private final CommentService commentService;
 
-	// 서비스 로직에서 board, column를 알 필요 없다.
 	// 댓글 생성
 	@PostMapping("")
 	public ResponseEntity<?> createComment(
