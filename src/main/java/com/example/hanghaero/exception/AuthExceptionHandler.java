@@ -62,11 +62,11 @@ public class AuthExceptionHandler {
 	public ResponseEntity<?> handleUserNotHasAdminRoleException() {
 		return new ResponseEntity<>(UserNotHasAdminRoleException.errorMsg, HttpStatus.UNAUTHORIZED);
 	}
-
+	
 	@ExceptionHandler(BadCredentialsException.class)
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<?> handleBadCredentialsException() {
-		return new ResponseEntity<>("이메일 혹은 비밀번호가 틀렸습니다.", HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>("이메일 혹은 비밀번호가 틀렸습니다.", HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(InternalAuthenticationServiceException.class)
