@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.hanghaero.jwt.error.JwtErrorCode;
+import com.example.hanghaero.error.JwtErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -19,13 +19,14 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "JwtExceptionHandlerFilter")
-public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
+public class ExceptionHandlerFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(
 		HttpServletRequest request,
 		HttpServletResponse response,
 		FilterChain filterChain
 	) throws ServletException, IOException {
+		// Jwt관련 예외는 여기서 catch하여 ErrorResponse로 Response 반환
 		try {
 			filterChain.doFilter(request, response);
 		} catch (SecurityException | MalformedJwtException e) {
@@ -38,10 +39,6 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 			log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
 			setErrorResponse(response, JwtErrorCode.TOKEN_UNSUPPORTED);
 		}
-		// catch (Exception e) {
-		// 	log.error("e :" + e);
-		// 	setErrorResponse(response, JwtErrorCode.TOKEN_EMPTY_CLAIM);
-		// }
 	}
 
 	private void setErrorResponse(HttpServletResponse response, JwtErrorCode jwtErrorCode) {

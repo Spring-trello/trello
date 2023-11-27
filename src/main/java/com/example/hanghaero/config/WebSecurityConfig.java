@@ -3,9 +3,7 @@ package com.example.hanghaero.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,12 +16,13 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.DisableEncodeUrlFilter;
 
+import com.example.hanghaero.filter.ExceptionHandlerFilter;
 import com.example.hanghaero.filter.HttpLoggingFilter;
-import com.example.hanghaero.filter.JwtExceptionHandlerFilter;
-import com.example.hanghaero.jwt.JwtUtil;
-import com.example.hanghaero.security.JwtAuthenticationFilter;
-import com.example.hanghaero.security.JwtAuthorizationFilter;
-import com.example.hanghaero.security.UserDetailsServiceImpl;
+import com.example.hanghaero.security.JwtUtil;
+import com.example.hanghaero.security.filter.JwtAuthenticationFilter;
+import com.example.hanghaero.security.filter.JwtAuthorizationFilter;
+import com.example.hanghaero.security.handler.AuthenticationEntryPointImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,8 +57,8 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	public JwtExceptionHandlerFilter jwtExceptionHandlerFilter() throws Exception {
-		return new JwtExceptionHandlerFilter();
+	public ExceptionHandlerFilter jwtExceptionHandlerFilter() throws Exception {
+		return new ExceptionHandlerFilter();
 	}
 
 	@Bean
@@ -75,6 +74,12 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
+	public AuthenticationEntryPointImpl authenticationEntryPoint() {
+		return new AuthenticationEntryPointImpl();
+	}
+
+	@Bean
+
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		// CSRF 설정
 		http.csrf(AbstractHttpConfigurer::disable);
@@ -90,22 +95,22 @@ public class WebSecurityConfig {
 			.permitAll() // resources 접근 허용 설정
 			.requestMatchers("/")
 			.permitAll() // 메인 페이지 요청 허가
-			.requestMatchers("/login")
-			// 실제로는 JwtAuthenticationFilter가 /api/user/signin url에서 로그인 요청을 받지만 스프링 시큐리티 기본 url이 /login이라서 버그 방지로 넣음
-			.permitAll()
-			.requestMatchers(HttpMethod.POST, "/users/**") // '/api/user/'로 시작하는 요청 모두 접근 허가
+			.requestMatchers("/users/**")
 			.permitAll()
 			.requestMatchers("/error") // 인증 Exception이 발생할경우 /error로 간다.
-			.permitAll()
-			.requestMatchers("/admin/**")
-			.hasRole("ADMIN") // admin Role
+			.permitAll() // admin 권한 확인은 Interceptor에서 수행
 			.anyRequest()
 			.authenticated() // 그 외 모든 요청 인증처리
 		);
 
-		http.formLogin(Customizer.withDefaults());
+		http.formLogin((formLogin) ->
+			formLogin
+				.loginPage("/users/signin")
+				.loginProcessingUrl("/processing-signin"));
 
-		// JWT 예외처리 필터 추가
+		http.exceptionHandling((exception) ->
+			exception.authenticationEntryPoint(authenticationEntryPoint()));
+
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
 		http.addFilterBefore(jwtExceptionHandlerFilter(), JwtAuthorizationFilter.class);

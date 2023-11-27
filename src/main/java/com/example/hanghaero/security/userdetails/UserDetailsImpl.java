@@ -1,4 +1,4 @@
-package com.example.hanghaero.security;
+package com.example.hanghaero.security.userdetails;
 
 import java.util.ArrayList;
 import java.util.Collection;

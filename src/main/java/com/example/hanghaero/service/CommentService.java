@@ -16,7 +16,7 @@ import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.exception.entity.comment.CardNotFoundException;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.CommentRepository;
-import com.example.hanghaero.security.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 

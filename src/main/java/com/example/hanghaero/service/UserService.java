@@ -1,13 +1,17 @@
 package com.example.hanghaero.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UserUpdateResponseDto;
 import com.example.hanghaero.entity.User;
+import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.exception.entity.user.DuplicateEmailException;
+import com.example.hanghaero.exception.entity.user.ManagerSecretKeyNotMatchedException;
 import com.example.hanghaero.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +23,9 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
+	@Value("${manager.secret.key}")
+	private String managerSecretKey;
+
 	public void signup(SignUpRequestDto signupRequestDto) {
 		String encodedPwd = passwordEncoder.encode(signupRequestDto.getPassword());
 		User user = new User(signupRequestDto);
@@ -28,6 +35,18 @@ public class UserService {
 			throw new DuplicateEmailException();
 		});
 
+		UserRoleEnum role = UserRoleEnum.USER;
+		String inputManagerSecretKey = signupRequestDto.getAdminKey();
+
+		if (signupRequestDto.isAdminCheck()) {
+			if (StringUtils.equals(managerSecretKey, inputManagerSecretKey)) {
+				role = UserRoleEnum.ADMIN;
+			} else {
+				throw new ManagerSecretKeyNotMatchedException();
+			}
+		}
+
+		user.update(role);
 		userRepository.save(user);
 	}
 

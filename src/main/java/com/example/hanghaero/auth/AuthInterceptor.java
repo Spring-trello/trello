@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.example.hanghaero.exception.entity.user.UserNotHasAdminRoleException;
 import com.example.hanghaero.repository.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,8 +46,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 			System.out.println(" [ " + SecurityContextHolder.getContext().getAuthentication().getName() + "관리자 입니다. ]");
 			return true;
 		}
-		log.info("관리자만 접근 가능한 페이지 입니다.");
-		response.sendError(401, "관리자만 접근 가능한 페이지 입니다.");
-		return false;
+		throw new UserNotHasAdminRoleException();
 	}
 }

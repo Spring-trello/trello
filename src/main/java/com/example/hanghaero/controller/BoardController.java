@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.hanghaero.dto.board.BoardCreateRequestDto;
 import com.example.hanghaero.dto.board.BoardModifyRequestDto;
 import com.example.hanghaero.dto.board.BoardResponseDto;
-import com.example.hanghaero.security.UserDetailsImpl;
+import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.example.hanghaero.service.BoardService;
 
 import lombok.RequiredArgsConstructor;

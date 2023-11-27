@@ -1,4 +1,4 @@
-package com.example.hanghaero.jwt;
+package com.example.hanghaero.security;
 
 import java.security.Key;
 import java.util.Base64;
