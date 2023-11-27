@@ -23,4 +23,6 @@ public class ColResponseDto {
 		this.position = columns.getPosition();
 		this.boardId = columns.getBoard().getId();
 	}
+
+
 }

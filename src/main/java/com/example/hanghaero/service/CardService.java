@@ -3,7 +3,6 @@ package com.example.hanghaero.service;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
 import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,6 +26,14 @@ public class CardService {
 	private final CardRepository cardRepository;
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
+
+	public List<CardResponseDto> getCards(Long boardId){
+		return cardRepository.getCards(boardId).stream().map(CardResponseDto::new).toList();
+	}
+
+	public List<Card> getCardsByColumnId(Long columnId){
+		return cardRepository.getCardsByColumnId(columnId);
+	}
 
 	public CardResponseDto createCard(CardCreateRequestDto requestDto,
 		UserDetailsImpl userDetails) {

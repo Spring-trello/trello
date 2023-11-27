@@ -1,5 +1,6 @@
 package com.example.hanghaero.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class BoardService {
 	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
 	private final BoardUserRepository boardUserRepository;
+
+
+	public List<BoardResponseDto> getBoard(){
+		return boardRepository.findAll().stream().map(BoardResponseDto::new).toList();
+	}
 
 	public BoardResponseDto createBoard(BoardCreateRequestDto boardRequestDto, Long userId) {
 		Optional<User> user = userRepository.findById(userId);
