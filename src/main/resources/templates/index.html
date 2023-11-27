@@ -9,52 +9,75 @@
 
     <link href="/css/style.css" rel="stylesheet">
     <script crossorigin="anonymous"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="/js/basic.js"></script>
     <title>나만의 셀렉샵</title>
 </head>
 <body>
-<div class="header" style="position:relative;">
-    <!--headr-->
-    <div id="header-title-select-shop">
-        My Select Shop
-    </div>
-    <!--/headr-->
-</div>
+<div id="boardContent"></div>
+
 <div class="nav">
-    <div class="nav-see active">
-        모아보기
-    </div>
-    <div class="nav-search">
-        탐색하기
-    </div>
+    <!-- 버튼을 클릭하면 JavaScript 함수를 호출하여 페이지 이동 -->
+    <button onclick="goToBoardPage()">보드 페이지로 이동</button>
 </div>
 <div id="see-area">
     <div id="product-container">
 
     </div>
 </div>
-<div id="search-area">
-    <div>
-        <input id="query" type="text">
-    </div>
-    <div id="search-result-box">
 
-    </div>
-    <div class="popup-container" id="container">
-        <div class="popup">
-            <button class="close" id="close">
-                X
-            </button>
-            <h1>⏰최저가 설정하기</h1>
-            <p>최저가를 설정해두면 선택하신 상품의 최저가가 떴을 때<br/> 표시해드려요!</p>
-            <div>
-                <input id="myprice" placeholder="200,000" type="text">원
-            </div>
-            <button class="cta" onclick="setMyprice()">설정하기</button>
-        </div>
-    </div>
-</div>
+<script>
+
+    const host = 'http://' + window.location.host;
+
+    function getAuthorizationToken() {
+        const cookies = document.cookie.split('; ');
+
+        for (const cookie of cookies) {
+            const [name, value] = cookie.split('=');
+
+            // 쿠키 이름 앞뒤의 공백 제거
+            const cookieName = name.trim();
+
+            if (cookieName === 'Authorization') {
+                // 쿠키 값 앞뒤의 공백 제거 후 반환
+                return value.trim();
+            }
+        }
+
+        // 찾지 못한 경우
+        return null;
+    }
+
+    // 사용 예시
+
+    function goToBoardPage() {
+        const authToken = getAuthorizationToken();
+        console.log(authToken);
+        $.ajax({
+            url: '/boards',
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            success:
+                function (response) {
+                    $('#boardContent').html(response);
+
+                }
+            ,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('에러 발생:', textStatus, errorThrown);
+            }
+        })
+        ;
+    }
+
+</script>
 </body>
 </html>
+
+
+
