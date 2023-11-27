@@ -29,6 +29,10 @@ public class CardService {
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
 
+	public List<CardResponseDto> getCards(Long boardId){
+		return cardRepository.getCards(boardId).stream().map(CardResponseDto::new).toList();
+	}
+
 	public CardResponseDto createCard(CardCreateRequestDto requestDto,
 		UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();

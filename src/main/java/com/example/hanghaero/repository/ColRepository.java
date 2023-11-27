@@ -1,5 +1,6 @@
 package com.example.hanghaero.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.annotations.Columns;
@@ -11,6 +12,8 @@ import com.example.hanghaero.entity.Col;
 
 @Repository
 public interface ColRepository extends JpaRepository<Col, Long> {
+	@Query(value = "select * from columns where board_id = ? ", nativeQuery = true)
+	List<Col> getColumns(Long boardId);
 	@Query(value = "select * from columns where board_id = ? and position=? ",nativeQuery = true)
 	Col getPosition(Long boardId, int position);
 

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.hanghaero.entity.Card;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
+	@Query(value = "select * from card where board_id = ? ", nativeQuery = true)
+	List<Card> getCards(Long boardId);
 
 	Optional<Card> findFirstByColumn_ColumnIdOrderByPositionDesc(Long columnId);
 

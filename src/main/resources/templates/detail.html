@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+
+    <link href="/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script crossorigin="anonymous"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="/js/basic.js"></script>
+    <title>칸반보드 - 상세</title>
+</head>
+<body>
+
+<div id="p1" class="mdl-progress mdl-js-progress"></div>
+<script>
+    document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
+        this.MaterialProgress.setProgress(44);
+    });
+</script>
+<div class="kanban__title">
+    <h1><span class="material-symbols-outlined">
+check
+</span> To do list</h1></div>
+<div class="dd">
+</div>
+<script th:inline="javascript">
+    var list = [[${columnList}]];
+    console.log("columnList = ", list);
+    for (let i = 0; i < list.length; i++) {
+        console.log(list[i]);
+        let tempHtml = addHTML(list[i])
+        $('.dd').append(tempHtml);
+    }
+
+    function addHTML(column){
+        console.log("column id = ", column)
+        return `<ol class = "kanban To-do">
+                   <div class="kanban__title">
+                    <h2><i class="material-icons">${column.title}</i></h2>
+                    </div>
+                    <li class="dd-item" data-id="1">
+            <h3 class="title dd-handle">Do the dishes<i class=" material-icons ">filter_none</i></h3>
+            <div class="text" contenteditable="true">wwPaul Rand once said, “The public is more familiar with bad
+                fucking design than good design. It is, in effect, conditioned to prefer
+
+            </div>
+            <i class="material-icons" id="label blue">label</i>
+            <div class="actions">
+                <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i
+                    class="material-icons">insert_link</i><i class="material-icons">attach_file</i></div>
+
+        </li>
+        <li class="dd-item" data-id="4">
+            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i>log-in bug</h3>
+            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
+                design than good design. It is, in effect, conditioned to prefer bad design,
+            </div>
+            <div class="actions">
+                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
+                    class="material-icons">attach_file</i></div>
+
+        </li>
+        <li class="dd-item" data-id="3">
+            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i>UX design</h3>
+            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
+                design than good design. It is, in effect, conditioned to prefer bad design,
+            </div>
+            <div class="actions">
+                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
+                    class="material-icons">attach_file</i></div>
+
+        </li>
+            <div class="actions-addbutt">
+                <button class="addbutt"><span class="material-symbols-outlined">add_circle</span> Add new</button>
+            </div>
+        </ol>`
+    }
+</script>
+<script>
+    $(document).ready(showColumn())
+
+    var columnList = {};
+    console.log("columnList = ", columnList);
+
+    function showColumn(){
+        $.ajax({
+            type: 'GET',
+            url: "/board/{boardId}",
+            data: columnList,
+            datatype: 'json',
+            success: function (data) {
+                $('.dd').empty();
+                console.log(data[0])
+                for (let i = 0; i < data.length; i++) {
+                    //let input_data = data[i].name;
+                    let tempHtml = addHTML(data[i])
+                    $('.dd').append(tempHtml);
+                }
+            },
+            error(error, status, request) {
+            }
+        })
+    }
+
+    function addHTML(column){
+        console.log("column id = ", column)
+        return `<ol class = "kanban">
+                   <div class="kanban__title">
+                    <h2><i class="material-icons">${column.title}</i></h2>
+                    </div>
+                </ol>`
+    }
+
+    $(".actions-addbutt").click(function(){
+        console.log("click addbutton");
+        $('div.actions-addbutt').empty();
+        $("ol.kanban").append("<li class=\"dd-item\" data-id=\"1\">\n" +
+            "            <h3 class=\"title dd-handle\">Do the dishes<i class=\" material-icons \">filter_none</i></h3>\n" +
+            "            <div class=\"text\" contenteditable=\"true\">wwPaul Rand once said, “The public is more familiar with bad\n" +
+            "                fucking design than good design. It is, in effect, conditioned to prefer\n" +
+            "\n" +
+            "            </div>\n" +
+            "            <i class=\"material-icons\" id=\"label blue\">label</i>\n" +
+            "            <div class=\"actions\">\n" +
+            "                <i class=\"material-icons\" id=\"color\">palette</i><i class=\"material-icons\">edit</i><i\n" +
+            "                    class=\"material-icons\">insert_link</i><i class=\"material-icons\">attach_file</i></div>\n" +
+            "\n" +
+            "        </li>" +
+            "<div class=\"actions-addbutt\">\n                <button class=\"addbutt\"><span class=\"material-symbols-outlined\">add_circle</span> Add new</button>\n            </div>");
+    })
+
+</script>
+</body>
+</html>

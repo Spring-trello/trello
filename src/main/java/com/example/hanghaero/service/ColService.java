@@ -1,5 +1,7 @@
 package com.example.hanghaero.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class ColService {
 	private final BoardRepository boardRepository;
 	private final ColRepository columnRepository;
+
+	public List<ColResponseDto> getColumns(Long boardId){
+		return columnRepository.getColumns(boardId).stream().map(ColResponseDto::new).toList();
+	}
 
 	public ColResponseDto createColumn(ColCreateRequestDto requestDto) {
 		Long boardId = requestDto.getBoardId();

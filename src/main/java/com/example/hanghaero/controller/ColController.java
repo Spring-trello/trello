@@ -4,15 +4,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.hanghaero.dto.column.ColCreateRequestDto;
 import com.example.hanghaero.dto.column.ColModifyRequestDto;
+import com.example.hanghaero.service.CardService;
 import com.example.hanghaero.service.ColService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,17 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/columns")
 public class ColController {
 	private final ColService columnService;
+	private final CardService cardService;
+
+	@GetMapping("board/{boardId}")
+	public ModelAndView getColumns(@PathVariable Long boardId){
+		System.out.println("ajax 요청 도착! " + boardId);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("columnList", columnService.getColumns(boardId));
+		mv.addObject("cardList", cardService.getCards(boardId));
+		mv.setViewName("detail");
+		return mv;
+	}
 
 	@PostMapping("")
 	public ResponseEntity<?> createColumn(@RequestBody ColCreateRequestDto columnRequestDto) {
