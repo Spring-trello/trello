@@ -17,9 +17,9 @@
 
         function onclickAdmin() {
             // Get the checkbox
-            var checkBox = document.getElementById("admin-check");
+            var checkBox = document.getElementById("adminCheck");
             // Get the output text
-            var box = document.getElementById("admin-token");
+            var box = document.getElementById("adminToken");
 
             // If the checkbox is checked, display the output text
             if (checkBox.checked == true) {
@@ -83,7 +83,7 @@
 
         <div>
             <input id="adminCheck" name="admin" onclick="onclickAdmin()" style="margin-top: 30px;" type="checkbox">관리자
-            <input class="login-input-box" id="adminKey" name="adminKey" placeholder="관리자 암호" style="display:none"
+            <input class="login-input-box" id="adminToken" name="adminToken" placeholder="관리자 암호" style="display:none"
                    type="password">
         </div>
         <button id="login-id-submit" onclick="submitSignupForm()" type="button">회원 가입</button>
