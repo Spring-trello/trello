@@ -36,10 +36,10 @@ public class UserService {
 		});
 
 		UserRoleEnum role = UserRoleEnum.USER;
-		String inputManagerSecretKey = signupRequestDto.getAdminKey();
+		String inputAdminKey = signupRequestDto.getAdminKey();
 
 		if (signupRequestDto.isAdminCheck()) {
-			if (StringUtils.equals(managerSecretKey, inputManagerSecretKey)) {
+			if (StringUtils.equals(managerSecretKey, inputAdminKey)) {
 				role = UserRoleEnum.ADMIN;
 			} else {
 				throw new ManagerSecretKeyNotMatchedException();

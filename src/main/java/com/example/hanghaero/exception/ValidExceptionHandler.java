@@ -28,6 +28,8 @@ public class ValidExceptionHandler {
 			builder.append(fieldError.getField());
 			builder.append(" (은)는 ");
 			builder.append(fieldError.getDefaultMessage());
+			builder.append('\n').append('\n');
+
 		}
 		return new ResponseEntity<>(builder.toString(), HttpStatus.BAD_REQUEST);
 	}
