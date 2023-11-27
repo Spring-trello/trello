@@ -22,6 +22,7 @@ import com.example.hanghaero.security.JwtUtil;
 import com.example.hanghaero.security.filter.JwtAuthenticationFilter;
 import com.example.hanghaero.security.filter.JwtAuthorizationFilter;
 import com.example.hanghaero.security.handler.AuthenticationEntryPointImpl;
+import com.example.hanghaero.security.handler.LoginSuccessHandler;
 import com.example.hanghaero.security.userdetails.UserDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,11 @@ public class WebSecurityConfig {
 	public HttpLoggingFilter httpLoggingFilter() {
 		HttpLoggingFilter filter = new HttpLoggingFilter();
 		return filter;
+	}
+
+	@Bean
+	public LoginSuccessHandler loginSuccessHandler() {
+		return new LoginSuccessHandler();
 	}
 
 	@Bean
@@ -106,7 +112,8 @@ public class WebSecurityConfig {
 		http.formLogin((formLogin) ->
 			formLogin
 				.loginPage("/users/signin")
-				.loginProcessingUrl("/processing-signin"));
+				.loginProcessingUrl("/processing-signin")
+				.successHandler(loginSuccessHandler()));
 
 		http.exceptionHandling((exception) ->
 			exception.authenticationEntryPoint(authenticationEntryPoint()));

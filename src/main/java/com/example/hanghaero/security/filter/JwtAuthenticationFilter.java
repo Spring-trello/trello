@@ -58,26 +58,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 		Authentication authResult) {
-		try {
-			String username = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
-			UserRoleEnum role = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getRole();
+		String username = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
+		UserRoleEnum role = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getRole();
 
-			String token = jwtUtil.createToken(username, role);
-			log.info("token : " + token);
+		String token = jwtUtil.createToken(username, role);
+		log.info("token : " + token);
 
-			// 응답 헤더에 토큰 추가
-			response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+		// 응답 헤더에 토큰 추가
+		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
-			// 응답 상태 코드 및 메시지 설정
-			response.setContentType("application/json;charset=UTF-8");
-			response.setCharacterEncoding("UTF-8");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("로그인에 성공하였습니다.");
-			response.getWriter().flush();
-			response.getWriter().close();
-		} catch (IOException e) {
-			log.error("IOException 발생 : " + e.getMessage());
-		}
+		// 응답 상태 코드 및 메시지 설정
+		// response.setContentType("application/json;charset=UTF-8");
+		// response.setCharacterEncoding("UTF-8");
+		// response.setStatus(HttpServletResponse.SC_OK);
+		// response.getWriter().write("로그인에 성공하였습니다.");
+		// response.getWriter().flush();
+		// response.getWriter().close();
 	}
 
 	@Override
