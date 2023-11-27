@@ -1,56 +1,25 @@
 package com.example.hanghaero.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import com.example.hanghaero.entity.Card;
+import com.example.hanghaero.service.CardService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.hanghaero.dto.card.CardCreateRequestDto;
-import com.example.hanghaero.dto.card.CardModifyRequestDto;
-import com.example.hanghaero.security.userdetails.UserDetailsImpl;
-import com.example.hanghaero.service.CardService;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cards")
 public class CardController {
-	private final CardService cardService;
 
-	// 카드 생성
-	@PostMapping("")
-	public ResponseEntity<?> createCard(
-		@RequestBody CardCreateRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.status(201).body(cardService.createCard(requestDto, userDetails));
-	}
+    private final CardService cardService;
 
-	// 카드 수정
-	@PutMapping("/{cardId}")
-	public ResponseEntity<?> updateCard(
-		@PathVariable Long cardId,
-		@RequestBody CardModifyRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.ok().body(cardService.updateCard(cardId, requestDto, userDetails));
-	}
-
-	// 카드 이동
-	@PutMapping("/{cardId}/to/{toColumnId}/{newPosition}")
-	public ResponseEntity<?> moveCard(
-		@PathVariable Long cardId, @PathVariable Long toColumnId, @PathVariable int newPosition) {
-		return ResponseEntity.ok().body(cardService.moveCard(cardId, toColumnId, newPosition));
-	}
-
-	// 카드 삭제
-	@DeleteMapping("/{cardId}")
-	public ResponseEntity<String> deleteCard(@PathVariable Long cardId,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.ok().body(cardService.deleteCard(cardId, userDetails));
-	}
+    @GetMapping("/cards/columns/{columnId}")
+    public List<Card> getCardsByColumnId(Model model, @PathVariable Long columnId) {
+        List<Card> cards = cardService.getCardsByColumnId(columnId);
+//        model.addAttribute("cards", cards);
+        return cards;
+    }
 }
