@@ -12,7 +12,6 @@ import com.example.hanghaero.entity.Col;
 import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.ColRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,8 +20,11 @@ public class ColService {
 	private final BoardRepository boardRepository;
 	private final ColRepository columnRepository;
 
-	public ColResponseDto createColumn(Long boardId, ColCreateRequestDto requestDto) {
-		Board findBoard = findBoard(boardId);
+	public ColResponseDto createColumn(ColCreateRequestDto requestDto) {
+		Long boardId = requestDto.getBoardId();
+		Board findBoard = boardRepository.findById(requestDto.getBoardId())
+			.orElseThrow(() -> new NullPointerException("해당 보드가 없습니다."));
+
 		int position = 0;
 		if (columnRepository.lastPosition(boardId) != null) {
 			position = columnRepository.lastPosition(boardId);
@@ -33,9 +35,9 @@ public class ColService {
 	}
 
 	@Transactional
-	public ColResponseDto updateColumn(Long boardId, Long columnId, ColModifyRequestDto requestDto) {
-		findBoard(boardId);
-		Col findColumnObject = findColumn(columnId);
+	public ColResponseDto updateColumn(Long columnId, ColModifyRequestDto requestDto) {
+		// 보드에 있는 칼럼 조회
+		Col findColumnObject = findColumn(requestDto.getBoardId(), columnId);
 		try {
 			findColumnObject.update(requestDto);
 		} catch (Exception e) {
@@ -45,11 +47,11 @@ public class ColService {
 	}
 
 	@Transactional
-	public ResponseEntity deleteColumn(Long boardId, Long columnId) {
-		findBoard(boardId);
-		Col column = findColumn(columnId);
+	public ResponseEntity deleteColumn(Long columnId, Long boardId) {
+		// 보드에 있는 칼럼 조회
+		Col findColumnObject = findColumn(boardId, columnId);
 		try {
-			columnRepository.delete(column);
+			columnRepository.delete(findColumnObject);
 		} catch (Exception e) {
 			e.getMessage();
 		}
@@ -57,42 +59,31 @@ public class ColService {
 	}
 
 	@Transactional
-	public Object moveColumn(Long boardId, Long columnId, int newPosition) {
-		findBoard(boardId); //보드조회
-		Col findColumnObject = columnRepository.findColumnsofBoard(boardId, columnId).orElseThrow(
-			() -> new NullPointerException("조회되는 칼럼이 없습니다.")
-		);  //칼럼조회
-
+	public Object moveColumn(Long columnId, int newPosition, Long boardId) {
+		// 보드에서 칼럼 조회
+		Col findColumnObject = findColumn(boardId, columnId);
 		System.out.println("현재 칼럼의 위치 = " + findColumnObject.getPosition());
-		Col CurrentColumns = columnRepository.getPosition(boardId, newPosition);
-		if (CurrentColumns != null) {
+
+		Col toColumns = columnRepository.getPosition(boardId, newPosition);
+		if (newPosition <= columnRepository.lastPosition(boardId)) {
+			System.out.println("보드의 마지막 위치 = " + columnRepository.lastPosition(boardId));
 			try {
-				// "중복된 칼럼으로 기존에 위차한 칼럼 바뀔 칼럼과 change");
-				CurrentColumns.updatePosition(findColumnObject.getPosition());
+				toColumns.updatePosition(findColumnObject.getPosition());
+			} catch (Exception e) {
+				e.getMessage();
+			}
+			try {
+				findColumnObject.updatePosition(newPosition);
 			} catch (Exception e) {
 				e.getMessage();
 			}
 		}
-		try {
-			findColumnObject.updatePosition(newPosition);
-		} catch (Exception e) {
-			e.getMessage();
-		}
-		return ResponseEntity.ok().body(columnId + "번 칼럼 이동");
+		return ResponseEntity.ok();//.body(columnId + "번 칼럼 " + newPosition + "로 위치 이동");
 	}
 
-	private Board findBoard(Long boardId) {
-		Board board = boardRepository.findById(boardId).orElseThrow(
-			() -> new IllegalArgumentException("조회되는 보드가 없습니다.")
-		);
-		return board;
-	}
-
-	private Col findColumn(Long columnId) {
-		Col column = columnRepository.findById(columnId).orElseThrow(
-			() -> new EntityNotFoundException("칼럼을 찾을 수 없습니다.")
-		);
-		return column;
+	private Col findColumn(Long boardId, Long columnId) {
+		return columnRepository.findColumnsofBoard(boardId, columnId)
+			.orElseThrow(() -> new NullPointerException("해당 칼럼을 찾을 수 없습니다."));
 	}
 
 }
