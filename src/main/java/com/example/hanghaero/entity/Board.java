@@ -49,7 +49,7 @@ public class Board {
 	public Board(BoardCreateRequestDto boardRequestDto) {
 		this.name = boardRequestDto.getName();
 		this.bgColor = boardRequestDto.getBgColor();
-		this.description = boardRequestDto.getDescription();
+		//this.description = boardRequestDto.getDescription();
 	}
 
 	public void update(BoardModifyRequestDto boardRequestDto) {

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <script crossorigin="anonymous"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <meta charset="UTF-8">
+    <title>보드 생성 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="login-form">
+    <div id="login-title">create Board </div>
+    <br>
+
+    <div>
+        <div class="login-id-label">보드 이름</div>
+        <input class="login-input-box" id="name" name="name" type="text">
+
+        <div class="login-id-label">상세 설명</div>
+        <textarea class="login-input-box" id="description" name="description"></textarea>
+        <div class="login-id-label" id="bgColor">색상</div>
+        <div>
+            <div class="color-box" style="background-color: #FF0000;" onclick="selectColor('#FF0000')"></div>
+            <div class="color-box" style="background-color: #00FF00;" onclick="selectColor('#00FF00')"></div>
+            <div class="color-box" style="background-color: #0000FF;" onclick="selectColor('#0000FF')"></div>
+            <div class="color-box" style="background-color: #FFFF00;" onclick="selectColor('#FFFF00')"></div>
+            <div class="color-box" style="background-color: #FF00FF;" onclick="selectColor('#FF00FF')"></div>
+            <div class="color-box" style="background-color: #00FFFF;" onclick="selectColor('#00FFFF')"></div>
+        </div>
+        <h5><span th:text="${errorMsg}"></span></h5>
+        <button id="login-id-submit" onclick="createBoard()">보드생성하기</button>
+        <div style="color: red;" th:if="${not #strings.isEmpty(message)}" th:text="${message}"></div>
+    </div>
+
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        // 토큰 삭제
+        Cookies.remove('Authorization', {path: '/'});
+    });
+
+    const href = location.href;
+    const queryString = href.substring(href.indexOf("?") + 1)
+    if (queryString === 'error') {
+        const errorDiv = document.getElementById('login-failed');
+        errorDiv.style.display = 'block';
+    }
+
+    const host = 'http://' + window.location.host;
+
+    function createBoard() {
+        var name = $('#name').val();
+        var description = $('#description').val();
+        var bgColor= $('#bgColor').val();
+
+        console.log("name =", name);
+        console.log("description = ", description)
+
+        $.ajax({
+            type: "POST",
+            url: `/boards`,
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: name,
+                description: description,
+                bgColor: bgColor
+            })
+        })
+                .done(function (res, status, xhr) {
+                    console.log("name =", name);
+                    console.log("description = ", description)
+                    const token = xhr.getResponseHeader('Authorization');
+                    document.cookie = 'Authorization=' + token + '; path=/';
+                    $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                        jqXHR.setRequestHeader('Authorization', token);
+                    });
+                    window.location.href = host;
+                })
+                .fail(function (jqXHR, textStatus) {
+                    const errorMessage = jqXHR.responseText;
+                    alert(`Create Board Fail: ${errorMessage}`);
+                    window.location.href = host + '/boards'
+                });
+        }
+</script>
+</html>
