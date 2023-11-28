@@ -101,7 +101,7 @@ public class CardService {
 	}
 
 	@Transactional
-	public String deleteCard(Long cardId, UserDetailsImpl userDetails) {
+	public CardResponseDto deleteCard(Long cardId, UserDetailsImpl userDetails) {
 		Card card = cardRepository.findById(cardId).orElseThrow(
 			() -> new IllegalArgumentException("존재하지 않는 카드"));
 
@@ -111,7 +111,7 @@ public class CardService {
 
 		cardRepository.delete(card);
 
-		return "카드가 삭제되었습니다.";
+		return new CardResponseDto(card);
 	}
 
 	private boolean authCheck(Card card, UserDetailsImpl userDetails) {

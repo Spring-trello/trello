@@ -103,9 +103,9 @@
                 <h2><i class="material-icons">{name}</i></h2>
             </div>
 
-            <ol class="todo-list" id="todo-list">
+            <div class="todo-list" id="todo-list">
 <!--                카드들이 들어갈곳-->
-            </ol>
+            </div>
 
             <div class="actions">
                 <button id="create-card" class="addbutt" onclick="openModal({columnId})">ADD NEW</button>
@@ -116,8 +116,9 @@
 
     const cardTemplate =
         `
-        <li class="dd-item" id="card-{card_Id}" >
-            <span class="close" onclick="deleteCardForm()">&times;</span>
+        <li class="dd-item" id="card-{card_id}" >
+            <input type="hidden" id="cardIdValue" name="cardIdValue">
+            <span class="close" onclick="deleteCardForm(this)">&times;</span>
             <h3 class="title dd-handle">
                 <i class=" material-icons ">filter_none</i>
                 {card_name}
@@ -246,19 +247,38 @@
         });
     }
 
-    function deleteCardForm() {
+    function deleteCardForm(ele) {
         const authToken = getAuthorizationToken();
-        const cardId = document.getElementById("modalCardId").value;
+
+        // 클릭된 요소의 부모인 <li> 엘리먼트를 가져옵니다.
+        const listItem = $(ele).closest('.dd-item');
+        // <li> 엘리먼트의 id 속성 값을 가져옵니다.
+        const cardId = listItem.attr('id');
+        // {card_id} 부분을 추출합니다.
+        const extractedCardId = cardId.split('-')[1];
+        // 추출된 card_id를 출력하거나 사용할 수 있습니다.
+        console.log(extractedCardId);
+        console.log("cardId " +extractedCardId);
         // AJAX 요청을 보냄
         $.ajax({
-            url: '/cards/' + cardId,  // 데이터를 보낼 서버의 엔드포인트 URL
+            url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
             method: 'DELETE',
             headers: {
                 'Authorization': authToken
             },
             contentType: 'application/json',
-            success: function () {
+            success: function ( deleteCard) {
                 alert("삭제되었습니다.");
+                // 전체 카드 날리기 \
+                // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
+
+                const columnId = deleteCard.columnId;
+                const columnToReload = $(`#column-${columnId}`);
+                const cardList = columnToReload.find("#todo-list");
+                cardList.empty();
+
+                loadCardsByColumnId(columnId, authToken);
+
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
@@ -315,24 +335,6 @@
         });
     }
 
-    const cardTemplate =
-        `
-        <li class="dd-item" id="card-{card_Id}" >
-            <input type="hidden" id="modalCardId" name="modalCardId">
-            <span class="close" onclick=deleteCardForm()>&times;</span>
-            <h3 class="title dd-handle">
-                <i class=" material-icons ">filter_none</i>
-                {card_name}
-            </h3>
-            <div class="text" contenteditable="true">
-                {card_description}
-            </div>
-            <div class="actions">
-               {card_dueDate}
-            </div>
-        </li>
-        `
-
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
             url: '/cards/columns/' + columnId,
@@ -347,6 +349,7 @@
                         .replace("{card_name}", card.name)
                         .replace("{card_description}", card.description)
                     $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
+                    $(`#card-${card.id} #cardIdValue`).val(card.id);
                 }
             },
             error: function (error) {

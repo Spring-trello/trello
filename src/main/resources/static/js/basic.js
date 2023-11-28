@@ -42,7 +42,7 @@
         expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
         collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
         group           : 0,
-        maxDepth        : 2,
+        maxDepth        : 1, // 카드안에 카드 들어가는 것 방지
         threshold       : 20
     };
 
@@ -452,10 +452,16 @@
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                 parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
+
                 if (isEmpty) {
-                    list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
-                    list.append(this.placeEl);
-                    this.pointEl.replaceWith(list);
+                    // 아래 로직대로 하면 <ol>태그 안에 <ol> 태그가 생긴다.
+                    // list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
+                    // list.append(this.placeEl);
+                    // this.pointEl.replaceWith(list);
+
+                    // list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
+                    // list.append(this.placeEl);
+                    this.pointEl.replaceWith(this.placeEl);
                 }
                 else if (before) {
                     this.pointEl.before(this.placeEl);

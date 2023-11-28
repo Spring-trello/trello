@@ -52,8 +52,8 @@ public class CardRestController {
 
 	// 카드 삭제
 	@DeleteMapping("/{cardId}")
-	public ResponseEntity<String> deleteCard(@PathVariable Long cardId,
+	public CardResponseDto deleteCard(@PathVariable Long cardId,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.ok().body(cardService.deleteCard(cardId, userDetails));
+		return cardService.deleteCard(cardId, userDetails);
 	}
 }
