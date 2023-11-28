@@ -18,6 +18,42 @@
         this.MaterialProgress.setProgress(44);
     });
 
+    $(document).ready(showColumn())
+
+    var colresponsedto = {}
+
+    function showColumn(){
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            type: 'GET',
+            url: '/columns/1',
+            headers: {
+                'Authorization': authToken
+            },
+            data: colresponsedto,
+            success: function (data) {
+                const dd = $(".dd");
+                dd.empty();
+                console.log(data[0])
+                for (const column of data){
+                    let tempHtml = addHTML(column)
+                    dd.append(tempHtml);
+                }
+            },
+            error(error, status, request) {
+            }
+        })
+    }
+
+    function addHTML(column){
+        console.log("column id = ", column)
+        return `<ol class = "kanban columnId ${column.columnId}">
+                   <div class="kanban__title" id="todo-list-${column.columnId}">
+                    <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
+                    </div>
+                </ol>`
+    }
+
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
         $.ajax({
@@ -27,10 +63,14 @@
                 'Authorization': authToken
             },
             success: function (data) {
-                const todoList = $('#todo-list');
-                for (const card of data) {
-                    todoList.append(
-                        `<li class="dd-item" id="todo-${card.id}">
+                for (var i = 1; i < $('.dd ol').length+1; i++) {
+                    const todoList = $('#todo-list-' + i);
+                    for (const card of data) {
+                        console.log("card = ", card)
+                        console.log("card columnId = ", card.columnId)
+                        if(i == card.columnId){
+                            todoList.append(
+                                `<li class="dd-item" id="todo-${card.id}">
                             <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
                             <div class="text" contenteditable="true">
                                 ${card.description}
@@ -40,7 +80,10 @@
                                 <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
                             </div>
                         </li>`
-                    );
+                            );
+                        }
+
+                    }
                 }
             },
             error: function (error) {
@@ -74,7 +117,6 @@
 
     function addItem() {
         let itemCount = $("#todo-list li").length + 1;
-
         $("#todo-list").append(
             `<li class="dd-item" id="todo-${itemCount}">
                 <h3 class="title dd-handle">Do the dishes<i class="material-icons">filter_none</i></h3>

@@ -21,6 +21,10 @@
 <div class="nav">
     <!-- 버튼을 클릭하면 JavaScript 함수를 호출하여 페이지 이동 -->
     <button onclick="goToBoardPage()">보드 페이지로 이동</button>
+
+    <div id="boardList">
+
+    </div>
 </div>
 <div id="see-area">
     <div id="product-container">
@@ -64,7 +68,6 @@
             success:
                 function (response) {
                     $('#boardContent').html(response);
-
                 }
             ,
             error: function (jqXHR, textStatus, errorThrown) {
@@ -74,6 +77,54 @@
         ;
     }
 
+    $(document).ready(showBoard())
+
+    var boardDto = {};
+    boardDto.name = name;
+    function showBoard(){
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            url: "/boards/list",
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            data: boardDto,
+            datatype: 'json',
+            success: function (data) {
+                $('#boardList').empty();
+                // 4. for 문마다 boardDto를 꺼내서 HTML 만들고 검색결과 목록에 붙이기!
+                for (let i = 0; i < data.length; i++) {
+                    let tempHtml = addHTML(data[i])
+                    $('#boardList').append(tempHtml);
+                }
+            },
+            error(error, status, request) {
+                console.log('Error:', error);
+            }
+        })
+    }
+    function addHTML(board){
+        return `<button class = "board-name">
+            <a href="javascript:void(0);" onclick="boardDetail('${board.boardId}'); return false;">${board.name}</a></button>`
+    }
+
+    function boardDetail(boardId){
+        const authToken = getAuthorizationToken();
+        console.log("[boardDetail: boardId] = "+ boardId)
+        $.ajax({
+            url: "columns/"+boardId,
+            type: "GET",
+            headers: {
+                'Authorization': authToken
+            },
+            success: function(response){
+                console.log("success")
+                let url = "columns/"+boardId;
+                location.replace(url);
+            }
+        });
+    }
 </script>
 </body>
 </html>

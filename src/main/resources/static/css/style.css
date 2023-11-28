@@ -977,7 +977,7 @@ button {
     text-decoration: none;
 }
 
-ol.kanban.To-do {
+ol.kanban.columnId {
     border-top: 5px solid #FFB300;
 }
 

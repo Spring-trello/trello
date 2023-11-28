@@ -14,15 +14,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CardResponseDto {
+	private Long Id;
 	private String name;
 	private String description;
 	private String color;
 	private LocalDate dueDate;
+	private Long columnId;
 
 	public CardResponseDto(Card card) {
+		this.Id = card.getId();
 		this.name = card.getName();
 		this.description = card.getDescription();
 		this.color = card.getColor();
 		this.dueDate = card.getDueDate();
+		this.columnId = card.getColumn().getColumnId();
 	}
 }

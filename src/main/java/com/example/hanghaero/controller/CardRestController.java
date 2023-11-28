@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hanghaero.dto.card.CardCreateRequestDto;
@@ -25,6 +26,7 @@ public class CardRestController {
 
 	// 카드 생성
 	@PostMapping("")
+	@ResponseBody
 	public ResponseEntity<?> createCard(
 		@RequestBody CardCreateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
