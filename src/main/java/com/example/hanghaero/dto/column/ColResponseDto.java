@@ -14,14 +14,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ColResponseDto {
+	private Long columnId;
 	private String title;
 	private int position;
 	private Long boardId;
 
-	public ColResponseDto(Col columns) {
-		this.title = columns.getTitle();
-		this.position = columns.getPosition();
-		this.boardId = columns.getBoard().getId();
+	public ColResponseDto(Col column) {
+		this.columnId = column.getColumnId();
+		this.title = column.getTitle();
+		this.position = column.getPosition();
+		this.boardId = column.getBoard().getId();
 	}
 
 

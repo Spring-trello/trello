@@ -42,6 +42,5 @@ application-secret.yml
 application-deploy.yml
 application-dev.yml
 application-redis.yml
-
 ### log file ###
 *log.txt

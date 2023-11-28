@@ -14,14 +14,23 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="/js/basic.js"></script>
     <title>칸반보드</title>
+
+    <style>
+        .nav {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-<div id="boardContent"></div>
-
 <div class="nav">
     <!-- 버튼을 클릭하면 JavaScript 함수를 호출하여 페이지 이동 -->
     <button onclick="goToBoardPage()">보드 페이지로 이동</button>
 </div>
+<div class="wrapper" id="boardContent">
+
+</div>
+
+
 <div id="see-area">
     <div id="product-container">
 
@@ -31,6 +40,7 @@
 <script>
     const host = 'http://' + window.location.host;
 
+    let boardLoaded = false;
     function getAuthorizationToken() {
         const cookies = document.cookie.split('; ');
 
@@ -64,7 +74,8 @@
             success:
                 function (response) {
                     $('#boardContent').html(response);
-
+                    const goToBoardButton = document.querySelector('.nav');
+                    goToBoardButton.style.display = 'none'; // 숨김
                 }
             ,
             error: function (jqXHR, textStatus, errorThrown) {

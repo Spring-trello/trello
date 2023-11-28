@@ -23,7 +23,7 @@ public class ColService {
 	private final ColRepository columnRepository;
 
 	public List<ColResponseDto> getColumns(Long boardId){
-		return columnRepository.getColumns(boardId).stream().map(ColResponseDto::new).toList();
+		return columnRepository.getColumns(boardId).stream().map(ColResponseDto::new).sorted((c1,c2)->c1.getPosition()-c2.getPosition()).toList();
 	}
 
 	public ColResponseDto createColumn(ColCreateRequestDto requestDto) {

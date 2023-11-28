@@ -103,10 +103,15 @@ public class WebSecurityConfig {
 			.permitAll() // 메인 페이지 요청 허가
 			.requestMatchers("/users/**")
 			.permitAll()
+			.requestMatchers("/columns/boards/**")
+			.permitAll()
 			.requestMatchers("/error") // 인증 Exception이 발생할경우 /error로 간다.
 			.permitAll() // admin 권한 확인은 Interceptor에서 수행
+			.requestMatchers("/columns/board/**")
+			.permitAll()
 			.anyRequest()
 			.authenticated() // 그 외 모든 요청 인증처리
+
 		);
 
 		http.formLogin((formLogin) ->

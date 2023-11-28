@@ -16,6 +16,12 @@ public class HomeController {
 	public String boardPage() {
 		return "board";
 	}
+	//
+	// @GetMapping("/boards")
+	// public String boardPage() {
+	// 	return "testboard";
+	// }
+
 
 	@GetMapping("/admin")
 	public ResponseEntity<?> adminTest() {

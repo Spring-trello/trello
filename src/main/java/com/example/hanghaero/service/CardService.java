@@ -2,6 +2,7 @@ package com.example.hanghaero.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +32,8 @@ public class CardService {
 		return cardRepository.getCards(boardId).stream().map(CardResponseDto::new).toList();
 	}
 
-	public List<Card> getCardsByColumnId(Long columnId){
-		return cardRepository.getCardsByColumnId(columnId);
+	public List<CardResponseDto> getCardsByColumnId(Long columnId){
+		return cardRepository.getCardsByColumnId(columnId).stream().map(CardResponseDto::new).collect(Collectors.toList());
 	}
 
 	public CardResponseDto createCard(CardCreateRequestDto requestDto,
