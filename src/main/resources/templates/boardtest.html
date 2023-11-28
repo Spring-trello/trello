@@ -87,16 +87,23 @@
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
         $.ajax({
-            url: '/cards/columns/'+window.location.pathname.split('/')[2],
+            url: '/cards/boards/'+window.location.pathname.split('/')[2],
             type: 'GET',
             headers: {
                 'Authorization': authToken
             },
             success: function (data) {
-                for (var i = 1; i < $('.dd ol').length+1; i++) {
+                lst = $('.kanban.columnId h2')
+                console.log("list = ", lst)
+                idx_set = new Set();
+                for (const val of lst){
+                    idx_set.add(Number(val.id))
+                }
+                console.log("idx_set = ", idx_set)
+                for ( let i of idx_set ) {
                     const todoList = $('#todo-list-' + i);
                     for (const card of data) {
-                        console.log("card columnId = ", card.columnId)
+                        console.log("card Object", card)
                         if(i == card.columnId){
                             todoList.append(
                                 `<li class="dd-item" id="todo-${card.id}">

@@ -19,11 +19,12 @@ public class CardController {
     private final CardService cardService;
 
     //@GetMapping("/cards/columns/{columnId}")
-    @GetMapping("cards/boards/{boardId}")
+    @GetMapping("/cards/boards/{boardId}")
     @ResponseBody
-    public List<CardResponseDto> getCardsByColumnId(@PathVariable Long columnId) {
+    public List<CardResponseDto> getCardsByColumnId(@PathVariable Long boardId) {
+        System.out.println("CardController getCardsByColumnId");
         //List<Card> cards = cardService.getCardsByColumnId(columnId);
-        List<CardResponseDto> cards = cardService.getCards(columnId);
+        List<CardResponseDto> cards = cardService.getCards(boardId);
         return cards;
     }
 }
