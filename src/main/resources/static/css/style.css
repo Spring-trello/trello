@@ -1,3 +1,37 @@
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 페이지에 고정 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* 스크롤이 생기면 자동으로 스크롤 */
+    background-color: rgba(0, 0, 0, 0.4); /* 배경색과 투명도 조절 */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 중앙 정렬 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 Body {
     font-family: Sans-serif;
     font-size: 14px;
@@ -18,11 +52,10 @@ menu {
 }
 
 .material-symbols-outlined {
-    font-variation-settings:
-            'FILL' 0,
-            'wght' 600,
-            'GRAD' 0,
-            'opsz' 24
+    font-variation-settings: 'FILL' 0,
+    'wght' 600,
+    'GRAD' 0,
+    'opsz' 24
 }
 
 * {
@@ -949,10 +982,10 @@ h2 .material-icons {
     padding: 5px 16px;
 }
 
-button>.material-icons {
+button > .material-icons {
     line-height: 0.2;
-    position:relative;
-    top:7px;
+    position: relative;
+    top: 7px;
 }
 
 .dd-item:hover,
@@ -973,7 +1006,11 @@ button.addbutt {
     max-width: 330px;
 }
 
-button:active, button:down, button:focus {box-shadow: 0 0 0 0, 0 0 0 0 rgba(0, 0, 0, .2), 0 0 0 0 rgba(0, 0, 0, .12);color:#00838F;}
+button:active, button:down, button:focus {
+    box-shadow: 0 0 0 0, 0 0 0 0 rgba(0, 0, 0, .2), 0 0 0 0 rgba(0, 0, 0, .12);
+    color: #00838F;
+}
+
 button {
     align-items: center;
     background-color: #EEEEEE;
