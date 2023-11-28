@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hanghaero.dto.card.CardCreateRequestDto;
 import com.example.hanghaero.dto.card.CardModifyRequestDto;
+import com.example.hanghaero.dto.card.CardResponseDto;
 import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.example.hanghaero.service.CardService;
 
@@ -25,10 +26,10 @@ public class CardRestController {
 
 	// 카드 생성
 	@PostMapping("")
-	public ResponseEntity<?> createCard(
+	public CardResponseDto createCard(
 		@RequestBody CardCreateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.status(201).body(cardService.createCard(requestDto, userDetails));
+		return cardService.createCard(requestDto, userDetails);
 	}
 
 	// 카드 수정

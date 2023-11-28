@@ -47,13 +47,15 @@
             </ol>
 
             <div class="actions">
-                <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
+                <button id="create-card" class="addbutt" onclick="openModal({columnId})">ADD NEW</button>
             </div>
         </ol>
-    `
+        `
     // 모달 열기
-    function openModal() {
+    function openModal(columnId) {
         var modal = document.getElementById("myModal");
+        document.getElementById("modalColumnId").value = columnId;
+
         modal.style.display = "block";
         modal.style.zIndex = 9999;
     }
@@ -67,6 +69,8 @@
     function createCardForm() {
         const authToken = getAuthorizationToken();
 
+        // modal창에 숨어있는 columnId값을 가져옴
+        const columnId = document.getElementById("modalColumnId").value;
 
         var name = $("#name").val(); // 이름 입력란의 값을 가져옴
         var description = $("#description").val(); // 설명 입력란의 값을 가져옴
@@ -83,15 +87,14 @@
             data: JSON.stringify({
                 name: name, // 이름 데이터
                 description: description, // 설명 데이터
-                columnId: 5,
-                userId: 1,
-                boardId: 1
+                columnId: columnId
+                // boardId: 1
             }),
-            success: function () {
+            success: function (card) {
                 // 성공적으로 서버에 데이터를 전송한 후 할 일
                 alert("저장이 성공적으로 완료되었습니다.");
+                loadNewCard(card, columnId);
                 closeModal();
-                loadCardsByColumnId(5, authToken);
                 // document.replace = "/columns/board/1"
 
             },
@@ -133,13 +136,19 @@
         });
     }
 
-
+    function loadNewCard(card, columnId){
+        const newCardHtml = cardTemplate
+            .replace("{card_id}", card.id)
+            .replace("{card_name}", card.name)
+            .replace("{card_description}", card.description)
+        $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
+    }
 
     function loadNewColumn(column){
         const columnHtml = columnTemplate
             .replace('{columnId}', column.columnId)
             .replace('{name}', column.name);
-
+        console.log(columnHtml)
         $('#column-new-position').before(columnHtml);
         lastColumnPosition = column.position;
     }
@@ -162,6 +171,11 @@
                     $('#column-new-position').before( columnHtml);
                     loadCardsByColumnId(column.columnId, authToken);
                     lastColumnPosition = column.position;
+
+                    // Pass the columnId when opening the modal
+                    $(`#column-${column.columnId} #create-card`).click(function () {
+                        openModal(column.columnId);
+                    });
                 }
             },
             error: function (error) {
@@ -169,6 +183,23 @@
             }
         });
     }
+
+    const cardTemplate =
+        `
+        <li class="dd-item" id="card-{card_Id}" >
+            <span class="close" onclick="deleteCardForm()">&times;</span>
+            <h3 class="title dd-handle">
+                <i class=" material-icons ">filter_none</i>
+                {card_name}
+            </h3>
+            <div class="text" contenteditable="true">
+                {card_description}
+            </div>
+            <div class="actions">
+               {card_dueDate}
+            </div>
+        </li>
+        `
 
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
@@ -179,19 +210,10 @@
             },
             success: function (cards) {
                 for (const card of cards) {
-                    const newCardHtml =`
-                        <li class="dd-item" id="card-${card.id}" >
-                            <h3 class="title dd-handle">
-                                <i class=" material-icons ">filter_none</i>
-                                ${card.name}
-                            </h3>
-                            <div class="text" contenteditable="true">
-                                ${card.description}
-                            </div>
-                            <div class="actions">
-                               ${card.dueDate}
-                            </div>
-                        </li>`
+                    const newCardHtml = cardTemplate
+                        .replace("{card_id}", card.id)
+                        .replace("{card_name}", card.name)
+                        .replace("{card_description}", card.description)
                     $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
                 }
             },
@@ -247,11 +269,13 @@
         <button><i class="material-icons">playlist_add</i> Add new Column</button>
     </menu>
 </div>
+
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <form action="/cards" method="POST">
             <li class="dd-item" id="todo-${itemCount}">
+                <input type="hidden" id="modalColumnId" name="modalColumnId">
                 <div class="input-form-box"><span>제목 </span><input type="text" id="name" name="name"
                                                                    class="form-control"></div>
                 <div class="input-form-box"><span>내용 </span><input type="text" id="description" name="description"

@@ -25,6 +25,6 @@ public class CardResponseDto {
 		this.name = card.getName();
 		this.description = card.getDescription();
 		this.color = card.getColor();
-		this.dueDate = card.getDueDate();
+		//this.dueDate = card.getDueDate();
 	}
 }

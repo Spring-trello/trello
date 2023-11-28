@@ -41,8 +41,8 @@ public class Card {
 	@ColumnDefault("'#FFFFFF'")
 	private String color;
 
-	@Column(nullable = true)
-	private LocalDate dueDate;
+	// @Column(nullable = true)
+	// private LocalDate dueDate;
 
 	@Column(nullable = true)
 	private int position;
@@ -65,7 +65,7 @@ public class Card {
 	public Card(CardCreateRequestDto requestDto, User user, Board board, Col column, int pos) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
-		this.color = requestDto.getColor();
+		// this.color = requestDto.getColor();
 		// this.dueDate = StringToLocalDate(requestDto.getDueDate());
 		this.position = pos;
 		this.user = user;
