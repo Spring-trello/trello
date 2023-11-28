@@ -113,6 +113,7 @@
         </ol>
         `
 
+
     const cardTemplate =
         `
         <li class="dd-item" id="card-{card_Id}" >
@@ -247,36 +248,26 @@
 
     function deleteCardForm() {
         const authToken = getAuthorizationToken();
-
+        const cardId = document.getElementById("modalCardId").value;
         // AJAX 요청을 보냄
         $.ajax({
-            url: '/cards' + cardId, // 데이터를 보낼 서버의 엔드포인트 URL
+            url: '/cards/' + cardId,  // 데이터를 보낼 서버의 엔드포인트 URL
             method: 'DELETE',
             headers: {
                 'Authorization': authToken
             },
             contentType: 'application/json',
-            // POST 요청
-            data: JSON.stringify({
-                name: name, // 이름 데이터
-                description: description, // 설명 데이터
-                columnId: 5,
-                userId: 1,
-                boardId: 1
-            }),
             success: function () {
-                // 성공적으로 서버에 데이터를 전송한 후 할 일
-                alert("저장이 성공적으로 완료되었습니다.");
-                window.location.href = "/success-page?token" + authToken;
+                alert("삭제되었습니다.");
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
-                console.error('카드 생성 중 오류가 발생했습니다:', error);
+                alert("삭제 실패하였습니다.")
             }
         });
     }
 
-    function loadNewCard(card, columnId){
+    function loadNewCard(card, columnId) {
         const newCardHtml = cardTemplate
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
@@ -284,7 +275,7 @@
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
     }
 
-    function loadNewColumn(column){
+    function loadNewColumn(column) {
         const columnHtml = columnTemplate
             .replace('{columnId}', column.columnId)
             .replace('{name}', column.title);
@@ -308,7 +299,7 @@
                         .replace('{columnId}', column.columnId)
                         .replace('{name}', column.name);
 
-                    $('#column-new-position').before( columnHtml);
+                    $('#column-new-position').before(columnHtml);
                     loadCardsByColumnId(column.columnId, authToken);
                     lastColumnPosition = column.position;
 
@@ -324,7 +315,23 @@
         });
     }
 
-
+    const cardTemplate =
+        `
+        <li class="dd-item" id="card-{card_Id}" >
+            <input type="hidden" id="modalCardId" name="modalCardId">
+            <span class="close" onclick=deleteCardForm()>&times;</span>
+            <h3 class="title dd-handle">
+                <i class=" material-icons ">filter_none</i>
+                {card_name}
+            </h3>
+            <div class="text" contenteditable="true">
+                {card_description}
+            </div>
+            <div class="actions">
+               {card_dueDate}
+            </div>
+        </li>
+        `
 
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
@@ -348,24 +355,6 @@
         });
     }
 
-    function getAuthorizationToken() {
-        const cookies = document.cookie.split('; ');
-
-        for (const cookie of cookies) {
-            const [name, value] = cookie.split('=');
-
-            // 쿠키 이름 앞뒤의 공백 제거
-            const cookieName = name.trim();
-
-            if (cookieName === 'Authorization') {
-                // 쿠키 값 앞뒤의 공백 제거 후 반환
-                return value.trim();
-            }
-        }
-
-        // 찾지 못한 경우
-        return null;
-    }
 
     function addColumn(authToken){
         // boardId,
@@ -390,12 +379,13 @@
             });
     }
 
-
 </script>
+
 <div class="wrapper">
     <div class="kanban__title">
         <h1><i class="material-icons">check</i> To do list</h1></div>
-    <div class="dd">
+
+    <div class="dd" id="column-list">
         <ol class="addcolumn" id="column-new-position">
             <div class="actions">
                 <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
@@ -411,7 +401,6 @@
         <button><i class="material-icons">playlist_add</i> Add new Column</button>
     </menu>
 </div>
-
 
 <div id="myModal" class="modal">
     <div class="modal-content">

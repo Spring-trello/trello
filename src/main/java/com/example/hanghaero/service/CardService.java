@@ -14,6 +14,7 @@ import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Col;
 import com.example.hanghaero.entity.User;
+import com.example.hanghaero.entity.UserRoleEnum;
 import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
@@ -114,11 +115,11 @@ public class CardService {
 	}
 
 	private boolean authCheck(Card card, UserDetailsImpl userDetails) {
-		if (!Objects.equals(userDetails.getUser(), card.getUser()) &&
-			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
-			return false;
+		if (Objects.equals(userDetails.getUser().getId(), card.getUser().getId()) ||
+			Objects.equals(userDetails.getUser().getRole(), UserRoleEnum.ADMIN)) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	private int lastPosition(Long columnId) {
