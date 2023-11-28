@@ -109,6 +109,8 @@ public class WebSecurityConfig {
 			.permitAll()
 			.requestMatchers("/columns/boards/**")
 			.permitAll()
+			.requestMatchers("/cardPopupTestURL")
+			.permitAll()
 			.requestMatchers("/error") // 인증 Exception이 발생할경우 /error로 간다.
 			.permitAll() // admin 권한 확인은 Interceptor에서 수행
 			.requestMatchers("/columns/board/**")

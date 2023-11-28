@@ -22,9 +22,14 @@ public class HomeController {
 	// 	return "testboard";
 	// }
 
+	@GetMapping("/cardPopupTestURL")
+	public String cardPopupTestURL(){ return "cardPopupTestURL";}
 
 	@GetMapping("/admin")
 	public ResponseEntity<?> adminTest() {
 		return new ResponseEntity<>("admin", HttpStatus.OK);
 	}
+
+	@GetMapping("/cardPopup")
+	public String cardPopup(){ return "cardPopup";}
 }
