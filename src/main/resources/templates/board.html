@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
 
@@ -34,7 +35,6 @@
             success: function (data) {
                 const dd = $(".dd");
                 dd.empty();
-                console.log(data[0])
                 for (const column of data){
                     let tempHtml = addHTML(column)
                     dd.append(tempHtml);
@@ -50,9 +50,40 @@
         return `<ol class = "kanban columnId ${column.columnId}">
                    <div class="kanban__title" id="todo-list-${column.columnId}">
                     <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
+                    <button id="test-button" className="addbutt"><span class="material-symbols-outlined">add</span> Add new </button>
                     </div>
                 </ol>`
     }
+
+    $(document).ready(function(){
+        // 부모 요소에 이벤트 핸들러 등록
+        $("body").on("click", "button#test-button", function(){
+            console.log("add button 동작");
+            var buttonId = $(this).attr("id");
+            addItem($(this).closest('ol'));
+        });
+    });
+
+    function addItem(elem) {
+        console.log(elem)
+        let itemCount = $('li.dd-item').length+1
+        console.log("itemCount = " ,itemCount);
+        console.log(elem[0].querySelectorAll('li')[itemCount-2])
+        last_elem = elem[0].querySelectorAll('li')[itemCount-2]
+        elem.append(
+            `<li class="dd-item" id="todo-${itemCount}">
+                <h3 class="title dd-handle">Title<i class="material-icons">filter_none</i></h3>
+                <div class="text" contenteditable="true">
+                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
+                </div>
+                <i class="material-icons" id="label blue">label</i>
+                <div class="actions">
+                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+                </div>
+            </li>`
+        );
+    }
+
 
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
@@ -82,7 +113,6 @@
                         </li>`
                             );
                         }
-
                     }
                 }
             },
@@ -109,27 +139,9 @@
         return null;
     }
 
-    $(document).ready(function(){
-        $("#test-button").click(function(){
-            addItem();
-        });
-    });
 
-    function addItem() {
-        let itemCount = $("#todo-list li").length + 1;
-        $("#todo-list").append(
-            `<li class="dd-item" id="todo-${itemCount}">
-                <h3 class="title dd-handle">Do the dishes<i class="material-icons">filter_none</i></h3>
-                <div class="text" contenteditable="true">
-                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
-                </div>
-                <i class="material-icons" id="label blue">label</i>
-                <div class="actions">
-                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-                </div>
-            </li>`
-        );
-    }
+
+
 </script>
 <div class="kanban__title">
     <h1><i class="material-icons">check</i> To do list</h1></div>

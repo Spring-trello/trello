@@ -5,6 +5,15 @@ Body {
     background-color: #E0E0E0;
 }
 
+.material-symbols-outlined {
+ font-variation-settings:
+         'FILL' 0,
+         'wght' 400,
+         'GRAD' 0,
+         'opsz' 24
+}
+
+
 h1 {
     position: absolute;
     left: 16px;
