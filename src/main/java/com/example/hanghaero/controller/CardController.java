@@ -1,5 +1,6 @@
 package com.example.hanghaero.controller;
 
+import com.example.hanghaero.dto.card.CardResponseDto;
 import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.service.CardService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,7 @@ public class CardController {
     private final CardService cardService;
 
     @GetMapping("/cards/columns/{columnId}")
-    public List<Card> getCardsByColumnId(Model model, @PathVariable Long columnId) {
-        List<Card> cards = cardService.getCardsByColumnId(columnId);
-//        model.addAttribute("cards", cards);
-        return cards;
+    public List<CardResponseDto> getCardsByColumnId(Model model, @PathVariable Long columnId) {
+        return cardService.getCardsByColumnId(columnId);
     }
 }

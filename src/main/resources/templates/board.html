@@ -14,6 +14,129 @@
 
 <div id="p1" class="mdl-progress mdl-js-progress"></div>
 <script>
+    document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
+        this.MaterialProgress.setProgress(44);
+    });
+
+    let lastColumnPosition = 0;
+
+    $(document).ready(function () {
+        const authToken = getAuthorizationToken();
+        loadColumns(1, authToken);
+        $("#test-button").click(function(){
+            addItem();
+        });
+        $("#add-column").click(function(){
+            addColumn(authToken);
+        });
+    });
+
+    const columnTemplate =
+        `
+        <ol class="column" id="column-{columnId}">
+            <div class="kanban__title">
+                <h2><i class="material-icons">{name}</i></h2>
+            </div>
+
+            <div class="todo-list" id="todo-list">
+<!--                카드들이 들어갈곳-->
+            </div>
+
+            <div class="actions">
+                <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
+            </div>
+        </ol>
+    `
+
+    function loadNewColumn(column){
+        const columnHtml = columnTemplate
+            .replace('{columnId}', column.columnId)
+            .replace('{name}', column.name);
+
+        $('#column-new-position').before(columnHtml);
+        lastColumnPosition = column.position;
+    }
+
+
+    function loadColumns(boardId, authToken){
+        $.ajax({
+            url: '/columns/boards/' +boardId,
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            success: function (columns) {
+                console.log(columns);
+                for (const column of columns) {
+
+                    const columnHtml = columnTemplate
+                        .replace('{columnId}', column.columnId)
+                        .replace('{name}', column.name);
+
+                    $('#column-new-position').before( columnHtml);
+                    loadCardsByColumnId(column.columnId, authToken);
+                    lastColumnPosition = column.position;
+                }
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function loadCardsByColumnId(columnId, authToken){
+        $.ajax({
+            url: '/cards/columns/' + columnId,
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            success: function (cards) {
+                for (const card of cards) {
+                    const newCardHtml =`
+                        <li class="dd-item" id="card-${card.id}>
+                            <h3 class="title dd-handle">${card.name}</h3>
+                            <div class="text" contenteditable="true">
+                                ${card.description}
+                            </div>
+                            <div class="actions">
+                               ${card.dueDate}
+                            </div>
+                        </li>`
+                    $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
+                }
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function addColumn(authToken){
+        // boardId,
+        // title
+        let boardId = 1
+        let title = "생성된 컬럼";
+        $.ajax({
+            type: "POST",
+            url: `/columns`,
+            contentType: "application/json",
+            data: JSON.stringify({boardId: boardId, title: title}),
+            headers:{
+                'Authorization' : authToken
+            }
+        })
+            .done(function (res, status, xhr) {
+                loadNewColumn(res);
+            })
+            .fail(function (jqXHR, textStatus) {
+                const errorMessage = jqXHR.responseText;
+                alert(`${errorMessage}`);
+            });
+    }
+
+
+
     // 모달 열기
     function openModal() {
         var modal = document.getElementById("myModal");
@@ -27,7 +150,6 @@
     }
     function createCardForm() {
         const authToken = getAuthorizationToken();
-
 
         var name = $("#name").val(); // 이름 입력란의 값을 가져옴
         var description = $("#description").val(); // 설명 입력란의 값을 가져옴
@@ -59,149 +181,7 @@
         });
     }
 
-    document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
-        this.MaterialProgress.setProgress(44);
-    });
 
-    let lastColumnPosition = 0;
-    function loadNewColumn(column){
-        $('#column-new-position').before(
-            `
-            <ol class="column" id="column-${column.columnId}">
-                <div class="kanban__title">
-                    <h2><i class="material-icons">${column.name}</i>
-                        <div class="actions">
-                            <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-                        </div>
-                    </h2>
-                </div>
-            </ol>
-            `
-
-        );
-        lastColumnPosition = column.position;
-    }
-    function loadColumns(boardId, authToken){
-        $.ajax({
-            url: '/columns/boards/' +boardId,
-            type: 'GET',
-            headers: {
-                'Authorization': authToken
-            },
-            success: function (columns) {
-                const columnList = $('#column-list');
-                console.log(columns);
-                for (const column of columns) {
-
-                    $('#column-new-position').before(
-                        `
-                        <ol class="column" id="column-${column.columnId}">
-                            <div class="kanban__title">
-                                <h2><i class="material-icons">${column.name}</i>
-                                    <div class="actions">
-                                        <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-                                    </div>
-                                </h2>
-                            </div>
-                        </ol>
-                        `
-
-                    );
-                    loadCardsByColumnId(column.columnId, authToken);
-                    lastColumnPosition = column.position;
-                }
-            },
-            error: function (error) {
-                console.log('Error:', error);
-            }
-        });
-    }
-
-    function loadCardsByColumnId(columnId, authToken){
-        $.ajax({
-            url: '/cards/columns/' + columnId,
-            type: 'GET',
-            headers: {
-                'Authorization': authToken
-            },
-            success: function (data) {
-                const todoList = $('#todo-list');
-                for (const card of data) {
-                    todoList.append(
-                        `<li class="dd-item" id="todo-${card.id}">
-                            <h3 class="title dd-handle">${card.name}</h3>
-                            <div class="text" contenteditable="true">
-                                ${card.description}
-                            </div>
-                            <div class="actions">
-                               ${card.dueDate}
-                            </div>
-                        </li>`
-                    );
-                }
-            },
-            error: function (error) {
-                console.log('Error:', error);
-            }
-        });
-    }
-
-    $(document).ready(function () {
-        const authToken = getAuthorizationToken();
-        loadColumns(1, authToken);
-    });
-
-    function getAuthorizationToken() {
-        const cookies = document.cookie.split('; ');
-
-        for (const cookie of cookies) {
-            const [name, value] = cookie.split('=');
-
-            // 쿠키 이름 앞뒤의 공백 제거
-            const cookieName = name.trim();
-
-            if (cookieName === 'Authorization') {
-                // 쿠키 값 앞뒤의 공백 제거 후 반환
-                return value.trim();
-            }
-        }
-        return null;
-    }
-
-    $(document).ready(function(){
-        const authToken = getAuthorizationToken();
-        $("#test-button").click(function(){
-            addItem();
-        });
-        $("#add-column").click(function(){
-            addColumn(authToken);
-        });
-    });
-
-
-
-    function addColumn(authToken){
-        // boardId,
-        // title
-        let boardId = 1
-        let title = "생성된 컬럼";
-        $.ajax({
-            type: "POST",
-            url: `/columns`,
-            contentType: "application/json",
-            data: JSON.stringify({boardId: boardId, title: title}),
-            headers:{
-                'Authorization' : authToken
-            }
-        })
-            .done(function (res, status, xhr) {
-                loadNewColumn(res);
-            })
-            .fail(function (jqXHR, textStatus) {
-                const errorMessage = jqXHR.responseText;
-                alert(`${errorMessage}`);
-            });
-    }
     function addItem() {
         let itemCount = $("#todo-list li").length + 1;
 
@@ -222,6 +202,7 @@
                 </div>
                 </li>
             </form>`
+
         );
     }
 </script>
@@ -243,16 +224,6 @@
         <h1><i class="material-icons">check</i> To do list</h1></div>
 
     <div class="dd" id="column-list">
-        <ol class="column" id="todo-list">
-            <div class="kanban__title">
-                <h2><i class="material-icons">report_problem</i>
-                    <div class="actions">
-                        <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-                    </div>
-                </h2>
-            </div>
-        </ol>
-
         <ol class="addcolumn" id="column-new-position">
             <div class="actions">
                 <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
