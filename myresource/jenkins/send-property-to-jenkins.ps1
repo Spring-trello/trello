@@ -20,6 +20,7 @@ $localFiles = @(
     "C:\Users\sbl\programming\IdeaProjects\hanghaero\src\main\resources\application-local.yml",
     "C:\Users\sbl\programming\IdeaProjects\hanghaero\src\main\resources\application-secret.yml",
     "C:\Users\sbl\programming\IdeaProjects\hanghaero\src\main\resources\application-dev.yml"
+    "C:\Users\sbl\programming\IdeaProjects\hanghaero\src\main\resources\application-redis.yml"
 )
 
 $pemFile = "C:\Users\sbl\Desktop\aws\EC2_freetier_keypair\ec2freetierkeypair.pem"
