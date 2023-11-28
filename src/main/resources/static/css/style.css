@@ -846,8 +846,27 @@ menu.list .viewlist {
     display: none;
 }
 
+.wrapper {
+    display: flex;
+    height: 100vh; /* 뷰포트 높이만큼 설정 */
+    overflow-x:visible; /* 수평 스크롤 허용 */
+}
+
+/* 스크롤바 스타일... */
+.wrapper::-webkit-scrollbar {
+    height: 12px;
+}
+
+.wrapper::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+.wrapper::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
 .dd {
-    max-width: 100%;
+    /*max-width: 100%;*/
     top: 88px;
     margin: 0 auto;
     display: block;
@@ -993,13 +1012,45 @@ ol.kanban.Done {
     border-top: 5px solid #8BC34A;
 }
 
-ol.kanban {
+ol.column {
     border-top: 5px solid #78909C;
-    width: 20%;
     height: auto;
     margin: 1%;
-    max-width: 250px;
-    min-width: 120px;
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    flex-direction: column;
+    min-height: 200px;
+    z-index: 1;
+    position: relative;
+    background: #fff;
+    padding: 1em;
+    border-radius: 2px;
+}
+
+ol.addcolumn {
+    border-top: 5px solid #78909C;
+    height: 200px;
+    margin: 1%;
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    flex-direction: column;
+    min-height: 200px;
+    z-index: 1;
+    position: relative;
+    background: #fff;
+    padding: 1em;
+    border-radius: 2px;
+}
+
+ol.kanban {
+    border-top: 5px solid #78909C;
+    height: auto;
+    margin: 1%;
+    width: 300px;
     display: inline-block;
     vertical-align: top;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
@@ -1017,7 +1068,6 @@ ol.kanban {
     position: relative;
     list-style: none;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    min-height: 48px;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -1026,6 +1076,7 @@ ol.kanban {
     flex-direction: column;
     font-size: 16px;
     min-height: 120px;
+    min-width: 480px;
     overflow: hidden;
     z-index: 1;
     position: relative;
@@ -1077,12 +1128,23 @@ ol.kanban {
 
 .dd {
     position: relative;
-    display: block;
+    display: flex;
     list-style: none;
 }
+/* 추가된 코드 */
+.dd::-webkit-scrollbar {
+    width: 12px;
+}
 
+.dd::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+.dd::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
 .dd-list {
-    display: block;
+    display: flex;
     position: relative;
     margin: 0;
     padding: 0;
@@ -1110,6 +1172,7 @@ ol.kanban {
     border-radius: 3px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    min-width: 200px;
 }
 
 .dd-item:hover {

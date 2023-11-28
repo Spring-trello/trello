@@ -18,10 +18,63 @@
         this.MaterialProgress.setProgress(44);
     });
 
-    $(document).ready(function () {
-        const authToken = getAuthorizationToken();
+    let lastColumnPosition = 0;
+    function loadNewColumn(column){
+        $('#column-new-position').before(
+            `
+            <ol class="column" id="column-${column.columnId}">
+                <div class="kanban__title">
+                    <h2><i class="material-icons">${column.name}</i>
+                        <div class="actions">
+                            <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
+                        </div>
+                    </h2>
+                </div>
+            </ol>
+            `
+
+        );
+        lastColumnPosition = column.position;
+    }
+    function loadColumns(boardId, authToken){
         $.ajax({
-            url: '/cards/columns/1',
+            url: '/columns/boards/' +boardId,
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            success: function (columns) {
+                const columnList = $('#column-list');
+                console.log(columns);
+                for (const column of columns) {
+
+                    $('#column-new-position').before(
+                        `
+                        <ol class="column" id="column-${column.columnId}">
+                            <div class="kanban__title">
+                                <h2><i class="material-icons">${column.name}</i>
+                                    <div class="actions">
+                                        <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
+                                    </div>
+                                </h2>
+                            </div>
+                        </ol>
+                        `
+
+                    );
+                    loadCardsByColumnId(column.columnId, authToken);
+                    lastColumnPosition = column.position;
+                }
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function loadCardsByColumnId(columnId, authToken){
+        $.ajax({
+            url: '/cards/columns/' + columnId,
             type: 'GET',
             headers: {
                 'Authorization': authToken
@@ -30,16 +83,19 @@
                 const todoList = $('#todo-list');
                 for (const card of data) {
                     todoList.append(
-                        `<li class="dd-item" id="todo-${card.id}">
-                            <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
-                            <div class="text" contenteditable="true">
-                                ${card.description}
-                            </div>
-                            <i class="material-icons" id="label blue">label</i>
-                            <div class="actions">
-                                <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-                            </div>
-                        </li>`
+                        `
+                            <h2><i class="material-icons">build</i> In progress</h2>
+                            <li class="dd-item" data-id="5">
+                                <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>
+                                <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
+                                    design than good design. It is, in effect, conditioned to prefer bad design,
+                                </div>
+                                <div class="actions">
+                                    <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
+                                        class="material-icons">attach_file</i></div>
+
+                            </li>
+                        `
                     );
                 }
             },
@@ -47,6 +103,11 @@
                 console.log('Error:', error);
             }
         });
+    }
+
+    $(document).ready(function () {
+        const authToken = getAuthorizationToken();
+        loadColumns(1, authToken);
     });
 
     function getAuthorizationToken() {
@@ -67,11 +128,39 @@
     }
 
     $(document).ready(function(){
+        const authToken = getAuthorizationToken();
         $("#test-button").click(function(){
             addItem();
         });
+        $("#add-column").click(function(){
+            addColumn(authToken);
+        });
     });
 
+
+
+    function addColumn(authToken){
+        // boardId,
+        // title
+        let boardId = 1
+        let title = "생성된 컬럼";
+        $.ajax({
+            type: "POST",
+            url: `/columns`,
+            contentType: "application/json",
+            data: JSON.stringify({boardId: boardId, title: title}),
+            headers:{
+                'Authorization' : authToken
+            }
+        })
+            .done(function (res, status, xhr) {
+                loadNewColumn(res);
+            })
+            .fail(function (jqXHR, textStatus) {
+                const errorMessage = jqXHR.responseText;
+                alert(`${errorMessage}`);
+            });
+    }
     function addItem() {
         let itemCount = $("#todo-list li").length + 1;
 
@@ -89,82 +178,94 @@
         );
     }
 </script>
-<div class="kanban__title">
-    <h1><i class="material-icons">check</i> To do list</h1></div>
-<div class="dd">
+<div class="wrapper">
+    <div class="kanban__title">
+        <h1><i class="material-icons">check</i> To do list</h1></div>
 
-    <ol class="kanban To-do" id="todo-list">
-        <div class="kanban__title">
-            <h2><i class="material-icons">report_problem</i>            <div class="actions">
-                <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-            </div></h2></div>
-    </ol>
-
-    <ol class="kanban progress">
-        <h2><i class="material-icons">build</i> In progress</h2>
-        <li class="dd-item" data-id="5">
-            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>
-            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
-                design than good design. It is, in effect, conditioned to prefer bad design,
+    <div class="dd" id="column-list">
+        <ol class="column" id="todo-list">
+            <div class="kanban__title">
+                <h2><i class="material-icons">report_problem</i>
+                    <div class="actions">
+                        <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
+                    </div>
+                </h2>
             </div>
-            <div class="actions">
-                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
-                    class="material-icons">attach_file</i></div>
+        </ol>
 
-        </li>
-    </ol>
-    <ol class="kanban  Done">
-        <h2><i class="material-icons">check_circle</i> Done</h2>
-        <li class="dd-item" data-id="5">
-            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>
-            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
-                design than good design. It is, in effect, conditioned to prefer bad design,
+        <ol class="addcolumn" id="column-new-position">
+            <div class="actions">
+                <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
             </div>
-            <div class="actions">
-                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
-                    class="material-icons">attach_file</i></div>
+        </ol>
 
-        </li>
-        </li>
-        <li class="dd-item" data-id="2">
-            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>
-            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
-                design than good design. It is, in effect, conditioned to prefer bad design,
-            </div>
-            <div class="actions">
-                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
-                    class="material-icons">attach_file</i></div>
 
-        </li>
-        <div class="actions">
-            <button class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-        </div>
-    </ol>
-    <ol class="kanban Gone">
-        <h2><i class="material-icons">delete</i> Gone</h2>
-        <li class="dd-item" data-id="5">
-            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>
-            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
-                design than good design. It is, in effect, conditioned to prefer bad design,
-            </div>
-            <div class="actions">
-                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
-                    class="material-icons">attach_file</i></div>
+        <!--    <ol class="kanban progress">-->
+        <!--        <h2><i class="material-icons">build</i> In progress</h2>-->
+        <!--        <li class="dd-item" data-id="5">-->
+        <!--            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>-->
+        <!--            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking-->
+        <!--                design than good design. It is, in effect, conditioned to prefer bad design,-->
+        <!--            </div>-->
+        <!--            <div class="actions">-->
+        <!--                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i-->
+        <!--                    class="material-icons">attach_file</i></div>-->
 
-        </li>
-        <div class="actions">
-            <button class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-        </div>
-    </ol>
+        <!--        </li>-->
+        <!--    </ol>-->
+        <!--    <ol class="kanban  Done">-->
+        <!--        <h2><i class="material-icons">check_circle</i> Done</h2>-->
+        <!--        <li class="dd-item" data-id="5">-->
+        <!--            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>-->
+        <!--            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking-->
+        <!--                design than good design. It is, in effect, conditioned to prefer bad design,-->
+        <!--            </div>-->
+        <!--            <div class="actions">-->
+        <!--                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i-->
+        <!--                    class="material-icons">attach_file</i></div>-->
 
+        <!--        </li>-->
+        <!--        </li>-->
+        <!--        <li class="dd-item" data-id="2">-->
+        <!--            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>-->
+        <!--            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking-->
+        <!--                design than good design. It is, in effect, conditioned to prefer bad design,-->
+        <!--            </div>-->
+        <!--            <div class="actions">-->
+        <!--                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i-->
+        <!--                    class="material-icons">attach_file</i></div>-->
+
+        <!--        </li>-->
+        <!--        <div class="actions">-->
+        <!--            <button class="addbutt"><i class="material-icons">control_point</i> Add new</button>-->
+        <!--        </div>-->
+        <!--    </ol>-->
+        <!--    <ol class="kanban Gone">-->
+        <!--        <h2><i class="material-icons">delete</i> Gone</h2>-->
+        <!--        <li class="dd-item" data-id="5">-->
+        <!--            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>-->
+        <!--            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking-->
+        <!--                design than good design. It is, in effect, conditioned to prefer bad design,-->
+        <!--            </div>-->
+        <!--            <div class="actions">-->
+        <!--                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i-->
+        <!--                    class="material-icons">attach_file</i></div>-->
+
+        <!--        </li>-->
+        <!--        <div class="actions">-->
+        <!--            <button class="addbutt"><i class="material-icons">control_point</i> Add new</button>-->
+        <!--        </div>-->
+        <!--    </ol>-->
+    </div>
+    <menu class="kanban">
+        <button><i class="material-icons">settings</i></button>
+        <button><i class="material-icons">chevron_left</i></button>
+        <button class="viewkanban"><i class="material-icons ">view_column</i></button>
+        <button class="viewlist"><i class="material-icons">view_list</i></button>
+        <button><i class="material-icons">playlist_add</i> Add new Column</button>
+    </menu>
 </div>
-<menu class="kanban">
-    <button><i class="material-icons">settings</i></button>
-    <button><i class="material-icons">chevron_left</i></button>
-    <button class="viewkanban"><i class="material-icons ">view_column</i></button>
-    <button class="viewlist"><i class="material-icons">view_list</i></button>
-    <button><i class="material-icons">playlist_add</i> Add new Column</button>
-</menu>
+
 <script src="/js/basic.js"></script>
 </body>
 </html>
