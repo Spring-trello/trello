@@ -83,7 +83,7 @@ public class Card {
 	public void update(CardModifyRequestDto requestDto) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
-		this.color = requestDto.getColor();
+		//this.color = requestDto.getColor();
 		// this.dueDate = StringToLocalDate(requestDto.getDueDate());
 	}
 

@@ -22,6 +22,61 @@
         this.MaterialProgress.setProgress(44);
     });
 
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     // 모든 text 클래스 엘리먼트에 대해 keydown 이벤트 리스너 추가
+    //     document.querySelectorAll('.title dd-handle').forEach(addModifyEventListenerToCard);
+    //     document.querySelectorAll('.card-description').forEach(addModifyEventListenerToCard);
+    // });
+
+
+    function addModifyEventListenerToCard(element){
+        console.log("카드 수정 감지 리스너 추가");
+        $(element).on('keydown', function (event) {
+            // Enter 키가 눌렸을 때
+            if (event.key === 'Enter' && event.ctrlKey) {
+
+                console.log("카드 수정 감지");
+                event.preventDefault(); // 기본 동작 방지 (새 줄 입력 방지)
+
+                const card = element.closest('.dd-item');
+                updateCard(card);
+            }
+        });
+    }
+
+    function updateCard(card){
+        const authToken = getAuthorizationToken();
+        // title dd-handle, card-description, card-duedate
+        const cardModifyRequestMap = {};
+        card.querySelectorAll('.card-content').forEach(function (contentElement) {
+            const key = contentElement.classList.contains('title') ? 'name' :
+                contentElement.classList.contains('card-description') ? 'description' :
+                    contentElement.classList.contains('card-duedate') ? 'dueDate' :
+                        '';
+            const value = contentElement.innerText.trim();
+            cardModifyRequestMap[key] = value;
+        });
+
+        const cardId = card.id.split('-')[1];
+        //cardModifyRequestMap
+        // AJAX 요청을 보냄
+        $.ajax({
+            url: '/cards/' + cardId, // 데이터를 보낼 서버의 엔드포인트 URL
+            method: 'PUT',
+            headers: {
+                'Authorization': authToken
+            },
+            contentType: 'application/json',
+            // POST 요청
+            data: JSON.stringify(cardModifyRequestMap),
+            success: function (card) {},
+            error: function (error) {
+                console.error('카드 생성 중 오류가 발생했습니다:', error);
+            }
+        });
+    }
+
+
     let lastColumnPosition = 0;
     var colresponsedto = {}
 
@@ -54,48 +109,7 @@
 
     });
 
-    function loadAllCard_pjm(){
-        const authToken = getAuthorizationToken();
-        $.ajax({
-            url: '/cards/boards/'+window.location.pathname.split('/')[2],
-            type: 'GET',
-            headers: {
-                'Authorization': authToken
-            },
-            success: function (data) {
-                lst = $('.kanban.columnId h2')
-                console.log("list = ", lst)
-                idx_set = new Set();
-                for (const val of lst){
-                    idx_set.add(Number(val.id))
-                }
-                console.log("idx_set = ", idx_set)
-                for ( let i of idx_set ) {
-                    const todoList = $('#todo-list-' + i);
-                    for (const card of data) {
-                        console.log("card Object", card)
-                        if(i == card.columnId){
-                            todoList.append(
-                                `<li class="dd-item" id="todo-${card.id}">
-                            <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
-                            <div class="text" contenteditable="true">
-                                ${card.description}
-                            </div>
-                            <i class="material-icons" id="label blue">label</i>
-                            <div class="actions">
-                                <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-                            </div>
-                        </li>`
-                            );
-                        }
-                    }
-                }
-            },
-            error: function (error) {
-                console.log('Error:', error);
-            }
-        });
-    }
+
     const columnTemplate =
         `
         <ol class="column" id="column-{columnId}">
@@ -108,7 +122,7 @@
             </div>
 
             <div class="actions">
-                <button id="create-card" class="addbutt" onclick="openModal({columnId})">ADD NEW</button>
+                <button id="create-card" class="addbutt" onclick="openModal(this)">ADD NEW</button>
             </div>
         </ol>
         `
@@ -119,85 +133,26 @@
         <li class="dd-item" id="card-{card_id}" >
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
-            <h3 class="title dd-handle">
-                <i class=" material-icons ">filter_none</i>
+            <h3 class="title dd-handle card-content">
+
+<!--                <i class=" material-icons ">filter_none</i>-->
                 {card_name}
             </h3>
-            <div class="text" contenteditable="true">
+<!--            아래 card-text의 원래 class는 text-->
+            <div class="card-description card-content" contenteditable="true">
                 {card_description}
             </div>
-            <div class="actions">
-               {card_dueDate}
+            <div class="card-duedate card-content" contenteditable="true">
+                {card_duedate}
             </div>
         </li>
         `
-
-
-
-    // 정민님 함수
-    // 정민님 함수
-    function showColumn(){
-        var pathname = window.location.pathname;
-        console.log(pathname);
-        const authToken = getAuthorizationToken();
-        $.ajax({
-            type: 'GET',
-            url: `/columns/boards/`+window.location.pathname.split('/')[2],
-            headers: {
-                'Authorization': authToken
-            },
-            data: colresponsedto,
-            success: function (data) {
-                const dd = $(".dd");
-                dd.empty();
-                for (const column of data){
-                    let tempHtml = addHTML(column)
-                    dd.append(tempHtml);
-                }
-            },
-            error(error, status, request) {
-            }
-        })
-    }
-    function addHTML(column){
-        console.log("column id = ", column)
-        return `<ol class = "kanban columnId ${column.columnId}">
-                   <div class="kanban__title" id="todo-list-${column.columnId}">
-                    <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
-                    <button id="test-button" className="addbutt"><span class="material-symbols-outlined">add</span> Add new </button>
-                    </div>
-                </ol>`
-    }
-
-    function addItem(elem) {
-        console.log(elem)
-        let itemCount = $('li.dd-item').length+1
-        console.log("itemCount = " ,itemCount);
-        console.log(elem[0].querySelectorAll('li')[itemCount-2])
-        last_elem = elem[0].querySelectorAll('li')[itemCount-2]
-        elem.append(
-            `<li class="dd-item" id="todo-${itemCount}">
-                <h3 class="title dd-handle">Title<i class="material-icons">filter_none</i></h3>
-                <div class="text" contenteditable="true">
-                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
-                </div>
-                <i class="material-icons" id="label blue">label</i>
-                <div class="actions">
-                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-                </div>
-            </li>`
-        );
-    }
-
-    // 정민님 함수
-    // 정민님 함수
-
 
     // 모달 열기
     function openModal(columnId) {
         var modal = document.getElementById("myModal");
         document.getElementById("modalColumnId").value = columnId;
-
+        console.log(columnId + " id의 컬럼에 카드를 추가하는 modal창 띄움");
         modal.style.display = "block";
         modal.style.zIndex = 9999;
     }
@@ -235,10 +190,8 @@
             success: function (card) {
                 // 성공적으로 서버에 데이터를 전송한 후 할 일
                 alert("저장이 성공적으로 완료되었습니다.");
-                loadNewCard(card, columnId);
+                loadCard(card, columnId);
                 closeModal();
-                // document.replace = "/columns/board/1"
-
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
@@ -271,12 +224,12 @@
                 alert("삭제되었습니다.");
                 // 전체 카드 날리기 \
                 // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
-
                 const columnId = deleteCard.columnId;
                 const columnToReload = $(`#column-${columnId}`);
                 const cardList = columnToReload.find("#todo-list");
                 cardList.empty();
 
+                // 다시 전체 불러오기
                 loadCardsByColumnId(columnId, authToken);
 
             },
@@ -287,21 +240,19 @@
         });
     }
 
-    function loadNewCard(card, columnId) {
-        const newCardHtml = cardTemplate
-            .replace("{card_id}", card.id)
-            .replace("{card_name}", card.name)
-            .replace("{card_description}", card.description)
-        $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
-    }
 
-    function loadNewColumn(column) {
+
+    function loadColumn(column) {
         const columnHtml = columnTemplate
             .replace('{columnId}', column.columnId)
             .replace('{name}', column.title);
-        console.log(columnHtml)
+
         $('#column-new-position').before(columnHtml);
         lastColumnPosition = column.position;
+
+        $(`#column-${column.columnId} #create-card`).click(function () {
+            openModal(column.columnId);
+        });
     }
 
     function loadColumns(boardId, authToken) {
@@ -313,21 +264,10 @@
             },
             success: function (columns) {
                 console.log(columns);
-                for (const column of columns) {
-
-                    const columnHtml = columnTemplate
-                        .replace('{columnId}', column.columnId)
-                        .replace('{name}', column.name);
-
-                    $('#column-new-position').before(columnHtml);
+                columns.forEach(function(column){
+                    loadColumn(column);
                     loadCardsByColumnId(column.columnId, authToken);
-                    lastColumnPosition = column.position;
-
-                    // Pass the columnId when opening the modal
-                    $(`#column-${column.columnId} #create-card`).click(function () {
-                        openModal(column.columnId);
-                    });
-                }
+                });
             },
             error: function (error) {
                 console.log('Error:', error);
@@ -335,6 +275,26 @@
         });
     }
 
+    function loadCard(card, columnId) {
+        const newCardHtml = cardTemplate
+            .replace("{card_id}", card.id)
+            .replace("{card_name}", card.name)
+            .replace("{card_description}", card.description)
+            // .replace("{card_duedate}", card.duedate)
+
+        $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
+
+        $(`#card-${card.id} #cardIdValue`).val(card.id);
+
+        const newCard =$(`#card-${card.id}`);
+
+        newCard.find('.title dd-handle').each(function(index, element){
+            addModifyEventListenerToCard(element);
+        });
+        newCard.find('.card-description').each(function(index, element){
+            addModifyEventListenerToCard(element);
+        });
+    }
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
             url: '/cards/columns/' + columnId,
@@ -343,14 +303,9 @@
                 'Authorization': authToken
             },
             success: function (cards) {
-                for (const card of cards) {
-                    const newCardHtml = cardTemplate
-                        .replace("{card_id}", card.id)
-                        .replace("{card_name}", card.name)
-                        .replace("{card_description}", card.description)
-                    $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
-                    $(`#card-${card.id} #cardIdValue`).val(card.id);
-                }
+                cards.forEach((card) => {
+                    loadCard(card, columnId);
+                });
             },
             error: function (error) {
                 console.log('Error:', error);
@@ -358,12 +313,13 @@
         });
     }
 
-
     function addColumn(authToken){
         // boardId,
         // title
         let boardId = 1
-        let title = "생성된 컬럼";
+        console.log("windows.location.href : " + window.location.href);
+
+        let title = "새로운 컬럼";
         $.ajax({
             type: "POST",
             url: `/columns`,
@@ -374,13 +330,111 @@
             }
         })
             .done(function (res, status, xhr) {
-                loadNewColumn(res);
+                loadColumn(res);
             })
             .fail(function (jqXHR, textStatus) {
                 const errorMessage = jqXHR.responseText;
                 alert(`${errorMessage}`);
             });
     }
+    //
+    // function loadAllCard_pjm(){
+    //     const authToken = getAuthorizationToken();
+    //     $.ajax({
+    //         url: '/cards/boards/'+window.location.pathname.split('/')[2],
+    //         type: 'GET',
+    //         headers: {
+    //             'Authorization': authToken
+    //         },
+    //         success: function (data) {
+    //             lst = $('.kanban.columnId h2')
+    //             console.log("list = ", lst)
+    //             idx_set = new Set();
+    //             for (const val of lst){
+    //                 idx_set.add(Number(val.id))
+    //             }
+    //             console.log("idx_set = ", idx_set)
+    //             for ( let i of idx_set ) {
+    //                 const todoList = $('#todo-list-' + i);
+    //                 for (const card of data) {
+    //                     console.log("card Object", card)
+    //                     if(i == card.columnId){
+    //                         todoList.append(
+    //                             `<li class="dd-item" id="todo-${card.id}">
+    //                         <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
+    //                         <div class="text" contenteditable="true">
+    //                             ${card.description}
+    //                         </div>
+    //                         <i class="material-icons" id="label blue">label</i>
+    //                         <div class="actions">
+    //                             <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+    //                         </div>
+    //                     </li>`
+    //                         );
+    //                     }
+    //                 }
+    //             }
+    //         },
+    //         error: function (error) {
+    //             console.log('Error:', error);
+    //         }
+    //     });
+    // }
+    //
+    // // 정민님 함수
+    // // 정민님 함수
+    // function showColumn(){
+    //     var pathname = window.location.pathname;
+    //     console.log(pathname);
+    //     const authToken = getAuthorizationToken();
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: `/columns/boards/`+window.location.pathname.split('/')[2],
+    //         headers: {
+    //             'Authorization': authToken
+    //         },
+    //         data: colresponsedto,
+    //         success: function (data) {
+    //             const dd = $(".dd");
+    //             dd.empty();
+    //             for (const column of data){
+    //                 let tempHtml = addHTML(column)
+    //                 dd.append(tempHtml);
+    //             }
+    //         },
+    //         error(error, status, request) {
+    //         }
+    //     })
+    // }
+    // function addHTML(column){
+    //     console.log("column id = ", column)
+    //     return `<ol class = "kanban columnId ${column.columnId}">
+    //                <div class="kanban__title" id="todo-list-${column.columnId}">
+    //                 <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
+    //                 <button id="test-button" className="addbutt"><span class="material-symbols-outlined">add</span> Add new </button>
+    //                 </div>
+    //             </ol>`
+    // }
+    //
+    // function addItem(elem) {
+    //     console.log(elem)
+    //     let itemCount = $('li.dd-item').length+1
+    //     console.log("itemCount = " ,itemCount);
+    //     console.log(elem[0].querySelectorAll('li')[itemCount-2])
+    //     last_elem = elem[0].querySelectorAll('li')[itemCount-2]
+    //     elem.append(
+    //         `<li class="dd-item" id="todo-${itemCount}">
+    //             <h3 class="title dd-handle">Title<i class="material-icons">filter_none</i></h3>
+    //             <div class="text" contenteditable="true">
+    //                 wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
+    //             </div>
+    //             <i class="material-icons" id="label blue">label</i>
+    //             <div class="actions">
+    //                 <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+    //             </div>
+    //         </li>`
+    //     );
+    // }
 
 </script>
 

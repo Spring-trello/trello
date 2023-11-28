@@ -6,6 +6,6 @@ import lombok.Getter;
 public class CardModifyRequestDto {
 	private String name;
 	private String description;
-	private String color;
+	// private String color;
 	private String dueDate;
 }
