@@ -100,7 +100,11 @@ public class WebSecurityConfig {
 				PathRequest.toStaticResources().atCommonLocations())
 			.permitAll() // resources 접근 허용 설정
 			.requestMatchers("/")
-			.permitAll() // 메인 페이지 요청 허가
+			.permitAll()
+			.requestMatchers("/columns/**")
+			.permitAll()
+			.requestMatchers("/boards/**")
+			.permitAll()// 메인 페이지 요청 허가
 			.requestMatchers("/users/**")
 			.permitAll()
 			.requestMatchers("/columns/boards/**")

@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class BoardResponseDto {
+	private Long boardId;
 
 	private String name;
 
@@ -14,6 +15,7 @@ public class BoardResponseDto {
 	private String description;
 
 	public BoardResponseDto(Board board) {
+		this.boardId = board.getId();
 		this.name = board.getName();
 		this.bgColor = board.getBgColor();
 		this.description = board.getDescription();

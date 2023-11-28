@@ -14,23 +14,17 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="/js/basic.js"></script>
     <title>칸반보드</title>
-
-    <style>
-        .nav {
-            display: block;
-        }
-    </style>
 </head>
 <body>
+
 <div class="nav">
     <!-- 버튼을 클릭하면 JavaScript 함수를 호출하여 페이지 이동 -->
     <button onclick="goToBoardPage()">보드 페이지로 이동</button>
+
+    <div class="wrapper" id="boardList">
+
+    </div>
 </div>
-<div class="wrapper" id="boardContent">
-
-</div>
-
-
 <div id="see-area">
     <div id="product-container">
 
@@ -40,7 +34,6 @@
 <script>
     const host = 'http://' + window.location.host;
 
-    let boardLoaded = false;
     function getAuthorizationToken() {
         const cookies = document.cookie.split('; ');
 
@@ -74,8 +67,6 @@
             success:
                 function (response) {
                     $('#boardContent').html(response);
-                    const goToBoardButton = document.querySelector('.nav');
-                    goToBoardButton.style.display = 'none'; // 숨김
                 }
             ,
             error: function (jqXHR, textStatus, errorThrown) {
@@ -85,6 +76,53 @@
         ;
     }
 
+    $(document).ready(showBoard())
+
+    var boardDto = {};
+    boardDto.name = name;
+    function showBoard(){
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            url: "/boards/list",
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            data: boardDto,
+            datatype: 'json',
+            success: function (data) {
+                $('#boardList').empty();
+                // 4. for 문마다 boardDto를 꺼내서 HTML 만들고 검색결과 목록에 붙이기!
+                for (let i = 0; i < data.length; i++) {
+                    let tempHtml = addHTML(data[i])
+                    $('#boardList').append(tempHtml);
+                }
+            },
+            error(error, status, request) {
+                console.log('Error:', error);
+            }
+        })
+    }
+    function addHTML(board){
+        return `<button class = "board-name">
+            <a href="javascript:void(0);" onclick="boardDetail('${board.boardId}'); return false;">${board.name}</a></button>`
+    }
+
+    function boardDetail(boardId){
+        const authToken = getAuthorizationToken();
+        console.log("[index.html = boardDetail: boardId] = "+ boardId)
+        $.ajax({
+            url: "columns/"+boardId,
+            type: "GET",
+            headers: {
+                'Authorization': authToken
+            },
+            success: function(response){
+                let url = "boards/"+boardId;
+                location.replace(url); //토큰이 안보내짐
+            }
+        });
+    }
 </script>
 </body>
 </html>

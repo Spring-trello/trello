@@ -12,20 +12,37 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-
 <div id="p1" class="mdl-progress mdl-js-progress"></div>
-<script>
 
+<script>
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
         this.MaterialProgress.setProgress(44);
     });
 
     let lastColumnPosition = 0;
+    var colresponsedto = {}
 
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
+
+        // 정민님 카드 추가 함수
+        // // 부모 요소에 이벤트 핸들러 등록
+        // $("body").on("click", "button#test-button", function(){
+        //     console.log("add button 동작");
+        //     var buttonId = $(this).attr("id");
+        //     addItem($(this).closest('ol'));
+        // });
+        // 정민님 카드 추가 함수
+
+        // 정민님 column& card load 함수
+        showColumn();
+        loadAllCard_pjm();
+        // 정민님 column& card load 함수
+
+
         loadColumns(1, authToken);
         $("#delete-button").click(function(){
             addItem();
@@ -35,6 +52,48 @@
         });
     });
 
+    function loadAllCard_pjm(){
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            url: '/cards/boards/'+window.location.pathname.split('/')[2],
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            success: function (data) {
+                lst = $('.kanban.columnId h2')
+                console.log("list = ", lst)
+                idx_set = new Set();
+                for (const val of lst){
+                    idx_set.add(Number(val.id))
+                }
+                console.log("idx_set = ", idx_set)
+                for ( let i of idx_set ) {
+                    const todoList = $('#todo-list-' + i);
+                    for (const card of data) {
+                        console.log("card Object", card)
+                        if(i == card.columnId){
+                            todoList.append(
+                                `<li class="dd-item" id="todo-${card.id}">
+                            <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
+                            <div class="text" contenteditable="true">
+                                ${card.description}
+                            </div>
+                            <i class="material-icons" id="label blue">label</i>
+                            <div class="actions">
+                                <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+                            </div>
+                        </li>`
+                            );
+                        }
+                    }
+                }
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
     const columnTemplate =
         `
         <ol class="column" id="column-{columnId}">
@@ -51,6 +110,85 @@
             </div>
         </ol>
         `
+
+    const cardTemplate =
+        `
+        <li class="dd-item" id="card-{card_Id}" >
+            <span class="close" onclick="deleteCardForm()">&times;</span>
+            <h3 class="title dd-handle">
+                <i class=" material-icons ">filter_none</i>
+                {card_name}
+            </h3>
+            <div class="text" contenteditable="true">
+                {card_description}
+            </div>
+            <div class="actions">
+               {card_dueDate}
+            </div>
+        </li>
+        `
+
+
+
+    // 정민님 함수
+    // 정민님 함수
+    function showColumn(){
+        var pathname = window.location.pathname;
+        console.log(pathname);
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            type: 'GET',
+            url: `/columns/`+window.location.pathname.split('/')[2],
+            headers: {
+                'Authorization': authToken
+            },
+            data: colresponsedto,
+            success: function (data) {
+                const dd = $(".dd");
+                dd.empty();
+                for (const column of data){
+                    let tempHtml = addHTML(column)
+                    dd.append(tempHtml);
+                }
+            },
+            error(error, status, request) {
+            }
+        })
+    }
+    function addHTML(column){
+        console.log("column id = ", column)
+        return `<ol class = "kanban columnId ${column.columnId}">
+                   <div class="kanban__title" id="todo-list-${column.columnId}">
+                    <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
+                    <button id="test-button" className="addbutt"><span class="material-symbols-outlined">add</span> Add new </button>
+                    </div>
+                </ol>`
+    }
+
+    function addItem(elem) {
+        console.log(elem)
+        let itemCount = $('li.dd-item').length+1
+        console.log("itemCount = " ,itemCount);
+        console.log(elem[0].querySelectorAll('li')[itemCount-2])
+        last_elem = elem[0].querySelectorAll('li')[itemCount-2]
+        elem.append(
+            `<li class="dd-item" id="todo-${itemCount}">
+                <h3 class="title dd-handle">Title<i class="material-icons">filter_none</i></h3>
+                <div class="text" contenteditable="true">
+                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
+                </div>
+                <i class="material-icons" id="label blue">label</i>
+                <div class="actions">
+                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+                </div>
+            </li>`
+        );
+    }
+
+    // 정민님 함수
+    // 정민님 함수
+
+
     // 모달 열기
     function openModal(columnId) {
         var modal = document.getElementById("myModal");
@@ -184,22 +322,7 @@
         });
     }
 
-    const cardTemplate =
-        `
-        <li class="dd-item" id="card-{card_Id}" >
-            <span class="close" onclick="deleteCardForm()">&times;</span>
-            <h3 class="title dd-handle">
-                <i class=" material-icons ">filter_none</i>
-                {card_name}
-            </h3>
-            <div class="text" contenteditable="true">
-                {card_description}
-            </div>
-            <div class="actions">
-               {card_dueDate}
-            </div>
-        </li>
-        `
+
 
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
@@ -223,6 +346,24 @@
         });
     }
 
+    function getAuthorizationToken() {
+        const cookies = document.cookie.split('; ');
+
+        for (const cookie of cookies) {
+            const [name, value] = cookie.split('=');
+
+            // 쿠키 이름 앞뒤의 공백 제거
+            const cookieName = name.trim();
+
+            if (cookieName === 'Authorization') {
+                // 쿠키 값 앞뒤의 공백 제거 후 반환
+                return value.trim();
+            }
+        }
+
+        // 찾지 못한 경우
+        return null;
+    }
 
     function addColumn(authToken){
         // boardId,
@@ -247,13 +388,39 @@
             });
     }
 
-</script>
 
+    /// 정민님 card 추가 함수
+    /// 정민님 card 추가 함수
+    $(document).ready(function(){
+        $("#test-button").click(function(){
+            addItem();
+        });
+    });
+
+    function addItem() {
+        let itemCount = $("#todo-list li").length + 1;
+
+        $("#todo-list").append(
+            `<li class="dd-item" id="todo-${itemCount}">
+                <h3 class="title dd-handle">Do the dishes<i class="material-icons">filter_none</i></h3>
+                <div class="text" contenteditable="true">
+                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
+                </div>
+                <i class="material-icons" id="label blue">label</i>
+                <div class="actions">
+                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+                </div>
+            </li>`
+        );
+    }
+
+    /// 정민님 card 추가 함수
+    /// 정민님 card 추가 함수
+</script>
 <div class="wrapper">
     <div class="kanban__title">
         <h1><i class="material-icons">check</i> To do list</h1></div>
-
-    <div class="dd" id="column-list">
+    <div class="dd">
         <ol class="addcolumn" id="column-new-position">
             <div class="actions">
                 <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
@@ -269,6 +436,7 @@
         <button><i class="material-icons">playlist_add</i> Add new Column</button>
     </menu>
 </div>
+
 
 <div id="myModal" class="modal">
     <div class="modal-content">
@@ -290,7 +458,6 @@
         </form>
     </div>
 </div>
-
 <script src="/js/basic.js"></script>
 </body>
 </html>

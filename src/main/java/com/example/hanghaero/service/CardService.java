@@ -29,6 +29,7 @@ public class CardService {
 	private final ColRepository colRepository;
 
 	public List<CardResponseDto> getCards(Long boardId){
+		System.out.println("CardService getCards Method");
 		return cardRepository.getCards(boardId).stream().map(CardResponseDto::new).toList();
 	}
 

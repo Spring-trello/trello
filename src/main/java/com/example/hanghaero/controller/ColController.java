@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.hanghaero.dto.column.ColCreateRequestDto;
@@ -25,22 +24,12 @@ import com.example.hanghaero.service.ColService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/columns")
 public class ColController {
 	private final ColService columnService;
 	private final CardService cardService;
-
-	@GetMapping("/board/{boardId}")
-	public ModelAndView getColumns(@PathVariable Long boardId){
-		System.out.println("ajax 요청 도착! " + boardId);
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("columnList", columnService.getColumns(boardId));
-		mv.addObject("cardList", cardService.getCards(boardId));
-		mv.setViewName("detail");
-		return mv;
-	}
 
 	@ResponseBody
 	@GetMapping("/boards/{boardId}")
