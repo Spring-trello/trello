@@ -27,22 +27,6 @@
 
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
-
-        // 정민님 카드 추가 함수
-        // // 부모 요소에 이벤트 핸들러 등록
-        // $("body").on("click", "button#test-button", function(){
-        //     console.log("add button 동작");
-        //     var buttonId = $(this).attr("id");
-        //     addItem($(this).closest('ol'));
-        // });
-        // 정민님 카드 추가 함수
-
-        // 정민님 column& card load 함수
-        showColumn();
-        loadAllCard_pjm();
-        // 정민님 column& card load 함수
-
-
         loadColumns(1, authToken);
         $("#delete-button").click(function(){
             addItem();
@@ -50,6 +34,24 @@
         $("#add-column").click(function(){
             addColumn(authToken);
         });
+
+        // 정민님 컬럼 카드 불러오기 로직
+        // $("body").on("click", "button#test-button", function(){
+        //     console.log("add button 동작");
+        //     var buttonId = $(this).attr("id");
+        //     addItem($(this).closest('ol'));
+        // });
+        //
+        // showColumn();
+        // loadAllCard_pjm();
+        //
+        // $("#test-button").click(function(){
+        //     addItem();
+        // });
+
+        // 정민님 컬럼 카드 불러오기 로직
+
+
     });
 
     function loadAllCard_pjm(){
@@ -138,7 +140,7 @@
         const authToken = getAuthorizationToken();
         $.ajax({
             type: 'GET',
-            url: `/columns/`+window.location.pathname.split('/')[2],
+            url: `/columns/boards/`+window.location.pathname.split('/')[2],
             headers: {
                 'Authorization': authToken
             },
@@ -285,7 +287,7 @@
     function loadNewColumn(column){
         const columnHtml = columnTemplate
             .replace('{columnId}', column.columnId)
-            .replace('{name}', column.name);
+            .replace('{name}', column.title);
         console.log(columnHtml)
         $('#column-new-position').before(columnHtml);
         lastColumnPosition = column.position;
@@ -389,33 +391,6 @@
     }
 
 
-    /// 정민님 card 추가 함수
-    /// 정민님 card 추가 함수
-    $(document).ready(function(){
-        $("#test-button").click(function(){
-            addItem();
-        });
-    });
-
-    function addItem() {
-        let itemCount = $("#todo-list li").length + 1;
-
-        $("#todo-list").append(
-            `<li class="dd-item" id="todo-${itemCount}">
-                <h3 class="title dd-handle">Do the dishes<i class="material-icons">filter_none</i></h3>
-                <div class="text" contenteditable="true">
-                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
-                </div>
-                <i class="material-icons" id="label blue">label</i>
-                <div class="actions">
-                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-                </div>
-            </li>`
-        );
-    }
-
-    /// 정민님 card 추가 함수
-    /// 정민님 card 추가 함수
 </script>
 <div class="wrapper">
     <div class="kanban__title">

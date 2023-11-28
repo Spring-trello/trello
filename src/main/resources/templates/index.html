@@ -112,7 +112,7 @@
         const authToken = getAuthorizationToken();
         console.log("[index.html = boardDetail: boardId] = "+ boardId)
         $.ajax({
-            url: "columns/"+boardId,
+            url: "columns/boards/"+boardId,
             type: "GET",
             headers: {
                 'Authorization': authToken

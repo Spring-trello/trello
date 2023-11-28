@@ -38,6 +38,7 @@ public class ColController {
 	}
 
 	@PostMapping("")
+	@ResponseBody
 	public ColResponseDto createColumn(@RequestBody ColCreateRequestDto columnRequestDto) {
 		return columnService.createColumn(columnRequestDto);
 	}
