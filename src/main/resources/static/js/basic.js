@@ -41,7 +41,7 @@
         expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
         collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
         group           : 0,
-        maxDepth        : 5,
+        maxDepth        : 2,
         threshold       : 20
     };
 
@@ -253,6 +253,19 @@
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
+
+            // 드래그를 시작할 때 빈 열을 확인하여 <li class="dd-empty"> 추가하는 부분
+            $('.kanban').each(function() {
+                var currentColumn = $(this);
+                var itemsCount = currentColumn.find('.dd-item').length;
+
+                if (itemsCount === 0 && !currentColumn.find('.dd-empty').length) {
+                    currentColumn.append('<li class="dd-empty"></li>');
+                    console.log('Added empty item to column!');
+                }
+            });
+
+
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
@@ -290,6 +303,12 @@
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
+
+
+            // 마우스를 떼었을 때 생성된 dd-empty 삭제
+            this.dragRootEl.find('.' + this.options.emptyClass).remove();
+
+
 
             this.dragEl.remove();
             this.el.trigger('change');
@@ -414,7 +433,7 @@
 
             // find parent list of item under cursor
             var pointElRoot = this.pointEl.closest('.' + opt.rootClass),
-                isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
+                isNewRoot = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
             /**
              * move vertical
@@ -456,7 +475,6 @@
                 }
             }
         }
-
     };
 
     $.fn.nestable = function(params)
