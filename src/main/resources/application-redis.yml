@@ -1,6 +1,0 @@
-spring:
-  data:
-    redis:
-      host: 211.184.188.32
-      password: uioprewq
-      port: 16379
