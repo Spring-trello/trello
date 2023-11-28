@@ -28,12 +28,15 @@ public class CardService {
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
 
-	public List<CardResponseDto> getCards(Long boardId){
+	public List<CardResponseDto> getCards(Long boardId) {
 		return cardRepository.getCards(boardId).stream().map(CardResponseDto::new).toList();
 	}
 
-	public List<CardResponseDto> getCardsByColumnId(Long columnId){
-		return cardRepository.getCardsByColumnId(columnId).stream().map(CardResponseDto::new).collect(Collectors.toList());
+	public List<CardResponseDto> getCardsByColumnId(Long columnId) {
+		return cardRepository.getCardsByColumnId(columnId)
+			.stream()
+			.map(CardResponseDto::new)
+			.collect(Collectors.toList());
 	}
 
 	public CardResponseDto createCard(CardCreateRequestDto requestDto,
@@ -113,11 +116,11 @@ public class CardService {
 	}
 
 	private boolean authCheck(Card card, UserDetailsImpl userDetails) {
-		if (!Objects.equals(userDetails.getUser(), card.getUser()) &&
-			!Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
-			return false;
+		if (Objects.equals(userDetails.getUser().getRole(), card.getUser().getRole()) ||
+			Objects.equals(userDetails.getUser().getRole(), "ADMIN")) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	private int lastPosition(Long columnId) {

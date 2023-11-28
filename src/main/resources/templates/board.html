@@ -27,10 +27,10 @@
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
         loadColumns(1, authToken);
-        $("#delete-button").click(function(){
-            addItem();
-        });
-        $("#add-column").click(function(){
+        // $("#delete-button").click(function(){
+        //     addItem();
+        // });
+        $("#add-column").click(function () {
             addColumn(authToken);
         });
     });
@@ -51,6 +51,7 @@
             </div>
         </ol>
         `
+
     // 모달 열기
     function openModal(columnId) {
         var modal = document.getElementById("myModal");
@@ -105,38 +106,48 @@
         });
     }
 
+    // $(document).ready(function () {
+    //     $('.close').on('click', function () {
+    //         var cardId = $(this).closest('.card').data('card-id'); // 카드의 고유 ID 가져오기
+    //
+    //         $.ajax({
+    //             type: 'DELETE',
+    //             url: '/cards/' + cardId, // 카드 삭제 엔드포인트 URL
+    //             success: function (response) {
+    //                 // 서버에서 카드 삭제 성공 시 화면에서도 삭제
+    //                 $(this).closest('.card').remove(); // 해당 카드 요소를 DOM에서 삭제
+    //                 console.log('카드가 삭제되었습니다.');
+    //             },
+    //             error: function (error) {
+    //                 console.error('카드 삭제 중 오류 발생:', error);
+    //             }
+    //         });
+    //     });
+    // });
+
     function deleteCardForm() {
         const authToken = getAuthorizationToken();
-
+        const cardId = document.getElementById("modalCardId").value;
         // AJAX 요청을 보냄
         $.ajax({
-            url: '/cards' + cardId, // 데이터를 보낼 서버의 엔드포인트 URL
+            url: '/cards/' + cardId,  // 데이터를 보낼 서버의 엔드포인트 URL
             method: 'DELETE',
             headers: {
                 'Authorization': authToken
             },
             contentType: 'application/json',
-            // POST 요청
-            data: JSON.stringify({
-                name: name, // 이름 데이터
-                description: description, // 설명 데이터
-                columnId: 5,
-                userId: 1,
-                boardId: 1
-            }),
             success: function () {
                 // 성공적으로 서버에 데이터를 전송한 후 할 일
-                alert("저장이 성공적으로 완료되었습니다.");
-                window.location.href = "/success-page?token" + authToken;
+                alert("삭제되었습니다.");
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
-                console.error('카드 생성 중 오류가 발생했습니다:', error);
+                alert("삭제 실패하였습니다.")
             }
         });
     }
 
-    function loadNewCard(card, columnId){
+    function loadNewCard(card, columnId) {
         const newCardHtml = cardTemplate
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
@@ -144,7 +155,7 @@
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
     }
 
-    function loadNewColumn(column){
+    function loadNewColumn(column) {
         const columnHtml = columnTemplate
             .replace('{columnId}', column.columnId)
             .replace('{name}', column.name);
@@ -168,7 +179,7 @@
                         .replace('{columnId}', column.columnId)
                         .replace('{name}', column.name);
 
-                    $('#column-new-position').before( columnHtml);
+                    $('#column-new-position').before(columnHtml);
                     loadCardsByColumnId(column.columnId, authToken);
                     lastColumnPosition = column.position;
 
@@ -187,7 +198,8 @@
     const cardTemplate =
         `
         <li class="dd-item" id="card-{card_Id}" >
-            <span class="close" onclick="deleteCardForm()">&times;</span>
+            <input type="hidden" id="modalCardId" name="modalCardId">
+            <span class="close" onclick=deleteCardForm()>&times;</span>
             <h3 class="title dd-handle">
                 <i class=" material-icons ">filter_none</i>
                 {card_name}
@@ -224,7 +236,7 @@
     }
 
 
-    function addColumn(authToken){
+    function addColumn(authToken) {
         // boardId,
         // title
         let boardId = 1
