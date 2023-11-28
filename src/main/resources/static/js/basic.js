@@ -256,7 +256,7 @@
 
 
             // 드래그를 시작할 때 빈 열을 확인하여 <li class="dd-empty"> 추가하는 부분
-            $('.column').each(function() {
+            $('.todo-list').each(function() {
                 var currentColumn = $(this);
                 var itemsCount = currentColumn.find('.dd-item').length;
 
