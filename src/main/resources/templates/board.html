@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-
 <div id="p1" class="mdl-progress mdl-js-progress"></div>
 <script>
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
@@ -22,14 +21,14 @@
     $(document).ready(showColumn())
 
     var colresponsedto = {}
-    console.log(window.location.pathname);
+
     function showColumn(){
         var pathname = window.location.pathname;
         console.log(pathname);
         const authToken = getAuthorizationToken();
         $.ajax({
             type: 'GET',
-            url: '/columns/1',
+            url: `/columns/`+window.location.pathname.split('/')[2],
             headers: {
                 'Authorization': authToken
             },
@@ -46,7 +45,6 @@
             }
         })
     }
-
     function addHTML(column){
         console.log("column id = ", column)
         return `<ol class = "kanban columnId ${column.columnId}">
@@ -56,15 +54,6 @@
                     </div>
                 </ol>`
     }
-
-    $(document).ready(function(){
-        // 부모 요소에 이벤트 핸들러 등록
-        $("body").on("click", "button#test-button", function(){
-            console.log("add button 동작");
-            var buttonId = $(this).attr("id");
-            addItem($(this).closest('ol'));
-        });
-    });
 
     function addItem(elem) {
         console.log(elem)
@@ -86,21 +75,35 @@
         );
     }
 
+    $(document).ready(function(){
+        // 부모 요소에 이벤트 핸들러 등록
+        $("body").on("click", "button#test-button", function(){
+            console.log("add button 동작");
+            var buttonId = $(this).attr("id");
+            addItem($(this).closest('ol'));
+        });
+    });
 
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
         $.ajax({
-            url: '/cards/columns/1',
+            url: '/cards/boards/'+window.location.pathname.split('/')[2],
             type: 'GET',
             headers: {
                 'Authorization': authToken
             },
             success: function (data) {
-                for (var i = 1; i < $('.dd ol').length+1; i++) {
+                lst = $('.kanban.columnId h2')
+                console.log("list = ", lst)
+                idx_set = new Set();
+                for (const val of lst){
+                    idx_set.add(Number(val.id))
+                }
+                console.log("idx_set = ", idx_set)
+                for ( let i of idx_set ) {
                     const todoList = $('#todo-list-' + i);
                     for (const card of data) {
-                        console.log("card = ", card)
-                        console.log("card columnId = ", card.columnId)
+                        console.log("card Object", card)
                         if(i == card.columnId){
                             todoList.append(
                                 `<li class="dd-item" id="todo-${card.id}">
@@ -138,24 +141,15 @@
                 return value.trim();
             }
         }
+
+        // 찾지 못한 경우
         return null;
     }
-
-
-
-
 </script>
 <div class="kanban__title">
-    <h1><i class="material-icons">check</i> To do list</h1></div>
+    <h1><span class="material-symbols-outlined">done</span> To do list</h1>
+</div>
 <div class="dd">
-
-    <ol class="kanban To-do" id="todo-list">
-        <div class="kanban__title">
-            <h2><i class="material-icons">report_problem</i>            <div class="actions">
-                <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-            </div></h2></div>
-    </ol>
-
     <ol class="kanban progress">
         <h2><i class="material-icons">build</i> In progress</h2>
         <li class="dd-item" data-id="5">
@@ -196,23 +190,6 @@
             <button class="addbutt"><i class="material-icons">control_point</i> Add new</button>
         </div>
     </ol>
-    <ol class="kanban Gone">
-        <h2><i class="material-icons">delete</i> Gone</h2>
-        <li class="dd-item" data-id="5">
-            <h3 class="title dd-handle"><i class=" material-icons ">filter_none</i> title of job</h3>
-            <div class="text" contenteditable="true">Paul Rand once said, “The public is more familiar with bad fucking
-                design than good design. It is, in effect, conditioned to prefer bad design,
-            </div>
-            <div class="actions">
-                <i class="material-icons">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i
-                    class="material-icons">attach_file</i></div>
-
-        </li>
-        <div class="actions">
-            <button class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-        </div>
-    </ol>
-
 </div>
 <menu class="kanban">
     <button><i class="material-icons">settings</i></button>
