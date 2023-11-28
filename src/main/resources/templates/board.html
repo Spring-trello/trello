@@ -14,9 +14,55 @@
 
 <div id="p1" class="mdl-progress mdl-js-progress"></div>
 <script>
+    // 모달 열기
+    function openModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "block";
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+    }
+
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
         this.MaterialProgress.setProgress(44);
     });
+
+    function createCardForm() {
+        const authToken = getAuthorizationToken();
+
+
+        var name = $("#name").val(); // 이름 입력란의 값을 가져옴
+        var description = $("#description").val(); // 설명 입력란의 값을 가져옴
+
+        // AJAX 요청을 보냄
+        $.ajax({
+            url: '/cards', // 데이터를 보낼 서버의 엔드포인트 URL
+            method: 'POST',
+            headers: {
+                'Authorization': authToken
+            },
+            contentType: 'application/json',
+            // POST 요청
+            data: JSON.stringify({
+                name: name, // 이름 데이터
+                description: description, // 설명 데이터
+                columnId: 1,
+                userId: 1,
+                boardId: 1
+            }),
+            success: function (response) {
+                // 성공적으로 서버에 데이터를 전송한 후 할 일
+                console.log('카드가 성공적으로 생성되었습니다.');
+            },
+            error: function (error) {
+                // 요청 중 에러가 발생했을 때 처리할 내용
+                console.error('카드 생성 중 오류가 발생했습니다:', error);
+            }
+        });
+    }
 
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
@@ -31,13 +77,12 @@
                 for (const card of data) {
                     todoList.append(
                         `<li class="dd-item" id="todo-${card.id}">
-                            <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
+                            <h3 class="title dd-handle">${card.name}</h3>
                             <div class="text" contenteditable="true">
                                 ${card.description}
                             </div>
-                            <i class="material-icons" id="label blue">label</i>
                             <div class="actions">
-                                <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+                               ${card.dueDate}
                             </div>
                         </li>`
                     );
@@ -66,8 +111,8 @@
         return null;
     }
 
-    $(document).ready(function(){
-        $("#test-button").click(function(){
+    $(document).ready(function () {
+        $("#test-button").click(function () {
             addItem();
         });
     });
@@ -76,28 +121,47 @@
         let itemCount = $("#todo-list li").length + 1;
 
         $("#todo-list").append(
-            `<li class="dd-item" id="todo-${itemCount}">
-                <h3 class="title dd-handle">Do the dishes<i class="material-icons">filter_none</i></h3>
-                <div class="text" contenteditable="true">
-                    wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
-                </div>
-                <i class="material-icons" id="label blue">label</i>
+            `<form action="/cards" method="POST">
+                <li class="dd-item" id="todo-${itemCount}">
+
+<!--                <div class="text" contenteditable="true">-->
+<!--                    <h3>-->
+                        <input type="Text" id="name" name="name">
+<!--                    </h3>-->
+<!--                </div>-->
+<!--                <div class="text" contenteditable="true">-->
+                    <input type="Text" id="description" name="description">
+<!--                </div>-->
                 <div class="actions">
-                    <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
+                    <button onclick="createCardForm()" type="button">저장</button>
                 </div>
-            </li>`
+                </li>
+            </form>`
         );
     }
 </script>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p>모달 내용을 여기에 작성합니다.</p>
+    </div>
+</div>
+
+<!-- 버튼 클릭 시 모달 열기 -->
+<button onclick="openModal()">모달 열기</button>
 <div class="kanban__title">
     <h1><i class="material-icons">check</i> To do list</h1></div>
 <div class="dd">
 
     <ol class="kanban To-do" id="todo-list">
         <div class="kanban__title">
-            <h2><i class="material-icons">report_problem</i>            <div class="actions">
-                <button id="test-button" class="addbutt"><i class="material-icons">control_point</i> Add new</button>
-            </div></h2></div>
+            <h2><i class="material-icons">report_problem</i>
+                <div class="actions">
+                    <button id="test-button" class="addbutt"><i class="material-icons">Add a Card</i>
+                    </button>
+                </div>
+            </h2>
+        </div>
     </ol>
 
     <ol class="kanban progress">

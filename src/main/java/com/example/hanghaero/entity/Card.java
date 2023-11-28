@@ -1,7 +1,6 @@
 package com.example.hanghaero.entity;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +41,10 @@ public class Card {
 	@ColumnDefault("'#FFFFFF'")
 	private String color;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private LocalDate dueDate;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private int position;
 
 	@ManyToOne
@@ -67,25 +66,25 @@ public class Card {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
 		this.color = requestDto.getColor();
-		this.dueDate = StringToLocalDate(requestDto.getDueDate());
+		// this.dueDate = StringToLocalDate(requestDto.getDueDate());
 		this.position = pos;
 		this.user = user;
 		this.board = board;
 		this.column = column;
 	}
 
-	private LocalDate StringToLocalDate(String dueDate) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate date = LocalDate.parse(dueDate, formatter);
-
-		return date;
-	}
+	// private LocalDate StringToLocalDate(String dueDate) {
+	// 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	// 	LocalDate date = LocalDate.parse(dueDate, formatter);
+	//
+	// 	return date;
+	// }
 
 	public void update(CardModifyRequestDto requestDto) {
 		this.name = requestDto.getName();
 		this.description = requestDto.getDescription();
 		this.color = requestDto.getColor();
-		this.dueDate = StringToLocalDate(requestDto.getDueDate());
+		// this.dueDate = StringToLocalDate(requestDto.getDueDate());
 	}
 
 	public void move(Col column, int position) {
