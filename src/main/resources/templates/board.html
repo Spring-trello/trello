@@ -100,7 +100,7 @@
         `
         <ol class="column" id="column-{columnId}">
             <div class="kanban__title">
-                <h2><i class="material-icons">{name}</i></h2>
+                <h2 onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -298,7 +298,7 @@
     function loadNewColumn(column) {
         const columnHtml = columnTemplate
             .replace('{columnId}', column.columnId)
-            .replace('{name}', column.title);
+            .replace('{name}', column.title)
         console.log(columnHtml)
         $('#column-new-position').before(columnHtml);
         lastColumnPosition = column.position;
@@ -317,7 +317,7 @@
 
                     const columnHtml = columnTemplate
                         .replace('{columnId}', column.columnId)
-                        .replace('{name}', column.name);
+                        .replace('{name}', column.title);
 
                     $('#column-new-position').before(columnHtml);
                     loadCardsByColumnId(column.columnId, authToken);
@@ -382,6 +382,88 @@
             });
     }
 
+    function enableEditTitle(columnElement) {
+        if (columnElement) {
+            const titleElement = columnElement.querySelector('.kanban__title h2');
+            if (titleElement) {
+                titleElement.addEventListener('click', function () {
+                    // input Element를 생성하고, 컬럼제목을 input Element로 바꿈
+                    const currentTitle = titleElement.textContent;
+                    const inputElement = document.createElement('input');
+                    inputElement.value = currentTitle;
+                    titleElement.replaceWith(inputElement);
+
+                    // input Element에 포커스
+                    inputElement.focus();
+
+                    // 포커스가 풀리면 수정된 제목으로 html 업데이트
+                    function updateTitle() {
+                        const newTitle = inputElement.value;
+                        const newH2 = document.createElement('h2');
+                        const materialIcon = document.createElement('i');
+                        const authToken = getAuthorizationToken();
+                        const columnId = extractColumnId(columnElement);
+
+                        function extractColumnId(element) {
+                            const columnIdAttr = element.id; // columnId 가져오기
+                            const idParts = columnIdAttr.split('-');
+                            return idParts[idParts.length - 1]; // 마지막 부분 반환
+                        }
+
+                        // boardId 가져오는 부분 -> 로직을 바꾸는게 좋을듯?
+                        const currentUrl = window.location.href;
+                        const parts = currentUrl.split('/');
+                        const lastPart = parts[parts.length - 1];
+                        const boardId = parseInt(lastPart, 10);
+
+                        newH2.onclick = function () {
+                            enableEditTitle(this.closest('.column'));
+                        };
+                        materialIcon.classList.add('material-icons');
+                        materialIcon.textContent = newTitle;
+                        newH2.appendChild(materialIcon);
+
+                        // input Element가 없어진 이후에도 replace하는 것을 막기 위해 조건 체크
+                        if (inputElement.parentElement) {
+                            inputElement.replaceWith(newH2);
+                        }
+                        // You can perform further actions like updating the column title in the database
+                        // Example: updateColumnTitle(columnId, newTitle);
+
+                        $.ajax({
+                            url: `/columns/` + columnId,
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': authToken
+                            },
+                            contentType: 'application/json',
+                            // POST 요청
+                            data: JSON.stringify({
+                                boardId: boardId,
+                                title: newH2.textContent
+                            }),
+                            success: function (card) {
+                                // 성공적으로 서버에 데이터를 전송한 후 할 일
+                                alert("수정이 성공적으로 완료되었습니다.");
+                            },
+                            error: function (error) {
+                                // 요청 중 에러가 발생했을 때 처리할 내용
+                                console.error('컬럼 수정 중 오류가 발생했습니다:', error);
+                            }
+                        });
+                    }
+
+                    // 포커스를 푸는 방법은 엔터를 누르거나, input창에서 나가기(blur)
+                    //inputElement.addEventListener('blur', updateTitle);
+                    inputElement.addEventListener('keyup', function (event) {
+                        if (event.key === 'Enter') {
+                            updateTitle();
+                        }
+                    });
+                });
+            }
+        }
+    }
 </script>
 
 <div class="wrapper">
