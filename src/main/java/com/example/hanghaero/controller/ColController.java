@@ -35,6 +35,7 @@ public class ColController {
 	@ResponseBody
 	public List<ColResponseDto> getColumns(@PathVariable Long boardId){
 		System.out.println("[List<ColResponseDto> getColumns ajax 호출]" + boardId);
+		System.out.println(columnService.getColumns(boardId).get(1).getTitle());
 		return columnService.getColumns(boardId);
 	}
 

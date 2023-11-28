@@ -18,9 +18,10 @@ public class CardController {
 
     private final CardService cardService;
 
-    @GetMapping("/cards/columns/{columnId}")
+    //@GetMapping("/cards/columns/{columnId}")
+    @GetMapping("cards/boards/{boardId}")
     @ResponseBody
-    public List<CardResponseDto> getCardsByColumnId(Model model, @PathVariable Long columnId) {
+    public List<CardResponseDto> getCardsByColumnId(@PathVariable Long columnId) {
         //List<Card> cards = cardService.getCardsByColumnId(columnId);
         List<CardResponseDto> cards = cardService.getCards(columnId);
         return cards;

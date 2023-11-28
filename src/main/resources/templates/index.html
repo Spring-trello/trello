@@ -111,7 +111,7 @@
 
     function boardDetail(boardId){
         const authToken = getAuthorizationToken();
-        console.log("[boardDetail: boardId] = "+ boardId)
+        console.log("[index.html = boardDetail: boardId] = "+ boardId)
         $.ajax({
             url: "columns/"+boardId,
             type: "GET",
@@ -119,8 +119,7 @@
                 'Authorization': authToken
             },
             success: function(response){
-                console.log("success")
-                let url = "columns/"+boardId;
+                let url = "boards/"+boardId;
                 location.replace(url); //토큰이 안보내짐
             }
         });
