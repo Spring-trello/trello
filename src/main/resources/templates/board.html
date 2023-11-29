@@ -3,26 +3,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Your HTML Document</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <!-- 외부 스타일 시트를 링크합니다. -->
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="/css/style.css" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          rel="stylesheet"/>
 </head>
 <body>
-<div id="p1" class="mdl-progress mdl-js-progress"></div>
+<div class="mdl-progress mdl-js-progress" id="p1"></div>
 
 <script>
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
         this.MaterialProgress.setProgress(44);
     });
 
-    function addModifyEventListenerToCard(element){
+    function addModifyEventListenerToCard(element) {
         console.log("카드 수정 감지 리스너 추가");
         $(element).on('keydown', function (event) {
             // Enter 키가 눌렸을 때
@@ -37,7 +39,7 @@
         });
     }
 
-    function updateCard(card){
+    function updateCard(card) {
         const authToken = getAuthorizationToken();
         // title dd-handle, card-description, card-duedate
         const cardModifyRequestMap = {};
@@ -46,9 +48,10 @@
                 contentElement.classList.contains('card-description') ? 'description' :
                     contentElement.classList.contains('card-duedate') ? 'dueDate' :
                         '';
-            const value = contentElement.innerText.trim();
+            const value = contentElement.innerHTML.trim();
             cardModifyRequestMap[key] = value;
         });
+
 
         const cardId = card.id.split('-')[1];
         //cardModifyRequestMap
@@ -62,7 +65,8 @@
             contentType: 'application/json',
             // POST 요청
             data: JSON.stringify(cardModifyRequestMap),
-            success: function (card) {},
+            success: function (card) {
+            },
             error: function (error) {
                 console.error('카드 생성 중 오류가 발생했습니다:', error);
             }
@@ -76,10 +80,10 @@
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
         loadColumns(1, authToken);
-        $("#delete-button").click(function(){
+        $("#delete-button").click(function () {
             addItem();
         });
-        $("#add-column").click(function(){
+        $("#add-column").click(function () {
             addColumn(authToken);
         });
 
@@ -127,8 +131,6 @@
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
             <h3 class="title dd-handle card-content">
-
-<!--                <i class=" material-icons ">filter_none</i>-->
                 {card_name}
             </h3>
 <!--            아래 card-text의 원래 class는 text-->
@@ -204,7 +206,7 @@
         const extractedCardId = cardId.split('-')[1];
         // 추출된 card_id를 출력하거나 사용할 수 있습니다.
         console.log(extractedCardId);
-        console.log("cardId " +extractedCardId);
+        console.log("cardId " + extractedCardId);
         // AJAX 요청을 보냄
         $.ajax({
             url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
@@ -213,7 +215,7 @@
                 'Authorization': authToken
             },
             contentType: 'application/json',
-            success: function ( deleteCard) {
+            success: function (deleteCard) {
                 alert("삭제되었습니다.");
 
                 // 전체 카드 날리기 \
@@ -257,7 +259,7 @@
             },
             success: function (columns) {
                 console.log(columns);
-                columns.forEach(function(column){
+                columns.forEach(function (column) {
                     loadColumn(column);
                     loadCardsByColumnId(column.columnId, authToken);
                 });
@@ -272,22 +274,23 @@
         const newCardHtml = cardTemplate
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
-            .replace("{card_description}", card.description)
-            // .replace("{card_duedate}", card.duedate)
+            .replace("{card_description}", card.description.replaceAll("\n", "<br>"));
+        // .replace("{card_duedate}", card.duedate)
 
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
 
         $(`#card-${card.id} #cardIdValue`).val(card.id);
 
-        const newCard =$(`#card-${card.id}`);
+        const newCard = $(`#card-${card.id}`);
 
-        newCard.find('.title dd-handle').each(function(index, element){
+        newCard.find('.title dd-handle').each(function (index, element) {
             addModifyEventListenerToCard(element);
         });
-        newCard.find('.card-description').each(function(index, element){
+        newCard.find('.card-description').each(function (index, element) {
             addModifyEventListenerToCard(element);
         });
     }
+
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
             url: '/cards/columns/' + columnId,
@@ -306,7 +309,7 @@
         });
     }
 
-    function addColumn(authToken){
+    function addColumn(authToken) {
         // boardId,
         // title
         let boardId = 1
@@ -436,19 +439,20 @@
     </menu>
 </div>
 
-<div id="myModal" class="modal">
+<div class="modal" id="myModal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <form action="/cards" method="POST">
             <li class="dd-item" id="todo-${itemCount}">
-                <input type="hidden" id="modalColumnId" name="modalColumnId">
-                <div class="input-form-box"><span>제목 </span><input type="text" id="name" name="name"
-                                                                   class="form-control"></div>
-                <div class="input-form-box"><span>내용 </span><input type="text" id="description" name="description"
-                                                                   class="form-control">
+                <input id="modalColumnId" name="modalColumnId" type="hidden">
+                <div class="input-form-box"><span>제목 </span><input class="form-control" id="name" name="name"
+                                                                   type="text"></div>
+                <div class="input-form-box"><span>내용 </span><input class="form-control" id="description"
+                                                                   name="description"
+                                                                   type="text">
                 </div>
                 <div class="actions">
-                    <button onclick="createCardForm()" type="button" class="btn btn-primary btn-xs" style="width:100%">
+                    <button class="btn btn-primary btn-xs" onclick="createCardForm()" style="width:100%" type="button">
                         저장
                     </button>
                 </div>
