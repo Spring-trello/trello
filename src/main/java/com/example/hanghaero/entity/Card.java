@@ -42,7 +42,7 @@ public class Card {
 	@ColumnDefault("'#FFFFFF'")
 	private String color;
 
-	@Column(nullable = false)
+	@Column
 	private LocalDate dueDate;
 
 	@Column(nullable = true)
