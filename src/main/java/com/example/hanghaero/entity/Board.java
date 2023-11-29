@@ -39,6 +39,9 @@ public class Board {
 	@Column(nullable = false)
 	private String description;
 
+	@OneToMany(mappedBy = "board", orphanRemoval = true)
+	private List<Col> columns = new ArrayList<>();
+
 	@ManyToOne
 	@JoinColumn(name = "creator_id")
 	private User user;

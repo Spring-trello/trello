@@ -10,6 +10,16 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+#datepicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dDayDisplay {
+    font-family: 'Poppins', sans-serif;
+}
+
 
 .modal-content {
     background-color: #fefefe;
@@ -24,7 +34,7 @@
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -55,7 +65,7 @@ Body {
 
 
 h1 {
-    position: absolute;
+    /*position: absolute;*/
     left: 16px;
     top: 16px;
 }
@@ -443,8 +453,23 @@ button {
     background-color: #ffffff;
 }
 
+#signup-form {
+    width: 538px;
+    height: 900px;
+    margin: 70px auto 141px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /*gap: 96px;*/
+    padding: 56px 0 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+}
+
 #login-title {
-    width: 303px;
+    /*width: 303px;*/
     height: 32px;
     /*margin: 56px auto auto auto;*/
     flex-grow: 0;
@@ -547,7 +572,7 @@ button {
     margin: 40px 0 0;
     padding: 11px 12px;
     border-radius: 5px;
-    background-color: #15aabf;
+    background-color: black;
 
     font-family: SpoqaHanSansNeo;
     font-size: 20px;
@@ -987,9 +1012,9 @@ h2 {
 }
 
 h2 .material-icons {
-    font-family: 'Nanum Gothic', sans-serif;
+    font-family: 'Poppins', sans-serif;
     text-align: center;
-    color: #B0BEC5;
+    /*color: #B0BEC5;*/
     line-height: 1.5;
 }
 
@@ -1091,6 +1116,10 @@ ol.column {
     border-radius: 2px;
     font-family: 'Poppins', sans-serif;
     text-align: center;
+}
+
+.custom-font {
+    font-family: 'Poppins', sans-serif;
 }
 
 ol.addcolumn {
@@ -1197,7 +1226,7 @@ ol.kanban {
  */
 
 .dd {
-    position: relative;
+    /*position: relative;*/
     display: flex;
     list-style: none;
 }
@@ -1232,13 +1261,13 @@ ol.kanban {
 }
 
 .dd-item {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
     display: block;
     margin: 5px 0;
-    padding: 5px 10px;
     color: #333;
     text-decoration: none;
     font-weight: bold;
-    border: 1px solid #ccc;
     background: #fafafa;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -1320,3 +1349,10 @@ ol.kanban {
     cursor: move;
 }
 
+.card-color-bar {
+    height: 10px;
+    background-color: transparent;
+    border-radius: 5px;
+    margin: 5px 0;
+    flex: 1;
+}

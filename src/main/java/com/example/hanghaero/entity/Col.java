@@ -1,5 +1,8 @@
 package com.example.hanghaero.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.hanghaero.dto.column.ColCreateRequestDto;
 import com.example.hanghaero.dto.column.ColModifyRequestDto;
 
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,9 +35,12 @@ public class Col {
 	@Column(name = "position")
 	int position = 0;
 
+	@OneToMany(mappedBy = "column", orphanRemoval = true)
+	List<Card> cards = new ArrayList<>();
+
 	@ManyToOne
 	@JoinColumn(name = "board_id")
-	private Board board;
+	Board board;
 
 	public Col(Board board, ColCreateRequestDto requestDto, int lastPosition) {
 		this.title = requestDto.getTitle();

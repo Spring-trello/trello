@@ -4,40 +4,142 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Your HTML Document</title>
+    <title> 항해로 </title>
     <!-- Bootstrap CSS -->
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <!-- 외부 스타일 시트를 링크합니다. -->
 
     <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/styles2.css" rel="stylesheet">
     <script crossorigin="anonymous"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
           rel="stylesheet"/>
+    <!-- Favicon-->
+    <link href="assets/favicon.ico" rel="icon" type="image/x-icon"/>
+    <link href="assets/favicon.ico" rel="icon" type="image/x-icon"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
+
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-
+    <!-- jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <!-- jQuery UI CSS -->
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <!-- Spectrum Colorpicker -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css" rel="stylesheet"
+          type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.js"></script>
 </head>
 <body>
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container px-5">
+        <a class="navbar-brand" href="#" onclick="goToHome()">Hanghaero</a>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a aria-current="page" class="nav-link active" href="#"
+                                        onclick="goToHome()">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="Logout()">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="mdl-progress mdl-js-progress" id="p1"></div>
 
 <script>
+    function calculateDDay(card) {
+        const id = card.id;
+        var today = new Date();
+
+        // 문자열을 "-"로 분리하여 배열로 만듭니다.
+        var dateArray = card.dueDate.split("-");
+        // 배열에서 연, 월, 일 값을 추출합니다.
+        var year = parseInt(dateArray[0], 10);
+        var month = parseInt(dateArray[1], 10) - 1; // JavaScript의 월은 0부터 시작하므로 1을 빼줍니다.
+        var day = parseInt(dateArray[2], 10);
+
+        var dueDate = new Date(year, month, day);
+
+        console.log("dueDate : " + dueDate);
+        var timeDiff = dueDate.getTime() - today.getTime();
+        var dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        var dDayDisplaySelector = "#card-" + id + " #dDayDisplay";
+
+        console.log(dDayDisplaySelector);
+        var d_day = $(dDayDisplaySelector);
+        if (dayDiff === 0) {
+            d_day.text("D-Day");
+        } else if (dayDiff > 0) {
+            d_day.text("D-" + dayDiff);
+        } else {
+            dayDiff *= -1;
+            d_day.text("D+" + dayDiff);
+        }
+
+
+    }
+
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
         this.MaterialProgress.setProgress(44);
+    });
+
+
+    let lastColumnPosition = 0;
+    var colresponsedto = {}
+
+    let boardId = 0;
+    $(document).ready(function () {
+        const authToken = getAuthorizationToken();
+        const urls = window.location.href.split("/");
+        boardId = urls.at(urls.length - 1);
+        loadColumns(boardId, authToken);
+        $("#delete-button").click(function () {
+            addItem();
+        });
+        $("#add-column").click(function () {
+            addColumn(authToken);
+        });
+
+        $(document).ready(function () {
+            $("#card-modify-popup").load("/cardPopup.html");
+        })
+
+        $("#colorpicker").spectrum({
+            showPaletteOnly: true,
+            showPalette: true,
+            color: 'blanchedalmond',
+            palette: [
+                ['black', 'white', 'blanchedalmond',
+                    'rgb(255, 128, 0);', 'hsv 100 70 50'],
+                ['red', 'yellow', 'green', 'blue', 'violet']
+            ],
+            change: function (color) {
+                $('#colorHex').val(color.toHexString());
+            }
+        });
     });
 
     function addModifyEventListenerToCard(element) {
         console.log("카드 수정 감지 리스너 추가");
         $(element).on('keydown', function (event) {
             // Enter 키가 눌렸을 때
-            if (event.key === 'Enter' && event.ctrlKey) {
-
+            if (event.ctrlKey && event.key === 'Enter') {
                 console.log("카드 수정 감지");
                 event.preventDefault(); // 기본 동작 방지 (새 줄 입력 방지)
-
                 const card = element.closest('.dd-item');
                 updateCard(card);
             }
@@ -79,50 +181,12 @@
     }
 
 
-    let lastColumnPosition = 0;
-    var colresponsedto = {}
-
-    let boardId = 0;
-    $(document).ready(function () {
-        const authToken = getAuthorizationToken();
-        const urls = window.location.href.split("/");
-        boardId = urls.at(urls.length - 1);
-        loadColumns(boardId, authToken);
-        $("#delete-button").click(function () {
-            addItem();
-        });
-        $("#add-column").click(function () {
-            addColumn(authToken);
-        });
-
-        $(document).ready(function () {
-            $("#card-modify-popup").load("/cardPopup.html");
-        })
-
-        // 정민님 컬럼 카드 불러오기 로직
-        // $("body").on("click", "button#test-button", function(){
-        //     console.log("add button 동작");
-        //     var buttonId = $(this).attr("id");
-        //     addItem($(this).closest('ol'));
-        // });
-        //
-        // showColumn();
-        // loadAllCard_pjm();
-        //
-        // $("#test-button").click(function(){
-        //     addItem();
-        // });
-
-        // 정민님 컬럼 카드 불러오기 로직
-
-    });
-
-
     const columnTemplate =
         `
         <ol class="column" id="column-{columnId}">
+            <span class="close" onclick="deleteColumn(this.closest('.column'))">&times;</span>
             <div class="kanban__title">
-                <h2 style="font-family: 'Poppins', sans-serif;" onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
+                <h2 style="font-family: 'Poppins', sans-serif;" onclick="enableEditTitle(this.closest('.column'))">{name}</h2>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -139,19 +203,21 @@
     const cardTemplate =
         `
         <li class="dd-item" id="card-{card_id}" >
+            <div class="card-color-bar"></div>
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
-            <img alt= ":" src="../static/images/icon_detail.png" onclick="openCardModifyModal(this)"></img>
+            <img alt= ":" src="/images/icon_detail.png" width="20" height="20"  style="position: absolute; top: 2px; right: 2px;" onclick="openCardModifyModal(this)"></img>
 
             <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
             </h3>
-
-            <div class="card-description card-content" contenteditable="true">
-                {card_description}
+            <div style="font-family: 'Poppins', sans-serif;">
+                <div class="card-description card-content"  contenteditable="true">
+                    {card_description}
+                </div>
             </div>
-
-            <div class="card-duedate card-content" contenteditable="true">
+            <p id="dDayDisplay"></p>
+            <div style="font-family: 'Poppins', sans-serif;" class="card-duedate card-content" contenteditable="true">
                 {card_duedate}
             </div>
         </li>
@@ -164,6 +230,13 @@
         console.log(columnId + " id의 컬럼에 카드를 추가하는 modal창 띄움");
         modal.style.display = "block";
         modal.style.zIndex = 9999;
+
+        $("#datepicker-container").datepicker(); // Datepicker 초기화
+
+        $("#datepicker").datepicker({
+            // Datepicker를 모달 창 안에 추가하기 위해 appendTo 사용
+            appendTo: modal
+        });
     }
 
     // 모달 닫기
@@ -180,6 +253,8 @@
 
         var name = $("#name").val(); // 이름 입력란의 값을 가져옴
         var description = $("#description").val(); // 설명 입력란의 값을 가져옴
+        var selectedDate = $("#datepicker").datepicker("getDate");
+        var color = $("#colorpicker").spectrum("get").toHexString();
 
         // AJAX 요청을 보냄
         $.ajax({
@@ -193,14 +268,20 @@
             data: JSON.stringify({
                 name: name, // 이름 데이터
                 description: description, // 설명 데이터
-                columnId: columnId
+                columnId: columnId,
+                dueDate: selectedDate,
+                color: color
                 // boardId: 1
             }),
             success: function (card) {
                 // 성공적으로 서버에 데이터를 전송한 후 할 일
                 alert("저장이 성공적으로 완료되었습니다.");
+                console.log(card);
                 loadCard(card, columnId);
                 closeModal();
+                $("#name").val(''); // 이름 입력란 초기화
+                $("#description").val(''); // 설명 입력란 초기화
+
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
@@ -221,33 +302,38 @@
         // 추출된 card_id를 출력하거나 사용할 수 있습니다.
         console.log(extractedCardId);
         console.log("cardId " + extractedCardId);
-        // AJAX 요청을 보냄
-        $.ajax({
-            url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
-            method: 'DELETE',
-            headers: {
-                'Authorization': authToken
-            },
-            contentType: 'application/json',
-            success: function (deleteCard) {
-                alert("삭제되었습니다.");
+        console.log("카드 삭제 confirm")
+        // 삭제 YES/NO
+        const confirmDelete = confirm("카드를 삭제하시겠습니까?");
+        if (confirmDelete) {
+            // AJAX 요청을 보냄
+            $.ajax({
+                url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
+                method: 'DELETE',
+                headers: {
+                    'Authorization': authToken
+                },
+                contentType: 'application/json',
+                success: function (deleteCard) {
+                    alert("삭제되었습니다.");
 
-                // 전체 카드 날리기
-                // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
-                const columnId = deleteCard.columnId;
-                const columnToReload = $(`#column-${columnId}`);
-                const cardList = columnToReload.find("#todo-list");
-                cardList.empty();
+                    // 전체 카드 날리기
+                    // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
+                    const columnId = deleteCard.columnId;
+                    const columnToReload = $(`#column-${columnId}`);
+                    const cardList = columnToReload.find("#todo-list");
+                    cardList.empty();
 
-                // 다시 전체 불러오기
-                loadCardsByColumnId(columnId, authToken);
+                    // 다시 전체 불러오기
+                    loadCardsByColumnId(columnId, authToken);
 
-            },
-            error: function (error) {
-                // 요청 중 에러가 발생했을 때 처리할 내용
-                alert("삭제 실패하였습니다.")
-            }
-        });
+                },
+                error: function (error) {
+                    // 요청 중 에러가 발생했을 때 처리할 내용
+                    alert("삭제 실패하였습니다.")
+                }
+            });
+        }
     }
 
 
@@ -295,12 +381,14 @@
         const newCardHtml = cardTemplate
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
-            .replace("{card_description}", card.description.replaceAll("\n", "<br>"));
-        // .replace("{card_duedate}", card.duedate)
+            .replace("{card_description}", card.description.replaceAll("\n", "<br>"))
+            .replace("{card_duedate}", card.dueDate);
 
         // html 요소를 해당 컬럼의 가장 아래에 추가한다.
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
         $(`#card-${card.id} #cardIdValue`).val(card.id);
+        // 카드의 색깔 변경
+        $(`#card-${card.id} .card-color-bar`).css('background-color', card.color);
         const newCard = $(`#card-${card.id}`);
 
         // 카드 제목 및 내용 수정 이벤트 리스너 등록
@@ -310,6 +398,8 @@
         newCard.find('.card-description').each(function (index, element) {
             addModifyEventListenerToCard(element);
         });
+        calculateDDay(card);
+
     }
 
     function loadCardsByColumnId(columnId, authToken) {
@@ -413,8 +503,11 @@
     // 새로운 제목을 갖는 h2 엘리먼트 생성
     function createNewH2Element(newTitle, materialIcon, columnElement) {
         const newH2 = document.createElement('h2');
-        materialIcon.classList.add('material-icons');
-        materialIcon.textContent = newTitle;
+        newH2.classList.add('custom-font');
+        // 스타일 직접 추가
+        newH2.style.fontFamily = "'Poppins', sans-serif";
+        // 다른 스타일 속성 추가
+        newH2.textContent = newTitle;
         newH2.appendChild(materialIcon);
         newH2.onclick = () => enableEditTitle(columnElement);
         return newH2;
@@ -429,11 +522,10 @@
             headers: {'Authorization': authToken},
             contentType: 'application/json',
             data: JSON.stringify({boardId: boardId, title: newTitle}),
-            success: () => console.log("수정이 성공적으로 완료되었습니다."),
-            error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
+            success: () => alert('수정이 완료되었습니다.'),
+            error: (error) => alert('컬럼 수정 중 오류가 발생하였습니다.')
         });
     }
-
 
     // 카드 수정 관련 모달
     function openCardModifyModal(card) {
@@ -455,29 +547,31 @@
         // 모달이 닫힐 때 처리할 작업 추가
     });
 
+    function goToHome() {
+        window.location.href = "/";
+    }
+
+    function deleteAuthToken() {
+        document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+
+    function Logout() {
+        deleteAuthToken();
+        window.location.href = "/users/signin";
+    }
+
 </script>
-
-<div class="wrapper">
-    <div class="kanban__title">
-        <h1 style="font-family: 'Poppins', sans-serif;">Hanghaero</h1></div>
-
-    <div class="dd" id="column-list">
-        <ol class="addcolumn" id="column-new-position">
-            <div class="actions">
-                <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
-            </div>
-        </ol>
+<section class="py-5 border-bottom" id="features">
+    <div class="wrapper">
+        <div class="dd" id="column-list">
+            <ol class="addcolumn" id="column-new-position">
+                <div class="actions">
+                    <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
+                </div>
+            </ol>
+        </div>
     </div>
-
-    <menu class="kanban">
-        <button style="font-family: 'Poppins', sans-serif;">settings</button>
-        <button style="font-family: 'Poppins', sans-serif;">chevron_left</button>
-        <button class="viewkanban" style="font-family: 'Poppins', sans-serif;">view_column</button>
-        <button class="viewlist" style="font-family: 'Poppins', sans-serif;">view_list</button>
-        <button style="font-family: 'Poppins', sans-serif;">playlist_add</button>
-    </menu>
-</div>
-
+</section>
 
 <div class="modal" id="myModal">
     <div class="modal-content">
@@ -492,6 +586,16 @@
                                                                                     id="description"
                                                                                     name="description"
                                                                                     type="text">
+                </div>
+                <div>
+                    <span class="modalfont">색상</span>
+                </div>
+                <div>
+                    <input id="colorpicker" type="text"/>
+                </div>
+                <div>
+                    <span class="modalfont">날짜</span>
+                    <div id="datepicker"></div>
                 </div>
                 <div class="actions">
                     <button class="btn btn-primary btn-xs" onclick="createCardForm()"
@@ -535,52 +639,11 @@ odal">
     </div>
 </div>
 
-<script>
-    // if (document.getElementById("state1")) {
-    //     const countUp = new CountUp("state1", document.getElementById("state1").getAttribute("countTo"));
-    //     if (!countUp.error) {
-    //         countUp.start();
-    //     } else {
-    //         console.error(countUp.error);
-    //     }
-    // }
-    // if (document.getElementById("state2")) {
-    //     const countUp1 = new CountUp("state2", document.getElementById("state2").getAttribute("countTo"));
-    //     if (!countUp1.error) {
-    //         countUp1.start();
-    //     } else {
-    //         console.error(countUp1.error);
-    //     }
-    // }
-    // if (document.getElementById("state3")) {
-    //     const countUp2 = new CountUp("state3", document.getElementById("state3").getAttribute("countTo"));
-    //     if (!countUp2.error) {
-    //         countUp2.start();
-    //     } else {
-    //         console.error(countUp2.error);
-    //     }
-    //     ;
-    // }
-    //
-    // if (document.querySelector('.datepicker-1')) {
-    //     flatpickr('.datepicker-1', {}); // flatpickr
-    // }
-    //
-    // if (document.querySelector('.datepicker-2')) {
-    //     flatpickr('.datepicker-2', {}); // flatpickr
-    // }
-    // if (document.getElementById("typed")) {
-    //     var typed = new Typed("#typed", {
-    //         stringsElement: "#typed-strings",
-    //         typeSpeed: 70,
-    //         backSpeed: 50,
-    //         backDelay: 200,
-    //         startDelay: 500,
-    //         loop: true
-    //     });
-    // }
-</script>
+
+<!-- JS 파일 목록 -->
 
 <script src="/js/basic.js"></script>
+<script src="/js/column.js"></script>
+
 </body>
 </html>
