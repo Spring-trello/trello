@@ -22,13 +22,6 @@
         this.MaterialProgress.setProgress(44);
     });
 
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // 모든 text 클래스 엘리먼트에 대해 keydown 이벤트 리스너 추가
-    //     document.querySelectorAll('.title dd-handle').forEach(addModifyEventListenerToCard);
-    //     document.querySelectorAll('.card-description').forEach(addModifyEventListenerToCard);
-    // });
-
-
     function addModifyEventListenerToCard(element){
         console.log("카드 수정 감지 리스너 추가");
         $(element).on('keydown', function (event) {
@@ -114,7 +107,7 @@
         `
         <ol class="column" id="column-{columnId}">
             <div class="kanban__title">
-                <h2><i class="material-icons">{name}</i></h2>
+                <h2 onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -222,6 +215,7 @@
             contentType: 'application/json',
             success: function ( deleteCard) {
                 alert("삭제되었습니다.");
+
                 // 전체 카드 날리기 \
                 // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
                 const columnId = deleteCard.columnId;
@@ -239,7 +233,6 @@
             }
         });
     }
-
 
 
     function loadColumn(column) {
@@ -337,105 +330,89 @@
                 alert(`${errorMessage}`);
             });
     }
-    //
-    // function loadAllCard_pjm(){
-    //     const authToken = getAuthorizationToken();
-    //     $.ajax({
-    //         url: '/cards/boards/'+window.location.pathname.split('/')[2],
-    //         type: 'GET',
-    //         headers: {
-    //             'Authorization': authToken
-    //         },
-    //         success: function (data) {
-    //             lst = $('.kanban.columnId h2')
-    //             console.log("list = ", lst)
-    //             idx_set = new Set();
-    //             for (const val of lst){
-    //                 idx_set.add(Number(val.id))
-    //             }
-    //             console.log("idx_set = ", idx_set)
-    //             for ( let i of idx_set ) {
-    //                 const todoList = $('#todo-list-' + i);
-    //                 for (const card of data) {
-    //                     console.log("card Object", card)
-    //                     if(i == card.columnId){
-    //                         todoList.append(
-    //                             `<li class="dd-item" id="todo-${card.id}">
-    //                         <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
-    //                         <div class="text" contenteditable="true">
-    //                             ${card.description}
-    //                         </div>
-    //                         <i class="material-icons" id="label blue">label</i>
-    //                         <div class="actions">
-    //                             <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-    //                         </div>
-    //                     </li>`
-    //                         );
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         error: function (error) {
-    //             console.log('Error:', error);
-    //         }
-    //     });
-    // }
-    //
-    // // 정민님 함수
-    // // 정민님 함수
-    // function showColumn(){
-    //     var pathname = window.location.pathname;
-    //     console.log(pathname);
-    //     const authToken = getAuthorizationToken();
-    //     $.ajax({
-    //         type: 'GET',
-    //         url: `/columns/boards/`+window.location.pathname.split('/')[2],
-    //         headers: {
-    //             'Authorization': authToken
-    //         },
-    //         data: colresponsedto,
-    //         success: function (data) {
-    //             const dd = $(".dd");
-    //             dd.empty();
-    //             for (const column of data){
-    //                 let tempHtml = addHTML(column)
-    //                 dd.append(tempHtml);
-    //             }
-    //         },
-    //         error(error, status, request) {
-    //         }
-    //     })
-    // }
-    // function addHTML(column){
-    //     console.log("column id = ", column)
-    //     return `<ol class = "kanban columnId ${column.columnId}">
-    //                <div class="kanban__title" id="todo-list-${column.columnId}">
-    //                 <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
-    //                 <button id="test-button" className="addbutt"><span class="material-symbols-outlined">add</span> Add new </button>
-    //                 </div>
-    //             </ol>`
-    // }
-    //
-    // function addItem(elem) {
-    //     console.log(elem)
-    //     let itemCount = $('li.dd-item').length+1
-    //     console.log("itemCount = " ,itemCount);
-    //     console.log(elem[0].querySelectorAll('li')[itemCount-2])
-    //     last_elem = elem[0].querySelectorAll('li')[itemCount-2]
-    //     elem.append(
-    //         `<li class="dd-item" id="todo-${itemCount}">
-    //             <h3 class="title dd-handle">Title<i class="material-icons">filter_none</i></h3>
-    //             <div class="text" contenteditable="true">
-    //                 wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
-    //             </div>
-    //             <i class="material-icons" id="label blue">label</i>
-    //             <div class="actions">
-    //                 <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-    //             </div>
-    //         </li>`
-    //     );
-    // }
 
+    function enableEditTitle(columnElement) {
+        if (columnElement) {
+            const titleElement = columnElement.querySelector('.kanban__title h2');
+            if (titleElement) {
+                titleElement.addEventListener('click', function () {
+                    // input Element를 생성하고, 컬럼제목을 input Element로 바꿈
+                    const currentTitle = titleElement.textContent;
+                    const inputElement = document.createElement('input');
+                    inputElement.value = currentTitle;
+                    titleElement.replaceWith(inputElement);
+
+                    // input Element에 포커스
+                    inputElement.focus();
+
+                    // 포커스가 풀리면 수정된 제목으로 html 업데이트
+                    function updateTitle() {
+                        const newTitle = inputElement.value;
+                        const newH2 = document.createElement('h2');
+                        const materialIcon = document.createElement('i');
+                        const authToken = getAuthorizationToken();
+                        const columnId = extractColumnId(columnElement);
+
+                        function extractColumnId(element) {
+                            const columnIdAttr = element.id; // columnId 가져오기
+                            const idParts = columnIdAttr.split('-');
+                            return idParts[idParts.length - 1]; // 마지막 부분 반환
+                        }
+
+                        // boardId 가져오는 부분 -> 로직을 바꾸는게 좋을듯?
+                        const currentUrl = window.location.href;
+                        const parts = currentUrl.split('/');
+                        const lastPart = parts[parts.length - 1];
+                        const boardId = parseInt(lastPart, 10);
+
+                        newH2.onclick = function () {
+                            enableEditTitle(this.closest('.column'));
+                        };
+                        materialIcon.classList.add('material-icons');
+                        materialIcon.textContent = newTitle;
+                        newH2.appendChild(materialIcon);
+
+                        // input Element가 없어진 이후에도 replace하는 것을 막기 위해 조건 체크
+                        if (inputElement.parentElement) {
+                            inputElement.replaceWith(newH2);
+                        }
+                        // You can perform further actions like updating the column title in the database
+                        // Example: updateColumnTitle(columnId, newTitle);
+
+                        $.ajax({
+                            url: `/columns/` + columnId,
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': authToken
+                            },
+                            contentType: 'application/json',
+                            // POST 요청
+                            data: JSON.stringify({
+                                boardId: boardId,
+                                title: newH2.textContent
+                            }),
+                            success: function (card) {
+                                // 성공적으로 서버에 데이터를 전송한 후 할 일
+                                alert("수정이 성공적으로 완료되었습니다.");
+                            },
+                            error: function (error) {
+                                // 요청 중 에러가 발생했을 때 처리할 내용
+                                console.error('컬럼 수정 중 오류가 발생했습니다:', error);
+                            }
+                        });
+                    }
+
+                    // 포커스를 푸는 방법은 엔터를 누르거나, input창에서 나가기(blur)
+                    //inputElement.addEventListener('blur', updateTitle);
+                    inputElement.addEventListener('keyup', function (event) {
+                        if (event.key === 'Enter') {
+                            updateTitle();
+                        }
+                    });
+                });
+            }
+        }
+    }
 </script>
 
 <div class="wrapper">
