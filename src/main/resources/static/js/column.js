@@ -47,6 +47,7 @@ function enableEditTitle(columnElement) {
     titleElement.addEventListener('click', handleTitleClick);
 }
 
+// 컬럼을 삭제하는 함수
 function deleteColumn(columnElement) {
     const authToken = getAuthorizationToken();
     const columnId = extractColumnId(columnElement);
