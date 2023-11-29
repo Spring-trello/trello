@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="/css/style.css" rel="stylesheet" type="text/css">
@@ -32,7 +32,7 @@
 </head>
 <body>
 <div id="login-form">
-    <div id="login-title">create Board </div>
+    <div id="login-title">create Board</div>
     <br>
 
     <div>
@@ -96,7 +96,7 @@
             success:
                 function (response) {
                     console.log(response)
-                    window.location.href = 'http://localhost:8080';
+                    window.location.href = host + "/"; // 배포과정에서 수정했습니다.
                 }
             ,
             error: function (jqXHR, textStatus, errorThrown) {

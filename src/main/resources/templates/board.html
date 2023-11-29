@@ -11,7 +11,8 @@
     <!-- 외부 스타일 시트를 링크합니다. -->
     <link href="/css/style.css" rel="stylesheet">
     <script crossorigin="anonymous"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
           rel="stylesheet"/>
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -283,18 +284,19 @@
     }
 
     function loadCard(card, columnId) {
+        // 서버에서 받은 값들로 카드 내 문자열이 있어야 할 곳에 replace
         const newCardHtml = cardTemplate
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
             .replace("{card_description}", card.description.replaceAll("\n", "<br>"));
         // .replace("{card_duedate}", card.duedate)
 
+        // html 요소를 해당 컬럼의 가장 아래에 추가한다.
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
-
         $(`#card-${card.id} #cardIdValue`).val(card.id);
-
         const newCard = $(`#card-${card.id}`);
 
+        // 카드 제목 및 내용 수정 이벤트 리스너 등록
         newCard.find('.title dd-handle').each(function (index, element) {
             addModifyEventListenerToCard(element);
         });
@@ -453,14 +455,17 @@
         <form action="/cards" method="POST">
             <li class="dd-item" id="todo-${itemCount}">
                 <input id="modalColumnId" name="modalColumnId" type="hidden">
-                <div class="input-form-box"><span class="modalfont">제목</span><input class="form-control" id="name" name="name"
+                <div class="input-form-box"><span class="modalfont">제목</span><input class="form-control" id="name"
+                                                                                    name="name"
                                                                                     type="text"></div>
-                <div class="input-form-box"><span class="modalfont">내용</span><input class="form-control" id="description"
+                <div class="input-form-box"><span class="modalfont">내용</span><input class="form-control"
+                                                                                    id="description"
                                                                                     name="description"
                                                                                     type="text">
                 </div>
                 <div class="actions">
-                    <button class="btn btn-primary btn-xs" onclick="createCardForm()" style="font-family: 'Poppins', sans-serif; width : 100%;"
+                    <button class="btn btn-primary btn-xs" onclick="createCardForm()"
+                            style="font-family: 'Poppins', sans-serif; width : 100%;"
                             type="button">
                         저장
                     </button>
