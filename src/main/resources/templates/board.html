@@ -31,7 +31,7 @@
         console.log("카드 수정 감지 리스너 추가");
         $(element).on('keydown', function (event) {
             // Enter 키가 눌렸을 때
-            if (event.key === 'Enter' && event.ctrlKey) {
+            if (event.key === 'Enter' && event.ctrlKey) {정
 
                 console.log("카드 수정 감지");
                 event.preventDefault(); // 기본 동작 방지 (새 줄 입력 방지)
@@ -217,33 +217,40 @@
         // 추출된 card_id를 출력하거나 사용할 수 있습니다.
         console.log(extractedCardId);
         console.log("cardId " + extractedCardId);
-        // AJAX 요청을 보냄
-        $.ajax({
-            url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
-            method: 'DELETE',
-            headers: {
-                'Authorization': authToken
-            },
-            contentType: 'application/json',
-            success: function (deleteCard) {
-                alert("삭제되었습니다.");
+        console.log("카드 삭제 confirm")
+        // 삭제 YES/NO
+        const confirmDelete = confirm("카드를 삭제하시겠습니까?");
+        if(confirmDelete){
+            // AJAX 요청을 보냄
+            $.ajax({
+                url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
+                method: 'DELETE',
+                headers: {
+                    'Authorization': authToken
+                },
+                contentType: 'application/json',
+                success: function (deleteCard) {
+                    alert("삭제되었습니다.");
 
-                // 전체 카드 날리기
-                // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
-                const columnId = deleteCard.columnId;
-                const columnToReload = $(`#column-${columnId}`);
-                const cardList = columnToReload.find("#todo-list");
-                cardList.empty();
+                    // 전체 카드 날리기
+                    // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
+                    const columnId = deleteCard.columnId;
+                    const columnToReload = $(`#column-${columnId}`);
+                    const cardList = columnToReload.find("#todo-list");
+                    cardList.empty();
 
-                // 다시 전체 불러오기
-                loadCardsByColumnId(columnId, authToken);
+                    // 다시 전체 불러오기
+                    loadCardsByColumnId(columnId, authToken);
 
-            },
-            error: function (error) {
-                // 요청 중 에러가 발생했을 때 처리할 내용
-                alert("삭제 실패하였습니다.")
-            }
-        });
+                },
+                error: function (error) {
+                    // 요청 중 에러가 발생했을 때 처리할 내용
+                    alert("삭제 실패하였습니다.")
+                }
+            });
+        }
+
+
     }
 
 
