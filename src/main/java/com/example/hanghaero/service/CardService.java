@@ -29,13 +29,16 @@ public class CardService {
 	private final BoardRepository boardRepository;
 	private final ColRepository colRepository;
 
-	public List<CardResponseDto> getCardsByBoardId(Long boardId){
+	public List<CardResponseDto> getCardsByBoardId(Long boardId) {
 		System.out.println("CardService getCards Method");
 		return cardRepository.getCards(boardId).stream().map(CardResponseDto::new).toList();
 	}
 
-	public List<CardResponseDto> getCardsByColumnId(Long columnId){
-		return cardRepository.getCardsByColumnId(columnId).stream().map(CardResponseDto::new).collect(Collectors.toList());
+	public List<CardResponseDto> getCardsByColumnId(Long columnId) {
+		return cardRepository.getCardsByColumnId(columnId)
+			.stream()
+			.map(CardResponseDto::new)
+			.collect(Collectors.toList());
 	}
 
 	public CardResponseDto createCard(CardCreateRequestDto requestDto,
@@ -132,4 +135,5 @@ public class CardService {
 
 		return pos;
 	}
+
 }
