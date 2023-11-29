@@ -365,7 +365,7 @@
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
             .replace("{card_description}", card.description.replaceAll("\n", "<br>"))
-            .replace("{card_duedate}", localDateToString(card.dueDate)); // LocalDate 객체로 받아오기 때문에 변환 필요
+            .replace("{card_duedate}", card.dueDate);
 
         // html 요소를 해당 컬럼의 가장 아래에 추가한다.
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
