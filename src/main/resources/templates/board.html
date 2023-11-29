@@ -116,7 +116,7 @@
         `
         <ol class="column" id="column-{columnId}">
             <div class="kanban__title">
-                <h2 style="font-family: 'Poppins', sans-serif;" onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
+                <h2 class="custom-font" onclick="enableEditTitle(this.closest('.column'))">{name}</h2>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -140,11 +140,11 @@
                 {card_name}
             </h3>
 
-            <div class="card-description card-content" contenteditable="true">
+            <div class="card-description card-content" style="font-family: 'Poppins', sans-serif;" contenteditable="true">
                 {card_description}
             </div>
 
-            <div class="card-duedate card-content" contenteditable="true">
+            <div style="font-family: 'Poppins', sans-serif;" class="card-duedate card-content" contenteditable="true">
                 {card_duedate}
             </div>
         </li>
@@ -194,6 +194,8 @@
                 alert("저장이 성공적으로 완료되었습니다.");
                 loadCard(card, columnId);
                 closeModal();
+                $("#name").val(''); // 이름 입력란 초기화
+                $("#description").val(''); // 설명 입력란 초기화
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
@@ -406,8 +408,11 @@
     // 새로운 제목을 갖는 h2 엘리먼트 생성
     function createNewH2Element(newTitle, materialIcon, columnElement) {
         const newH2 = document.createElement('h2');
-        materialIcon.classList.add('material-icons');
-        materialIcon.textContent = newTitle;
+        newH2.classList.add('custom-font');
+        // 스타일 직접 추가
+        newH2.style.fontFamily = "'Poppins', sans-serif";
+        // 다른 스타일 속성 추가
+        newH2.textContent = newTitle;
         newH2.appendChild(materialIcon);
         newH2.onclick = () => enableEditTitle(columnElement);
         return newH2;
@@ -422,8 +427,8 @@
             headers: {'Authorization': authToken},
             contentType: 'application/json',
             data: JSON.stringify({boardId: boardId, title: newTitle}),
-            success: () => console.log("수정이 성공적으로 완료되었습니다."),
-            error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
+            success: () => alert('수정이 완료되었습니다.'),
+            error: (error) => alert('컬럼 수정 중 오류가 발생하였습니다.')
         });
     }
 </script>
