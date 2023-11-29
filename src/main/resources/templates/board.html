@@ -17,9 +17,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
           rel="stylesheet"/>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link href="assets/favicon.ico" rel="icon" type="image/x-icon"/>
     <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"/>
 
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
@@ -30,10 +30,13 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container px-5">
         <a class="navbar-brand" href="#!">Hanghaero</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button"><span
+                class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                <li class="nav-item"><a aria-current="page" class="nav-link active" href="#!">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Logout</a></li>
@@ -49,15 +52,32 @@
         this.MaterialProgress.setProgress(44);
     });
 
+
+    let lastColumnPosition = 0;
+    var colresponsedto = {}
+
+    let boardId = 0;
+    $(document).ready(function () {
+        const authToken = getAuthorizationToken();
+        const urls = window.location.href.split("/");
+        boardId = urls.at(urls.length - 1);
+        loadColumns(boardId, authToken);
+        $("#delete-button").click(function () {
+            addItem();
+        });
+        $("#add-column").click(function () {
+            addColumn(authToken);
+        });
+
+    });
+
     function addModifyEventListenerToCard(element) {
         console.log("카드 수정 감지 리스너 추가");
         $(element).on('keydown', function (event) {
             // Enter 키가 눌렸을 때
-            if (event.key === 'Enter' && event.ctrlKey) {정
-
+            if (event.ctrlKey && event.key === 'Enter') {
                 console.log("카드 수정 감지");
                 event.preventDefault(); // 기본 동작 방지 (새 줄 입력 방지)
-
                 const card = element.closest('.dd-item');
                 updateCard(card);
             }
@@ -99,41 +119,6 @@
     }
 
 
-    let lastColumnPosition = 0;
-    var colresponsedto = {}
-
-    let boardId = 0;
-    $(document).ready(function () {
-        const authToken = getAuthorizationToken();
-        const urls = window.location.href.split("/");
-        boardId = urls.at(urls.length - 1);
-        loadColumns(boardId, authToken);
-        $("#delete-button").click(function () {
-            addItem();
-        });
-        $("#add-column").click(function () {
-            addColumn(authToken);
-        });
-
-        // 정민님 컬럼 카드 불러오기 로직
-        // $("body").on("click", "button#test-button", function(){
-        //     console.log("add button 동작");
-        //     var buttonId = $(this).attr("id");
-        //     addItem($(this).closest('ol'));
-        // });
-        //
-        // showColumn();
-        // loadAllCard_pjm();
-        //
-        // $("#test-button").click(function(){
-        //     addItem();
-        // });
-
-        // 정민님 컬럼 카드 불러오기 로직
-
-    });
-
-
     const columnTemplate =
         `
         <ol class="column" id="column-{columnId}">
@@ -163,10 +148,12 @@
             <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
             </h3>
-
-            <div class="card-description card-content" style="font-family: 'Poppins', sans-serif;" contenteditable="true">
-                {card_description}
+            <div style="font-family: 'Poppins', sans-serif;">
+                <div class="card-description card-content"  contenteditable="true">
+                    {card_description}
+                </div>
             </div>
+
 
             <div style="font-family: 'Poppins', sans-serif;" class="card-duedate card-content" contenteditable="true">
                 {card_duedate}
@@ -243,7 +230,7 @@
         console.log("카드 삭제 confirm")
         // 삭제 YES/NO
         const confirmDelete = confirm("카드를 삭제하시겠습니까?");
-        if(confirmDelete){
+        if (confirmDelete) {
             // AJAX 요청을 보냄
             $.ajax({
                 url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
@@ -467,13 +454,13 @@
 </script>
 <section class="py-5 border-bottom" id="features">
     <div class="wrapper">
-            <div class="dd" id="column-list">
-                <ol class="addcolumn" id="column-new-position">
-                    <div class="actions">
-                        <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
-                    </div>
-                </ol>
-            </div>
+        <div class="dd" id="column-list">
+            <ol class="addcolumn" id="column-new-position">
+                <div class="actions">
+                    <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>
+                </div>
+            </ol>
+        </div>
     </div>
 </section>
 
