@@ -33,7 +33,7 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="#" onclick="goToHome()">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="Logout()">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -173,6 +173,15 @@
 
     function goToHome() {
         window.location.href = "/";
+    }
+
+    function deleteAuthToken() {
+        document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+
+    function Logout(){
+        deleteAuthToken();
+        window.location.href = "/users/signin";
     }
 </script>
 </body>
