@@ -1,5 +1,7 @@
 package com.example.hanghaero.dto.card;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,4 +15,5 @@ public class CardCreateRequestDto {
 	private Long columnId;
 	private String name;
 	private String description;
+	private LocalDate dueDate;
 }

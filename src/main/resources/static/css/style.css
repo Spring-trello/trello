@@ -10,6 +10,16 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+#datepicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dDayDisplay {
+    font-family: 'Poppins', sans-serif;
+}
+
 
 .modal-content {
     background-color: #fefefe;
