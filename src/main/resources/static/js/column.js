@@ -54,20 +54,24 @@ function deleteColumn(columnElement) {
     const boardId = extractBoardId();
 
     console.log(columnId)
-    // 컬럼 삭제를 위해 AJAX 호출
-    $.ajax({
-        url: `/columns/${columnId}?boardId=${boardId}`,
-        method: 'DELETE',
-        headers: { 'Authorization' : authToken },
-        // contentType: 'application/json',
-        // data: JSON.stringify({ boardId : boardId }),
-        success: () => {
-            console.log("삭제가 성공적으로 완료되었습니다.");
-            // DB에 삭제요청 성공하면 화면에서도 삭제
-            columnElement.remove();
-        },
-        error: (error) => console.error('컬럼 삭제 중 오류가 발생했습니다:', error)
-    })
+
+    const confirmDelete = confirm("이 컬럼을 삭제하시겠습니까?");
+    if (confirmDelete) {
+        // 컬럼 삭제를 위해 AJAX 호출
+        $.ajax({
+            url: `/columns/${columnId}?boardId=${boardId}`,
+            method: 'DELETE',
+            headers: {'Authorization': authToken},
+            // contentType: 'application/json',
+            // data: JSON.stringify({ boardId : boardId }),
+            success: () => {
+                console.log("삭제가 성공적으로 완료되었습니다.");
+                // DB에 삭제요청 성공하면 화면에서도 삭제
+                columnElement.remove();
+            },
+            error: (error) => console.error('컬럼 삭제 중 오류가 발생했습니다:', error)
+        })
+    }
 }
 
 // 보드 ID 추출 로직
@@ -100,9 +104,9 @@ function updateColumnTitle(newTitle, columnId, boardId) {
     $.ajax({
         url: `/columns/${columnId}`,
         method: 'PUT',
-        headers: { 'Authorization' : authToken },
+        headers: {'Authorization': authToken},
         contentType: 'application/json',
-        data: JSON.stringify({ boardId : boardId, title : newTitle }),
+        data: JSON.stringify({boardId: boardId, title: newTitle}),
         success: () => console.log("수정이 성공적으로 완료되었습니다."),
         error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
     });
