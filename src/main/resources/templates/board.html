@@ -335,86 +335,86 @@
     }
 
     function enableEditTitle(columnElement) {
-        if (columnElement) {
-            const titleElement = columnElement.querySelector('.kanban__title h2');
-            if (titleElement) {
-                titleElement.addEventListener('click', function () {
-                    // input Element를 생성하고, 컬럼제목을 input Element로 바꿈
-                    const currentTitle = titleElement.textContent;
-                    const inputElement = document.createElement('input');
-                    inputElement.value = currentTitle;
-                    titleElement.replaceWith(inputElement);
+        if (!columnElement) return;
 
-                    // input Element에 포커스
-                    inputElement.focus();
+        const titleElement = columnElement.querySelector('.kanban__title h2');
+        if (!titleElement) return;
 
-                    // 포커스가 풀리면 수정된 제목으로 html 업데이트
-                    function updateTitle() {
-                        const newTitle = inputElement.value;
-                        const newH2 = document.createElement('h2');
-                        const materialIcon = document.createElement('i');
-                        const authToken = getAuthorizationToken();
-                        const columnId = extractColumnId(columnElement);
+        const handleTitleClick = () => {
+            const currentTitle = titleElement.textContent;
+            const inputElement = document.createElement('input');
+            inputElement.value = currentTitle;
 
-                        function extractColumnId(element) {
-                            const columnIdAttr = element.id; // columnId 가져오기
-                            const idParts = columnIdAttr.split('-');
-                            return idParts[idParts.length - 1]; // 마지막 부분 반환
-                        }
+            const updateTitle = () => {
+                const newTitle = inputElement.value;
+                const materialIcon = document.createElement('i');
 
-                        // boardId 가져오는 부분 -> 로직을 바꾸는게 좋을듯?
-                        const currentUrl = window.location.href;
-                        const parts = currentUrl.split('/');
-                        const lastPart = parts[parts.length - 1];
-                        const boardId = parseInt(lastPart, 10);
+                // 보드 ID와 컬럼 ID를 추출하는 추가적인 코드
+                const boardId = extractBoardId();
+                const columnId = extractColumnId(columnElement);
 
-                        newH2.onclick = function () {
-                            enableEditTitle(this.closest('.column'));
-                        };
-                        materialIcon.classList.add('material-icons');
-                        materialIcon.textContent = newTitle;
-                        newH2.appendChild(materialIcon);
+                // 수정된 제목과 현재 제목이 같으면 함수 종료
+                if (newTitle === currentTitle) return;
 
-                        // input Element가 없어진 이후에도 replace하는 것을 막기 위해 조건 체크
-                        if (inputElement.parentElement) {
-                            inputElement.replaceWith(newH2);
-                        }
-                        // You can perform further actions like updating the column title in the database
-                        // Example: updateColumnTitle(columnId, newTitle);
+                // 입력된 내용으로 새로운 h2 엘리먼트 생성
+                const newH2 = createNewH2Element(newTitle, materialIcon, columnElement);
+                if (inputElement.parentElement) {
+                    inputElement.replaceWith(newH2);
+                }
 
-                        $.ajax({
-                            url: `/columns/` + columnId,
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': authToken
-                            },
-                            contentType: 'application/json',
-                            // POST 요청
-                            data: JSON.stringify({
-                                boardId: boardId,
-                                title: newH2.textContent
-                            }),
-                            success: function (card) {
-                                // 성공적으로 서버에 데이터를 전송한 후 할 일
-                                alert("수정이 성공적으로 완료되었습니다.");
-                            },
-                            error: function (error) {
-                                // 요청 중 에러가 발생했을 때 처리할 내용
-                                console.error('컬럼 수정 중 오류가 발생했습니다:', error);
-                            }
-                        });
-                    }
+                // 컬럼 제목 업데이트를 위한 AJAX 호출
+                updateColumnTitle(newH2.textContent, columnId, boardId);
+            };
 
-                    // 포커스를 푸는 방법은 엔터를 누르거나, input창에서 나가기(blur)
-                    //inputElement.addEventListener('blur', updateTitle);
-                    inputElement.addEventListener('keyup', function (event) {
-                        if (event.key === 'Enter') {
-                            updateTitle();
-                        }
-                    });
-                });
-            }
-        }
+            inputElement.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    updateTitle();
+                }
+            });
+
+            titleElement.replaceWith(inputElement);
+            inputElement.focus();
+        };
+
+        titleElement.addEventListener('click', handleTitleClick);
+    }
+
+    // 보드 ID 추출 로직
+    function extractBoardId() {
+        const currentUrl = window.location.href;
+        const parts = currentUrl.split('/');
+        return parseInt(parts[parts.length - 1], 10);
+    }
+
+    // 컬럼 ID 추출 로직
+    function extractColumnId(columnElement) {
+        const columnIdAttr = columnElement.id;
+        const idParts = columnIdAttr.split('-');
+        return idParts[idParts.length - 1];
+    }
+
+    // 새로운 제목을 갖는 h2 엘리먼트 생성
+    function createNewH2Element(newTitle, materialIcon, columnElement) {
+        const newH2 = document.createElement('h2');
+        materialIcon.classList.add('material-icons');
+        materialIcon.textContent = newTitle;
+        newH2.appendChild(materialIcon);
+        newH2.onclick = () => enableEditTitle(columnElement);
+        return newH2;
+    }
+
+    // 컬럼 제목을 업데이트하기 위한 AJAX 호출
+    function updateColumnTitle(newTitle, columnId, boardId) {
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            url: `/columns/${columnId}`,
+            method: 'PUT',
+            headers: { 'Authorization': authToken },
+            contentType: 'application/json',
+            data: JSON.stringify({ boardId: boardId, title: newTitle }),
+            success: () => alert("수정이 성공적으로 완료되었습니다."),
+            error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
+        });
     }
 </script>
 
