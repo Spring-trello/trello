@@ -24,7 +24,7 @@
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -989,7 +989,7 @@ h2 {
 h2 .material-icons {
     font-family: 'Poppins', sans-serif;
     text-align: center;
-    color: #B0BEC5;
+    /*color: #B0BEC5;*/
     line-height: 1.5;
 }
 
@@ -1201,7 +1201,7 @@ ol.kanban {
  */
 
 .dd {
-    position: relative;
+    /*position: relative;*/
     display: flex;
     list-style: none;
 }

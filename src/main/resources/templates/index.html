@@ -18,8 +18,6 @@
 <body>
 
 <div class="nav">
-    <!-- 버튼을 클릭하면 JavaScript 함수를 호출하여 페이지 이동 -->
-    <button onclick="goToBoardPage()">보드 페이지로 이동</button>
     <button onclick="location.replace('/boards/newboard')">보드 생성하기</button>
     <div class="wrapper" id="boardList">
 
@@ -33,25 +31,6 @@
 
 <script>
     const host = 'http://' + window.location.host;
-
-    function getAuthorizationToken() {
-        const cookies = document.cookie.split('; ');
-
-        for (const cookie of cookies) {
-            const [name, value] = cookie.split('=');
-
-            // 쿠키 이름 앞뒤의 공백 제거
-            const cookieName = name.trim();
-
-            if (cookieName === 'Authorization') {
-                // 쿠키 값 앞뒤의 공백 제거 후 반환
-                return value.trim();
-            }
-        }
-
-        // 찾지 못한 경우
-        return null;
-    }
 
     // 사용 예시
 
