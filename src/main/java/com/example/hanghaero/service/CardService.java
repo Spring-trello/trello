@@ -83,19 +83,17 @@ public class CardService {
 		newPosition = Math.max(0, newPosition);
 		newPosition = Math.min(lastPosition(toColumnId), newPosition);
 
-		// 카드를 다른 컬럼으로 옮길 경우, 먼저 현재 컬럼에서 옮길 카드를 제외한 나머지 카드의 포지션을 수정
-		if (!Objects.equals(card.getColumn().getColumnId(), toColumnId)) {
-			List<Card> cardList = cardRepository
-				.findAllByPositionGreaterThanAndColumn_ColumnId(card.getPosition(), card.getColumn().getColumnId());
-			for (Card c : cardList) {
-				c.setPosition(c.getPosition() - 1);
-			}
+		// 먼저 현재 컬럼에서 옮길 카드를 제외한 나머지 카드의 포지션을 수정
+		List<Card> cardListCurrent = cardRepository
+			.findAllByPositionGreaterThanAndColumn_ColumnId(card.getPosition(), card.getColumn().getColumnId());
+		for (Card c : cardListCurrent) {
+			c.setPosition(c.getPosition() - 1);
 		}
 
-		// 이후 옮길 컬럼 내부의 포지션을 수정
-		List<Card> cardList = cardRepository
+		// 이후 카드를 옮길 컬럼 내부의 포지션을 수정
+		List<Card> cardListTarget = cardRepository
 			.findAllByPositionGreaterThanEqualAndColumn_ColumnId(newPosition, toColumnId);
-		for (Card c : cardList) {
+		for (Card c : cardListTarget) {
 			c.setPosition(c.getPosition() + 1);
 		}
 		card.move(column, newPosition);
