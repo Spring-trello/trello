@@ -40,6 +40,7 @@ public class BoardController {
 	@PostMapping("")
 	public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardCreateRequestDto boardRequestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		System.out.println("[BoardController: createBoard]");
 		Long userId = userDetails.getUser().getId();
 		return new ResponseEntity<>(boardService.createBoard(boardRequestDto, userId), HttpStatus.CREATED);
 	}
