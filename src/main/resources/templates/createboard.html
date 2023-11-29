@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="/css/style.css" rel="stylesheet" type="text/css">
@@ -40,16 +41,10 @@
 
         <div class="login-id-label">상세 설명</div>
         <textarea class="login-input-box" id="description" name="description"></textarea>
-        <div class="login-id-label" id="bgColor">색상</div>
-        <div>
-            <div class="color-box" style="background-color: #FF0000;" onclick="selectColor('#FF0000')"></div>
-            <div class="color-box" style="background-color: #00FF00;" onclick="selectColor('#00FF00')"></div>
-            <div class="color-box" style="background-color: #0000FF;" onclick="selectColor('#0000FF')"></div>
-            <div class="color-box" style="background-color: #FFFF00;" onclick="selectColor('#FFFF00')"></div>
-            <div class="color-box" style="background-color: #FF00FF;" onclick="selectColor('#FF00FF')"></div>
-            <div class="color-box" style="background-color: #00FFFF;" onclick="selectColor('#00FFFF')"></div>
-        </div>
-        <h5><span th:text="${errorMsg}"></span></h5>
+
+        <div class="login-id-label">색상</div>
+        <input class="login-input-box" id="bgColor" name="bgColor" type="text">
+
         <button id="login-id-submit" onclick="createBoard()">보드생성하기</button>
         <div style="color: red;" th:if="${not #strings.isEmpty(message)}" th:text="${message}"></div>
     </div>
@@ -57,53 +52,57 @@
 </div>
 </body>
 <script>
-    $(document).ready(function () {
-        // 토큰 삭제
-        Cookies.remove('Authorization', {path: '/'});
-    });
-
-    const href = location.href;
-    const queryString = href.substring(href.indexOf("?") + 1)
-    if (queryString === 'error') {
-        const errorDiv = document.getElementById('login-failed');
-        errorDiv.style.display = 'block';
-    }
-
     const host = 'http://' + window.location.host;
 
+    function getAuthorizationToken() {
+        const cookies = document.cookie.split('; ');
+
+        for (const cookie of cookies) {
+            const [name, value] = cookie.split('=');
+
+            // 쿠키 이름 앞뒤의 공백 제거
+            const cookieName = name.trim();
+
+            if (cookieName === 'Authorization') {
+                // 쿠키 값 앞뒤의 공백 제거 후 반환
+                return value.trim();
+            }
+        }
+
+        // 찾지 못한 경우
+        return null;
+    }
+
     function createBoard() {
+        const authToken = getAuthorizationToken();
+        console.log(authToken);
         var name = $('#name').val();
         var description = $('#description').val();
-        var bgColor= $('#bgColor').val();
+        var bgColor = $('#bgColor').val();
 
-        console.log("name =", name);
         console.log("description = ", description)
-
         $.ajax({
-            type: "POST",
-            url: `/boards`,
-            contentType: "application/json",
+            url: '/boards',
+            type: 'POST',
+            headers: {
+                'Authorization': authToken
+            },
             data: JSON.stringify({
                 name: name,
                 description: description,
                 bgColor: bgColor
-            })
-        })
-                .done(function (res, status, xhr) {
-                    console.log("name =", name);
-                    console.log("description = ", description)
-                    const token = xhr.getResponseHeader('Authorization');
-                    document.cookie = 'Authorization=' + token + '; path=/';
-                    $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                        jqXHR.setRequestHeader('Authorization', token);
-                    });
-                    window.location.href = host;
-                })
-                .fail(function (jqXHR, textStatus) {
-                    const errorMessage = jqXHR.responseText;
-                    alert(`Create Board Fail: ${errorMessage}`);
-                    window.location.href = host + '/boards'
-                });
-        }
+            }),
+            contentType: "application/json",
+            success:
+                function (response) {
+                    console.log(response)
+                    window.location.href = 'http://localhost:8080';
+                }
+            ,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('에러 발생:', textStatus, errorThrown);
+            }
+        });
+    }
 </script>
 </html>

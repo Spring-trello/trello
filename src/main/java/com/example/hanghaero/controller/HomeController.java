@@ -22,7 +22,7 @@ public class HomeController {
 	// 	return "testboard";
 	// }
 
-	@GetMapping("/boards/create")
+	@GetMapping("/boards/newboard")
 	public String boardCreate() { return "createboard"; }
 
 

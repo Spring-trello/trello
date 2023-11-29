@@ -15,5 +15,5 @@ public class BoardCreateRequestDto {
 
 	private String bgColor;
 
-	//private String description;
+	private String description;
 }
