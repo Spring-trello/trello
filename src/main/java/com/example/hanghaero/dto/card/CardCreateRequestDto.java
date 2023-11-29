@@ -15,5 +15,6 @@ public class CardCreateRequestDto {
 	private Long columnId;
 	private String name;
 	private String description;
+	private String color;
 	private LocalDate dueDate;
 }

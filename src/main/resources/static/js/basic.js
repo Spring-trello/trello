@@ -522,12 +522,12 @@ $('.viewkanban').on('click', function() {
     $('menu').removeClass('list')
 });
 /*colors*/
-$('#color').spectrum({
-    color: "#f00",
-    change: function(color) {
-        $("#label").text("change called: " + color.toHexString());
-    }
-});
+// $('#color').spectrum({
+//     color: "#f00",
+//     change: function(color) {
+//         $("#label").text("change called: " + color.toHexString());
+//     }
+// });
 
 function getAuthorizationToken() {
     const cookies = document.cookie.split('; ');
