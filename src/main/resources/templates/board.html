@@ -77,9 +77,12 @@
     let lastColumnPosition = 0;
     var colresponsedto = {}
 
+    let boardId = 0;
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
-        loadColumns(1, authToken);
+        const urls = window.location.href.split("/");
+        boardId = urls.at(urls.length - 1);
+        loadColumns(boardId, authToken);
         $("#delete-button").click(function () {
             addItem();
         });
@@ -264,11 +267,11 @@
                 });
             },
             error: function (error) {
-                if(error.status === 404) {
+                if (error.status === 404) {
                     // 서버에서 404 응답 코드를 보낸 경우 처리
                     console.log('Object not found');
                     // 여기에서 기존 HTML을 그대로 유지하거나 다른 동작 수행
-                }else{
+                } else {
                     console.log('Error:', error);
                 }
             }
@@ -315,10 +318,6 @@
     }
 
     function addColumn(authToken) {
-        // boardId,
-        // title
-        let boardId = 1
-        console.log("windows.location.href : " + window.location.href);
 
         let title = "새로운 컬럼";
         $.ajax({
