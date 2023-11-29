@@ -13,22 +13,27 @@ function enableEditTitle(columnElement) {
         inputElement.value = currentTitle;
 
         const updateTitle = () => {
-            const newTitle = inputElement.value;
-            const materialIcon = document.createElement('i');
+            let newTitle = inputElement.value.trim();
+
+            // 컬럼명이 공백일 경우 처음 컬럼명으로 돌아감
+            if (newTitle === '') {
+                console.log("컬럼명에 공백은 입력할 수 없습니다.");
+                newTitle = currentTitle;
+            }
 
             // 보드 ID와 컬럼 ID를 추출하는 추가적인 코드
             const boardId = extractBoardId();
             const columnId = extractColumnId(columnElement);
 
             // 입력된 내용으로 새로운 h2 엘리먼트 생성
-            const newH2 = createNewH2Element(newTitle, materialIcon, columnElement);
+            const newH2 = createNewH2Element(newTitle, columnElement);
             if (inputElement.parentElement) {
                 inputElement.replaceWith(newH2);
             }
 
             if (newTitle !== currentTitle) {
                 // 제목이 바뀌었으면 AJAX 호출하여 DB에 업데이트
-                updateColumnTitle(newH2.textContent, columnId, boardId);
+                updateColumnTitle(newTitle, columnId, boardId);
             } else {
                 console.log("기존 컬럼명과 동일합니다.");
             }
@@ -89,11 +94,11 @@ function extractColumnId(columnElement) {
 }
 
 // 새로운 제목을 갖는 h2 엘리먼트 생성
-function createNewH2Element(newTitle, materialIcon, columnElement) {
+function createNewH2Element(newTitle, columnElement) {
+    // <h2 class="custom-font" onclick="enableEditTitle(this.closest('.column'))">{name}</h2>
     const newH2 = document.createElement('h2');
-    materialIcon.classList.add('material-icons');
-    materialIcon.textContent = newTitle;
-    newH2.appendChild(materialIcon);
+    newH2.classList.add('custom-font');
+    newH2.textContent = newTitle;
     newH2.onclick = () => enableEditTitle(columnElement);
     return newH2;
 }

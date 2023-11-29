@@ -156,6 +156,7 @@
     const cardTemplate =
         `
         <li class="dd-item" id="card-{card_id}" >
+            <div class="card-color-bar"></div>
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
 
@@ -326,6 +327,8 @@
         // html 요소를 해당 컬럼의 가장 아래에 추가한다.
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
         $(`#card-${card.id} #cardIdValue`).val(card.id);
+        // 카드의 색깔 변경
+        $(`#card-${card.id} .card-color-bar`).css('background-color', card.color);
         const newCard = $(`#card-${card.id}`);
 
         // 카드 제목 및 내용 수정 이벤트 리스너 등록
