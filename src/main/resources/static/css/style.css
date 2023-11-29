@@ -987,7 +987,7 @@ h2 {
 }
 
 h2 .material-icons {
-    font-family: 'Nanum Gothic', sans-serif;
+    font-family: 'Poppins', sans-serif;
     text-align: center;
     color: #B0BEC5;
     line-height: 1.5;
@@ -1091,6 +1091,10 @@ ol.column {
     border-radius: 2px;
     font-family: 'Poppins', sans-serif;
     text-align: center;
+}
+
+.custom-font {
+    font-family: 'Poppins', sans-serif;
 }
 
 ol.addcolumn {
