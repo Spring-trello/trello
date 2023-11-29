@@ -29,14 +29,14 @@
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container px-5">
-        <a class="navbar-brand" href="#!">Hanghaero</a>
+        <a class="navbar-brand" href="#" onclick="goToHome()">Hanghaero</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Logout</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#" onclick="goToHome()">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -455,6 +455,10 @@
             error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
         });
     }
+
+    function goToHome() {
+        window.location.href = "/";
+    }
 </script>
 <section class="py-5 border-bottom" id="features">
     <div class="wrapper">
@@ -467,26 +471,6 @@
             </div>
     </div>
 </section>
-<!--<div class="wrapper">-->
-<!--    <div class="kanban__title">-->
-<!--        <h1 style="font-family: 'Poppins', sans-serif;">Hanghaero</h1></div>-->
-
-<!--    <div class="dd" id="column-list">-->
-<!--        <ol class="addcolumn" id="column-new-position">-->
-<!--            <div class="actions">-->
-<!--                <button class="addbutt" id="add-column"><i class="material-icons">+</i></button>-->
-<!--            </div>-->
-<!--        </ol>-->
-<!--    </div>-->
-
-<!--    <menu class="kanban">-->
-<!--        <button style="font-family: 'Poppins', sans-serif;">settings</button>-->
-<!--        <button style="font-family: 'Poppins', sans-serif;">chevron_left</button>-->
-<!--        <button class="viewkanban" style="font-family: 'Poppins', sans-serif;">view_column</button>-->
-<!--        <button class="viewlist" style="font-family: 'Poppins', sans-serif;">view_list</button>-->
-<!--        <button style="font-family: 'Poppins', sans-serif;">playlist_add</button>-->
-<!--    </menu>-->
-<!--</div>-->
 
 <div class="modal" id="myModal">
     <div class="modal-content">
