@@ -9,6 +9,7 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <!-- 외부 스타일 시트를 링크합니다. -->
+
     <link href="/css/style.css" rel="stylesheet">
     <script crossorigin="anonymous"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
@@ -18,6 +19,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 </head>
 <body>
 <div class="mdl-progress mdl-js-progress" id="p1"></div>
@@ -93,6 +95,10 @@
             addColumn(authToken);
         });
 
+        $(document).ready(function () {
+            $("#card-modify-popup").load("/cardPopup.html");
+        })
+
         // 정민님 컬럼 카드 불러오기 로직
         // $("body").on("click", "button#test-button", function(){
         //     console.log("add button 동작");
@@ -135,6 +141,7 @@
         <li class="dd-item" id="card-{card_id}" >
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
+            <img alt= ":" src="../static/images/icon_detail.png" onclick="openCardModifyModal(this)"></img>
 
             <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
@@ -426,6 +433,28 @@
             error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
         });
     }
+
+
+    // 카드 수정 관련 모달
+    function openCardModifyModal(card) {
+        var modal = document.getElementById("modify-card-modal");
+        console.log(modal);
+        $("modify-card-modal").load("/cardPopup.html");
+        console.log(modal);
+        modal.style.display = "block";
+        modal.style.zIndex = 9999;
+    }
+
+    // 모달 닫기 함수
+    function closeCardModifyModal() {
+        jQuery('#modify-card-modal').hide();
+    }
+
+    // 모달이 닫힐 때 이벤트 처리
+    $('#modify-card-modal').on('hidden.bs.modal', function () {
+        // 모달이 닫힐 때 처리할 작업 추가
+    });
+
 </script>
 
 <div class="wrapper">
@@ -448,6 +477,7 @@
         <button style="font-family: 'Poppins', sans-serif;">playlist_add</button>
     </menu>
 </div>
+
 
 <div class="modal" id="myModal">
     <div class="modal-content">
@@ -474,6 +504,75 @@
         </form>
     </div>
 </div>
+
+
+<!--카드수정모달창-->
+<div class="modal" id="modify-card-modal">
+    <div class="container">
+        <div class="row">
+            <div class="dd-item">
+            </div>
+            <div class="dd-item">
+                <form>
+                    <div class="modalfont">
+                        <input class="form-control" placeholder="카드 이름" type="email">
+                    </div>
+                    <div class="modalfont">
+                        <input class="form-control" placeholder="카드 내용"
+                               type="password">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // if (document.getElementById("state1")) {
+    //     const countUp = new CountUp("state1", document.getElementById("state1").getAttribute("countTo"));
+    //     if (!countUp.error) {
+    //         countUp.start();
+    //     } else {
+    //         console.error(countUp.error);
+    //     }
+    // }
+    // if (document.getElementById("state2")) {
+    //     const countUp1 = new CountUp("state2", document.getElementById("state2").getAttribute("countTo"));
+    //     if (!countUp1.error) {
+    //         countUp1.start();
+    //     } else {
+    //         console.error(countUp1.error);
+    //     }
+    // }
+    // if (document.getElementById("state3")) {
+    //     const countUp2 = new CountUp("state3", document.getElementById("state3").getAttribute("countTo"));
+    //     if (!countUp2.error) {
+    //         countUp2.start();
+    //     } else {
+    //         console.error(countUp2.error);
+    //     }
+    //     ;
+    // }
+    //
+    // if (document.querySelector('.datepicker-1')) {
+    //     flatpickr('.datepicker-1', {}); // flatpickr
+    // }
+    //
+    // if (document.querySelector('.datepicker-2')) {
+    //     flatpickr('.datepicker-2', {}); // flatpickr
+    // }
+    // if (document.getElementById("typed")) {
+    //     var typed = new Typed("#typed", {
+    //         stringsElement: "#typed-strings",
+    //         typeSpeed: 70,
+    //         backSpeed: 50,
+    //         backDelay: 200,
+    //         startDelay: 500,
+    //         loop: true
+    //     });
+    // }
+</script>
+
 <script src="/js/basic.js"></script>
 </body>
 </html>
