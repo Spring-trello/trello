@@ -205,8 +205,8 @@
         <li class="dd-item" id="card-{card_id}" >
             <div class="card-color-bar"></div>
             <input type="hidden" id="cardIdValue" name="cardIdValue">
-            <span class="close" onclick="deleteCardForm(this)">&times;</span>
-            <img alt= ":" src="/images/icon_detail.png" width="20" height="20"  style="position: absolute; top: 2px; right: 2px;" onclick="openCardModifyModal(this)"></img>
+            <img alt= ":" src="/images/icon_detail.png" width="20" height="20"  style="position: absolute; top: 40px; right: 2px;" onclick="openCardModifyModal(this)"></img>
+            <span class="close" style="position: absolute; top: 10px; right: 2px;" onclick="deleteCardForm(this)">&times;</span>
 
             <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
@@ -420,6 +420,25 @@
         });
     }
 
+    function loadCardByCardId(cardId, authToken) {
+
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: '/cards/' + cardId,
+                type: 'GET',
+                headers: {
+                    'Authorization': authToken
+                },
+                success: function (card) {
+                    resolve(card);
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
     function addColumn(authToken) {
 
         let title = "새로운 컬럼";
@@ -528,24 +547,99 @@
     }
 
     // 카드 수정 관련 모달
-    function openCardModifyModal(card) {
+    async function openCardModifyModal(ele) {
         var modal = document.getElementById("modify-card-modal");
-        console.log(modal);
-        $("modify-card-modal").load("/cardPopup.html");
-        console.log(modal);
+
+        console.log(ele);
+        const listItem = $(ele).closest('.dd-item');
+        // <li> 엘리먼트의 id 속성 값을 가져옵니다.
+        const cardId = listItem.attr('id');
+        const extractedCardId = cardId.split('-')[1];
+
+        console.log(extractedCardId);
+        var card;
+        try {
+            card = await loadCardByCardId(extractedCardId, getAuthorizationToken());
+            console.log(card);
+        } catch (error) {
+            console.log("Error : " + error);
+        }
+        document.getElementById("modify-cardId").value = card.id;
+        document.getElementById("modify-name").value = card.name;
+        document.getElementById("modify-description").value = card.description;
+        document.getElementById("modify-colorpicker").value = card.color;
+        document.getElementById("modify-datepicker").value = card.dueDate;
+        console.log(document.getElementById("modify-cardId").value);
+        console.log(document.getElementById("modify-name").value);
+        console.log(document.getElementById("modify-description").value);
+        console.log(document.getElementById("modify-colorpicker").value);
+        console.log(document.getElementById("modify-datepicker").value);
         modal.style.display = "block";
         modal.style.zIndex = 9999;
+
+        $("#datepicker-container").datepicker(); // Datepicker 초기화
+
+        $("#datepicker").datepicker({
+            // Datepicker를 모달 창 안에 추가하기 위해 appendTo 사용
+            appendTo: modal
+        });
+    }
+
+    function modifyCard() {
+        const authToken = getAuthorizationToken();
+
+        // modal창에 숨어있는 columnId값을 가져옴
+        const cardId = document.getElementById("modify-cardId").value;
+
+        var name = $("#modify-name").val(); // 이름 입력란의 값을 가져옴
+        var description = $("#modify-description").val(); // 설명 입력란의 값을 가져옴
+        var selectedDate = $("#modify-datepicker").datepicker("getDate");
+        var color = $("#modify-colorpicker").spectrum("get").toHexString();
+
+        $.ajax({
+            url: '/cards',
+            method: 'PUT',
+            headers: {
+                'Authorization': authToken
+            },
+            contentType: 'application/json',
+
+            data: JSON.stringify({
+                name: name, // 이름 데이터
+                description: description, // 설명 데이터
+                dueDate: selectedDate,
+                color: color
+            }),
+            success: function (updateCard) {
+                // 성공적으로 서버에 데이터를 전송한 후 할 일
+                alert("수정이 성공적으로 완료되었습니다.");
+                // 전체 카드 날리기
+                // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
+                const columnId = updateCard.columnId;
+                const columnToReload = $(`#column-${columnId}`);
+                const cardList = columnToReload.find("#todo-list");
+                cardList.empty();
+
+                // 다시 전체 불러오기
+                loadCardsByColumnId(columnId, authToken);
+                $("#modify-name").val('');
+                $("#modify-description").val('');
+                $("#modify-datepicker").datepicker();
+                // $("#modify-colorpicker").spectrum("").toHexString();
+
+            },
+            error: function (error) {
+                // 요청 중 에러가 발생했을 때 처리할 내용
+                console.error('카드 생성 중 오류가 발생했습니다:', error);
+            }
+        });
     }
 
     // 모달 닫기 함수
     function closeCardModifyModal() {
-        jQuery('#modify-card-modal').hide();
+        var modal = document.getElementById("modify-card-modal");
+        modal.style.display = "none";
     }
-
-    // 모달이 닫힐 때 이벤트 처리
-    $('#modify-card-modal').on('hidden.bs.modal', function () {
-        // 모달이 닫힐 때 처리할 작업 추가
-    });
 
     function goToHome() {
         window.location.href = "/";
@@ -609,36 +703,42 @@
     </div>
 </div>
 
-
-<!--카드수정모달창-->
-<div class="modal" id="modify-card-m
-odal">
-    <div class="container">
-        <div class="row">
-            <div class="dd-item">
-            </div>
-            <div class="dd-item">
-                <form>
-                    <div class="modalfont">
-                        <input class="form-control" id="modify-name" placeholder="카드 이름">
-                    </div>
-                    <div class="modalfont">
-                        <input class="form-control" id="modify-description" placeholder="카드 내용">
-                    </div>
-
-                    <div class="modalfont">
-                        <input class="form-control" id="add-comment" placeholder="댓글 달기">
-                    </div>
-
-                    <div class="modalfont">
-
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="modal" id="modify-card-modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeCardModifyModal()">&times;</span>
+        <form action="/cards" method="POST">
+            <li class="dd-item">
+                <input id="modify-cardId" name="modify-cardId" type="hidden">
+                <div class="input-form-box"><span class="modalfont">제목</span><input class="form-control"
+                                                                                    id="modify-name"
+                                                                                    name="name"
+                                                                                    type="text"></div>
+                <div class="input-form-box"><span class="modalfont">내용</span><input class="form-control"
+                                                                                    id="modify-description"
+                                                                                    name="description"
+                                                                                    type="text">
+                </div>
+                <div>
+                    <span class="modalfont">색상</span>
+                </div>
+                <div>
+                    <input id="modify-colorpicker" type="text"/>
+                </div>
+                <div>
+                    <span class="modalfont">날짜</span>
+                    <div id="modify-datepicker"></div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary btn-xs" onclick="modifyCard()"
+                            style="font-family: 'Poppins', sans-serif; width : 100%;"
+                            type="button">
+                        저장
+                    </button>
+                </div>
+            </li>
+        </form>
     </div>
 </div>
-
 
 <!-- JS 파일 목록 -->
 

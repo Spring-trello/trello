@@ -134,4 +134,8 @@ public class CardService {
 		return pos;
 	}
 
+	public CardResponseDto getCardById(Long cardId) {
+		return new CardResponseDto(
+			cardRepository.findById(cardId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카드")));
+	}
 }

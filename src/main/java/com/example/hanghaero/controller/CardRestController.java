@@ -3,6 +3,7 @@ package com.example.hanghaero.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,6 +33,13 @@ public class CardRestController {
 		@RequestBody CardCreateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		return cardService.createCard(requestDto, userDetails);
+	}
+
+	// 카드 한개 조회
+	@GetMapping("/{cardId}")
+	@ResponseBody
+	public CardResponseDto getCardById(@PathVariable Long cardId) {
+		return cardService.getCardById(cardId);
 	}
 
 	// 카드 수정
