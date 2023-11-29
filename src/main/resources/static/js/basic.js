@@ -262,7 +262,6 @@
 
                 if (itemsCount === 0 && !currentColumn.find('.dd-empty').length) {
                     currentColumn.append('<li class="dd-empty"></li>');
-                    console.log('Added empty item to column!');
                 }
             });
 
@@ -317,6 +316,9 @@
                 this.dragRootEl.trigger('change');
             }
             this.reset();
+
+            // dragStop이 발생할 때 마다 nestableDragStop을 발생시키고 el을 넘겨준다
+            $(document).trigger('nestableDragStop', el);
         },
 
         dragMove: function(e)
@@ -521,13 +523,6 @@ $('.viewkanban').on('click', function() {
     $('menu').addClass('kanban')
     $('menu').removeClass('list')
 });
-/*colors*/
-// $('#color').spectrum({
-//     color: "#f00",
-//     change: function(color) {
-//         $("#label").text("change called: " + color.toHexString());
-//     }
-// });
 
 function getAuthorizationToken() {
     const cookies = document.cookie.split('; ');
