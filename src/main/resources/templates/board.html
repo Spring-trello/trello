@@ -103,7 +103,6 @@
 
         // 정민님 컬럼 카드 불러오기 로직
 
-
     });
 
 
@@ -409,10 +408,10 @@
         $.ajax({
             url: `/columns/${columnId}`,
             method: 'PUT',
-            headers: { 'Authorization': authToken },
+            headers: {'Authorization': authToken},
             contentType: 'application/json',
-            data: JSON.stringify({ boardId: boardId, title: newTitle }),
-            success: () => alert("수정이 성공적으로 완료되었습니다."),
+            data: JSON.stringify({boardId: boardId, title: newTitle}),
+            success: () => console.log("수정이 성공적으로 완료되었습니다."),
             error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
         });
     }
