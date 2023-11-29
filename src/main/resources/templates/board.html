@@ -53,18 +53,24 @@
 <div class="mdl-progress mdl-js-progress" id="p1"></div>
 
 <script>
+
+    // 선택한 날짜와 오늘 날짜를 비교하여 남은 날짜 반환
     function calculateDDay(selectedDate) {
+        var dDay = new Date(localDateToString(selectedDate));
         var today = new Date();
-        var timeDiff = selectedDate.getTime() - today.getTime();
+        var timeDiff = dDay.getTime() - today.getTime();
         var dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
         if (dayDiff > 0) {
-            $("#dDayDisplay").text("D-" + dayDiff);
+            // $("#dDayDisplay").text("D-" + dayDiff);
+            return "D-" + dayDiff;
+        } else if (dayDiff === 0) {
+            return "D-Day"
         } else {
             dayDiff *= -1;
-            $("#dDayDisplay").text("D+" + dayDiff);
+            // $("#dDayDisplay").text("D+" + dayDiff);
+            return "D+" + dayDiff;
         }
-
     }
 
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
@@ -348,6 +354,8 @@
         $(`#card-${card.id} #cardIdValue`).val(card.id);
         // 카드의 색깔 변경
         $(`#card-${card.id} .card-color-bar`).css('background-color', card.color);
+        // 카드의 D-Day 표시 변경
+        $(`#card-${card.id} #dDayDisplay`).text(calculateDDay(card.dueDate));
         const newCard = $(`#card-${card.id}`);
 
         // 카드 제목 및 내용 수정 이벤트 리스너 등록
@@ -507,6 +515,7 @@
         }
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return localDate.toLocaleString('ko-KR', options);
+
     }
 
     // Spectrum Colorpicker Initializer
