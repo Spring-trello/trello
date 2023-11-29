@@ -1236,13 +1236,13 @@ ol.kanban {
 }
 
 .dd-item {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
     display: block;
     margin: 5px 0;
-    padding: 5px 10px;
     color: #333;
     text-decoration: none;
     font-weight: bold;
-    border: 1px solid #ccc;
     background: #fafafa;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -1324,3 +1324,10 @@ ol.kanban {
     cursor: move;
 }
 
+.card-color-bar {
+    height: 10px;
+    background-color: transparent;
+    border-radius: 5px;
+    margin: 5px 0;
+    flex: 1;
+}
