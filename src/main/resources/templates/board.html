@@ -522,6 +522,23 @@
         deleteAuthToken();
         window.location.href = "/users/signin";
     }
+
+    // Spectrum Colorpicker Initializer
+    $(document).ready(function() {
+        $("#colorpicker").spectrum({
+            showPaletteOnly: true,
+            showPalette:true,
+            color: 'blanchedalmond',
+            palette: [
+                ['black', 'white', 'blanchedalmond',
+                    'rgb(255, 128, 0);', 'hsv 100 70 50'],
+                ['red', 'yellow', 'green', 'blue', 'violet']
+            ],
+            change: function(color) {
+                $('#colorHex').val(color.toHexString());
+            }
+        });
+    });
 </script>
 <section class="py-5 border-bottom" id="features">
     <div class="wrapper">
