@@ -1352,6 +1352,7 @@ ol.kanban {
 .card-color-bar {
     height: 10px;
     background-color: transparent;
+    width: 40%;
     border-radius: 5px;
     margin: 5px 0;
     flex: 1;

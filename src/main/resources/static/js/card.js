@@ -27,3 +27,24 @@ $(document).on('nestableDragStop', function(event, el) {
         }
     });
 });
+
+// comment-icon 클릭 시 card 댓글을 표시하는 사이드바 토글
+function loadComments(el) {
+    const cardId = $(el).closest('.dd-item').attr('id').split('-')[1];
+    const authToken = getAuthorizationToken();
+
+    console.log("btn click, cardId: " + cardId);
+
+    $.ajax({
+        url: `/comments/${cardId}`,
+        method: 'GET',
+        headers: {'Authorization': authToken},
+        success: function (comments) {
+            console.log("댓글 목록을 불러왔습니다.");
+            comments.forEach((comment) => {
+                console.log("contents:" + comment.contents, "modAt:" + comment.modifiedAt);
+            })
+        },
+        error: (error) => console.error('댓글 목록을 불러오는 중 오류가 발생했습니다.', error)
+    })
+}
