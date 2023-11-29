@@ -9,15 +9,17 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <!-- 외부 스타일 시트를 링크합니다. -->
-    <link href="/css/style.css" rel="stylesheet">
-    <script crossorigin="anonymous"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="mdl-progress mdl-js-progress" id="p1"></div>
+<div id="p1" class="mdl-progress mdl-js-progress"></div>
 
 <script>
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
@@ -113,7 +115,7 @@
         `
         <ol class="column" id="column-{columnId}">
             <div class="kanban__title">
-                <h2 onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
+                <h2 style="font-family: 'Poppins', sans-serif;" onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -132,10 +134,9 @@
         <li class="dd-item" id="card-{card_id}" >
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
-            <h3 class="title dd-handle card-content">
+            <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
             </h3>
-<!--            아래 card-text의 원래 class는 text-->
             <div class="card-description card-content" contenteditable="true">
                 {card_description}
             </div>
@@ -220,7 +221,7 @@
             success: function (deleteCard) {
                 alert("삭제되었습니다.");
 
-                // 전체 카드 날리기 \
+                // 전체 카드 날리기
                 // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
                 const columnId = deleteCard.columnId;
                 const columnToReload = $(`#column-${columnId}`);
@@ -424,7 +425,7 @@
 
 <div class="wrapper">
     <div class="kanban__title">
-        <h1><i class="material-icons">check</i> To do list</h1></div>
+        <h1 style="font-family: 'Poppins', sans-serif;">Hanghaero</h1></div>
 
     <div class="dd" id="column-list">
         <ol class="addcolumn" id="column-new-position">
@@ -435,28 +436,29 @@
     </div>
 
     <menu class="kanban">
-        <button><i class="material-icons">settings</i></button>
-        <button><i class="material-icons">chevron_left</i></button>
-        <button class="viewkanban"><i class="material-icons ">view_column</i></button>
-        <button class="viewlist"><i class="material-icons">view_list</i></button>
-        <button><i class="material-icons">playlist_add</i> Add new Column</button>
+        <button style="font-family: 'Poppins', sans-serif;">settings</button>
+        <button style="font-family: 'Poppins', sans-serif;">chevron_left</button>
+        <button style="font-family: 'Poppins', sans-serif;" class="viewkanban">view_column</button>
+        <button style="font-family: 'Poppins', sans-serif;" class="viewlist">view_list</button>
+        <button style="font-family: 'Poppins', sans-serif;">playlist_add</button>
     </menu>
 </div>
 
-<div class="modal" id="myModal">
+<div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <form action="/cards" method="POST">
             <li class="dd-item" id="todo-${itemCount}">
-                <input id="modalColumnId" name="modalColumnId" type="hidden">
-                <div class="input-form-box"><span>제목 </span><input class="form-control" id="name" name="name"
-                                                                   type="text"></div>
-                <div class="input-form-box"><span>내용 </span><input class="form-control" id="description"
-                                                                   name="description"
-                                                                   type="text">
+                <input type="hidden" id="modalColumnId" name="modalColumnId">
+                <div class="input-form-box"><span class="modalfont">제목</span><input type="text" id="name" name="name"
+                                                                                    class="form-control"></div>
+                <div class="input-form-box"><span class="modalfont">내용</span><input type="text" id="description"
+                                                                                    name="description"
+                                                                                    class="form-control">
                 </div>
                 <div class="actions">
-                    <button class="btn btn-primary btn-xs" onclick="createCardForm()" style="width:100%" type="button">
+                    <button onclick="createCardForm()" type="button" class="btn btn-primary btn-xs"
+                            style="font-family: 'Poppins', sans-serif; width : 100%;">
                         저장
                     </button>
                 </div>

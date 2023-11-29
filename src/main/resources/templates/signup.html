@@ -67,13 +67,13 @@
 </head>
 <body>
 <div id="login-form">
-    <div id="login-title">Sign up Select Shop</div>
+    <div id="login-title">Sign up Hanghaero</div>
 
     <form action="/users/signup" method="post">
         <div class="login-id-label">이메일</div>
         <input class="login-input-box" id="email" name="email" placeholder="이메일" type="text">
         <div class="login-id-label">비밀번호</div>
-        <input class="login-input-box" id="password" name="password" type="password">
+        <input class="login-input-box" id="password" name="password" placeholder="비밀번호" type="password">
         <div class="login-id-label">이름</div>
         <input class="login-input-box" id="name" name="name" placeholder="이름" type="text">
         <div class="login-id-label">전화번호</div>
@@ -81,8 +81,9 @@
         <div class="login-id-label">주소</div>
         <input class="login-input-box" id="address" name="address" placeholder="주소" type="text">
 
-        <div>
-            <input id="adminCheck" name="admin" onclick="onclickAdmin()" style="margin-top: 30px;" type="checkbox">관리자
+        <div style="font-family: 'Poppins', sans-serif;">
+            <input id="adminCheck" name="admin" onclick="onclickAdmin()"
+                   style="margin-top: 30px; font-family: 'Poppins', sans-serif;" type="checkbox">관리자
             <input class="login-input-box" id="adminKey" name="adminKey" placeholder="관리자 암호" style="display:none"
                    type="password">
         </div>

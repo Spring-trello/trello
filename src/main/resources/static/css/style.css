@@ -7,8 +7,9 @@
     width: 100%;
     height: 100%;
     overflow: auto; /* 스크롤이 생기면 자동으로 스크롤 */
-    background-color: rgba(0, 0, 0, 0.4); /* 배경색과 투명도 조절 */
+    background-color: rgba(0, 0, 0, 0.4);
 }
+
 
 .modal-content {
     background-color: #fefefe;
@@ -17,6 +18,7 @@
     border: 1px solid #888;
     width: 80%;
     z-index: 9999;
+    font-family: 'Poppins', sans-serif;
 }
 
 .close {
@@ -24,6 +26,10 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
+}
+
+.modalfont {
+    font-family: 'Poppins', sans-serif;
 }
 
 .close:hover,
@@ -41,11 +47,10 @@ Body {
 }
 
 .material-symbols-outlined {
- font-variation-settings:
-         'FILL' 0,
-         'wght' 400,
-         'GRAD' 0,
-         'opsz' 24
+    font-variation-settings: 'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
 }
 
 
@@ -503,7 +508,7 @@ button {
 
 .login-input-box {
     border-width: 0;
-
+    font-family: 'Poppins', sans-serif;
     width: 370px !important;
     height: 40px;
     margin: 14px 0 0;
@@ -518,7 +523,7 @@ button {
     padding-left: 11px;
     margin-top: 40px;
     /*margin: 0 337.9px 14px 11px;*/
-    font-family: NotoSansCJKKR;
+    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     font-weight: normal;
     font-stretch: normal;
@@ -896,6 +901,10 @@ menu.list .viewlist {
     overflow-x: visible; /* 수평 스크롤 허용 */
 }
 
+.kanban__title {
+    font-family: 'Poppins', sans-serif;
+}
+
 /* 스크롤바 스타일... */
 .wrapper::-webkit-scrollbar {
     height: 12px;
@@ -978,11 +987,15 @@ h2 {
 }
 
 h2 .material-icons {
+    font-family: 'Nanum Gothic', sans-serif;
+    text-align: center;
     color: #B0BEC5;
     line-height: 1.5;
 }
 
 .dd-handle .material-icons {
+    font-family: 'Nanum Gothic', sans-serif;
+    text-align: center;
     color: #B0BEC5;
     font-size: 14px;
     font-weight: 800;
@@ -1011,6 +1024,7 @@ button.addbutt {
     background-color: #EEEEEE;
     color: #607D8B;
     width: 100%;
+    font-family: 'Poppins', sans-serif;
 }
 
 .list > button.addbutt {
@@ -1075,6 +1089,8 @@ ol.column {
     background: #fff;
     padding: 1em;
     border-radius: 2px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
 }
 
 ol.addcolumn {
@@ -1115,7 +1131,7 @@ ol.kanban {
     display: block;
     position: relative;
     list-style: none;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -1131,6 +1147,7 @@ ol.kanban {
     background: #fff;
     border-radius: 2px;
     box-sizing: border-box;
+    text-align: center;
 }
 
 .title {
@@ -1146,6 +1163,8 @@ ol.kanban {
     -webkit-transform-origin: 149px 48px;
     transform-origin: 149px 48px;
     margin: 0;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
 }
 
 .text {
@@ -1157,6 +1176,8 @@ ol.kanban {
     overflow: hidden;
     padding: 16px;
     width: 90%;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
 }
 
 .actions {
@@ -1167,6 +1188,7 @@ ol.kanban {
     color: #B0BEC5;
     padding: 8px;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 
