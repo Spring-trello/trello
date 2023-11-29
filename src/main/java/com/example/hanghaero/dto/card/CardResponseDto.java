@@ -26,8 +26,8 @@ public class CardResponseDto {
 		this.name = card.getName();
 		this.description = card.getDescription();
 		this.color = card.getColor();
-		// TODO: 2023-11-28 duedate notnull 옵션 
-		//this.dueDate = card.getDueDate();
+		// TODO: 2023-11-28 duedate notnull 옵션
+		this.dueDate = card.getDueDate();
 		this.columnId = card.getColumn().getColumnId();
 	}
 }
