@@ -16,20 +16,13 @@ public class HomeController {
 	public String boardPage() {
 		return "board";
 	}
-	//
-	// @GetMapping("/boards")
-	// public String boardPage() {
-	// 	return "testboard";
-	// }
 
-	@GetMapping("/cardPopupTestURL")
-	public String cardPopupTestURL(){ return "cardPopupTestURL";}
+	@GetMapping("/boards/newboard")
+	public String boardCreate() { return "createboard"; }
+
 
 	@GetMapping("/admin")
 	public ResponseEntity<?> adminTest() {
 		return new ResponseEntity<>("admin", HttpStatus.OK);
 	}
-
-	@GetMapping("/cardPopup")
-	public String cardPopup(){ return "cardPopup";}
 }

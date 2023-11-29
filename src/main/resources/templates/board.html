@@ -3,33 +3,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Your HTML Document</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <!-- 외부 스타일 시트를 링크합니다. -->
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="/css/style.css" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="p1" class="mdl-progress mdl-js-progress"></div>
+<div class="mdl-progress mdl-js-progress" id="p1"></div>
 
 <script>
     document.querySelector('#p1').addEventListener('mdl-componentupgraded', function () {
         this.MaterialProgress.setProgress(44);
     });
 
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // 모든 text 클래스 엘리먼트에 대해 keydown 이벤트 리스너 추가
-    //     document.querySelectorAll('.title dd-handle').forEach(addModifyEventListenerToCard);
-    //     document.querySelectorAll('.card-description').forEach(addModifyEventListenerToCard);
-    // });
-
-
-    function addModifyEventListenerToCard(element){
+    function addModifyEventListenerToCard(element) {
         console.log("카드 수정 감지 리스너 추가");
         $(element).on('keydown', function (event) {
             // Enter 키가 눌렸을 때
@@ -44,7 +42,7 @@
         });
     }
 
-    function updateCard(card){
+    function updateCard(card) {
         const authToken = getAuthorizationToken();
         // title dd-handle, card-description, card-duedate
         const cardModifyRequestMap = {};
@@ -53,9 +51,10 @@
                 contentElement.classList.contains('card-description') ? 'description' :
                     contentElement.classList.contains('card-duedate') ? 'dueDate' :
                         '';
-            const value = contentElement.innerText.trim();
+            const value = contentElement.innerHTML.trim();
             cardModifyRequestMap[key] = value;
         });
+
 
         const cardId = card.id.split('-')[1];
         //cardModifyRequestMap
@@ -69,7 +68,8 @@
             contentType: 'application/json',
             // POST 요청
             data: JSON.stringify(cardModifyRequestMap),
-            success: function (card) {},
+            success: function (card) {
+            },
             error: function (error) {
                 console.error('카드 생성 중 오류가 발생했습니다:', error);
             }
@@ -80,13 +80,16 @@
     let lastColumnPosition = 0;
     var colresponsedto = {}
 
+    let boardId = 0;
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
-        loadColumns(1, authToken);
-        $("#delete-button").click(function(){
+        const urls = window.location.href.split("/");
+        boardId = urls.at(urls.length - 1);
+        loadColumns(boardId, authToken);
+        $("#delete-button").click(function () {
             addItem();
         });
-        $("#add-column").click(function(){
+        $("#add-column").click(function () {
             addColumn(authToken);
         });
 
@@ -106,7 +109,6 @@
 
         // 정민님 컬럼 카드 불러오기 로직
 
-
     });
 
 
@@ -114,7 +116,7 @@
         `
         <ol class="column" id="column-{columnId}">
             <div class="kanban__title">
-                <h2><i class="material-icons">{name}</i></h2>
+                <h2 style="font-family: 'Poppins', sans-serif;" onclick="enableEditTitle(this.closest('.column'))"><i class="material-icons">{name}</i></h2>
             </div>
 
             <div class="todo-list" id="todo-list">
@@ -133,15 +135,15 @@
         <li class="dd-item" id="card-{card_id}" >
             <input type="hidden" id="cardIdValue" name="cardIdValue">
             <span class="close" onclick="deleteCardForm(this)">&times;</span>
-            <h3 class="title dd-handle card-content">
 
-<!--                <i class=" material-icons ">filter_none</i>-->
+            <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
             </h3>
-<!--            아래 card-text의 원래 class는 text-->
+
             <div class="card-description card-content" contenteditable="true">
                 {card_description}
             </div>
+
             <div class="card-duedate card-content" contenteditable="true">
                 {card_duedate}
             </div>
@@ -211,7 +213,7 @@
         const extractedCardId = cardId.split('-')[1];
         // 추출된 card_id를 출력하거나 사용할 수 있습니다.
         console.log(extractedCardId);
-        console.log("cardId " +extractedCardId);
+        console.log("cardId " + extractedCardId);
         // AJAX 요청을 보냄
         $.ajax({
             url: '/cards/' + extractedCardId,  // 데이터를 보낼 서버의 엔드포인트 URL
@@ -220,9 +222,10 @@
                 'Authorization': authToken
             },
             contentType: 'application/json',
-            success: function ( deleteCard) {
+            success: function (deleteCard) {
                 alert("삭제되었습니다.");
-                // 전체 카드 날리기 \
+
+                // 전체 카드 날리기
                 // column-{columnId} 안에 todo-list ol 태그 안에 있는 애들 지우기
                 const columnId = deleteCard.columnId;
                 const columnToReload = $(`#column-${columnId}`);
@@ -239,7 +242,6 @@
             }
         });
     }
-
 
 
     function loadColumn(column) {
@@ -264,37 +266,45 @@
             },
             success: function (columns) {
                 console.log(columns);
-                columns.forEach(function(column){
+                columns.forEach(function (column) {
                     loadColumn(column);
                     loadCardsByColumnId(column.columnId, authToken);
                 });
             },
             error: function (error) {
-                console.log('Error:', error);
+                if (error.status === 404) {
+                    // 서버에서 404 응답 코드를 보낸 경우 처리
+                    console.log('Object not found');
+                    // 여기에서 기존 HTML을 그대로 유지하거나 다른 동작 수행
+                } else {
+                    console.log('Error:', error);
+                }
             }
         });
     }
 
     function loadCard(card, columnId) {
+        // 서버에서 받은 값들로 카드 내 문자열이 있어야 할 곳에 replace
         const newCardHtml = cardTemplate
             .replace("{card_id}", card.id)
             .replace("{card_name}", card.name)
-            .replace("{card_description}", card.description)
-            // .replace("{card_duedate}", card.duedate)
+            .replace("{card_description}", card.description.replaceAll("\n", "<br>"));
+        // .replace("{card_duedate}", card.duedate)
 
+        // html 요소를 해당 컬럼의 가장 아래에 추가한다.
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
-
         $(`#card-${card.id} #cardIdValue`).val(card.id);
+        const newCard = $(`#card-${card.id}`);
 
-        const newCard =$(`#card-${card.id}`);
-
-        newCard.find('.title dd-handle').each(function(index, element){
+        // 카드 제목 및 내용 수정 이벤트 리스너 등록
+        newCard.find('.title dd-handle').each(function (index, element) {
             addModifyEventListenerToCard(element);
         });
-        newCard.find('.card-description').each(function(index, element){
+        newCard.find('.card-description').each(function (index, element) {
             addModifyEventListenerToCard(element);
         });
     }
+
     function loadCardsByColumnId(columnId, authToken) {
         $.ajax({
             url: '/cards/columns/' + columnId,
@@ -313,11 +323,7 @@
         });
     }
 
-    function addColumn(authToken){
-        // boardId,
-        // title
-        let boardId = 1
-        console.log("windows.location.href : " + window.location.href);
+    function addColumn(authToken) {
 
         let title = "새로운 컬럼";
         $.ajax({
@@ -337,110 +343,94 @@
                 alert(`${errorMessage}`);
             });
     }
-    //
-    // function loadAllCard_pjm(){
-    //     const authToken = getAuthorizationToken();
-    //     $.ajax({
-    //         url: '/cards/boards/'+window.location.pathname.split('/')[2],
-    //         type: 'GET',
-    //         headers: {
-    //             'Authorization': authToken
-    //         },
-    //         success: function (data) {
-    //             lst = $('.kanban.columnId h2')
-    //             console.log("list = ", lst)
-    //             idx_set = new Set();
-    //             for (const val of lst){
-    //                 idx_set.add(Number(val.id))
-    //             }
-    //             console.log("idx_set = ", idx_set)
-    //             for ( let i of idx_set ) {
-    //                 const todoList = $('#todo-list-' + i);
-    //                 for (const card of data) {
-    //                     console.log("card Object", card)
-    //                     if(i == card.columnId){
-    //                         todoList.append(
-    //                             `<li class="dd-item" id="todo-${card.id}">
-    //                         <h3 class="title dd-handle">${card.name}<i class="material-icons">filter_none</i></h3>
-    //                         <div class="text" contenteditable="true">
-    //                             ${card.description}
-    //                         </div>
-    //                         <i class="material-icons" id="label blue">label</i>
-    //                         <div class="actions">
-    //                             <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-    //                         </div>
-    //                     </li>`
-    //                         );
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         error: function (error) {
-    //             console.log('Error:', error);
-    //         }
-    //     });
-    // }
-    //
-    // // 정민님 함수
-    // // 정민님 함수
-    // function showColumn(){
-    //     var pathname = window.location.pathname;
-    //     console.log(pathname);
-    //     const authToken = getAuthorizationToken();
-    //     $.ajax({
-    //         type: 'GET',
-    //         url: `/columns/boards/`+window.location.pathname.split('/')[2],
-    //         headers: {
-    //             'Authorization': authToken
-    //         },
-    //         data: colresponsedto,
-    //         success: function (data) {
-    //             const dd = $(".dd");
-    //             dd.empty();
-    //             for (const column of data){
-    //                 let tempHtml = addHTML(column)
-    //                 dd.append(tempHtml);
-    //             }
-    //         },
-    //         error(error, status, request) {
-    //         }
-    //     })
-    // }
-    // function addHTML(column){
-    //     console.log("column id = ", column)
-    //     return `<ol class = "kanban columnId ${column.columnId}">
-    //                <div class="kanban__title" id="todo-list-${column.columnId}">
-    //                 <h2 id="${column.columnId}"><i class="material-icons">${column.title}</i></h2>
-    //                 <button id="test-button" className="addbutt"><span class="material-symbols-outlined">add</span> Add new </button>
-    //                 </div>
-    //             </ol>`
-    // }
-    //
-    // function addItem(elem) {
-    //     console.log(elem)
-    //     let itemCount = $('li.dd-item').length+1
-    //     console.log("itemCount = " ,itemCount);
-    //     console.log(elem[0].querySelectorAll('li')[itemCount-2])
-    //     last_elem = elem[0].querySelectorAll('li')[itemCount-2]
-    //     elem.append(
-    //         `<li class="dd-item" id="todo-${itemCount}">
-    //             <h3 class="title dd-handle">Title<i class="material-icons">filter_none</i></h3>
-    //             <div class="text" contenteditable="true">
-    //                 wwPaul Rand once said, “The public is more familiar with bad fucking design than good design. It is, in effect, conditioned to prefer
-    //             </div>
-    //             <i class="material-icons" id="label blue">label</i>
-    //             <div class="actions">
-    //                 <i class="material-icons" id="color">palette</i><i class="material-icons">edit</i><i class="material-icons">insert_link</i><i class="material-icons">attach_file</i>
-    //             </div>
-    //         </li>`
-    //     );
-    // }
 
+    function enableEditTitle(columnElement) {
+        if (!columnElement) return;
+
+        const titleElement = columnElement.querySelector('.kanban__title h2');
+        if (!titleElement) return;
+
+        const handleTitleClick = () => {
+            const currentTitle = titleElement.textContent;
+            const inputElement = document.createElement('input');
+            inputElement.value = currentTitle;
+
+            const updateTitle = () => {
+                const newTitle = inputElement.value;
+                const materialIcon = document.createElement('i');
+
+                // 보드 ID와 컬럼 ID를 추출하는 추가적인 코드
+                const boardId = extractBoardId();
+                const columnId = extractColumnId(columnElement);
+
+                // 수정된 제목과 현재 제목이 같으면 함수 종료
+                if (newTitle === currentTitle) return;
+
+                // 입력된 내용으로 새로운 h2 엘리먼트 생성
+                const newH2 = createNewH2Element(newTitle, materialIcon, columnElement);
+                if (inputElement.parentElement) {
+                    inputElement.replaceWith(newH2);
+                }
+
+                // 컬럼 제목 업데이트를 위한 AJAX 호출
+                updateColumnTitle(newH2.textContent, columnId, boardId);
+            };
+
+            inputElement.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    updateTitle();
+                }
+            });
+
+            titleElement.replaceWith(inputElement);
+            inputElement.focus();
+        };
+
+        titleElement.addEventListener('click', handleTitleClick);
+    }
+
+    // 보드 ID 추출 로직
+    function extractBoardId() {
+        const currentUrl = window.location.href;
+        const parts = currentUrl.split('/');
+        return parseInt(parts[parts.length - 1], 10);
+    }
+
+    // 컬럼 ID 추출 로직
+    function extractColumnId(columnElement) {
+        const columnIdAttr = columnElement.id;
+        const idParts = columnIdAttr.split('-');
+        return idParts[idParts.length - 1];
+    }
+
+    // 새로운 제목을 갖는 h2 엘리먼트 생성
+    function createNewH2Element(newTitle, materialIcon, columnElement) {
+        const newH2 = document.createElement('h2');
+        materialIcon.classList.add('material-icons');
+        materialIcon.textContent = newTitle;
+        newH2.appendChild(materialIcon);
+        newH2.onclick = () => enableEditTitle(columnElement);
+        return newH2;
+    }
+
+    // 컬럼 제목을 업데이트하기 위한 AJAX 호출
+    function updateColumnTitle(newTitle, columnId, boardId) {
+        const authToken = getAuthorizationToken();
+        $.ajax({
+            url: `/columns/${columnId}`,
+            method: 'PUT',
+            headers: {'Authorization': authToken},
+            contentType: 'application/json',
+            data: JSON.stringify({boardId: boardId, title: newTitle}),
+            success: () => console.log("수정이 성공적으로 완료되었습니다."),
+            error: (error) => console.error('컬럼 수정 중 오류가 발생했습니다:', error)
+        });
+    }
 </script>
 
 <div class="wrapper">
     <div class="kanban__title">
-        <h1><i class="material-icons">check</i> To do list</h1></div>
+        <h1 style="font-family: 'Poppins', sans-serif;">Hanghaero</h1></div>
 
     <div class="dd" id="column-list">
         <ol class="addcolumn" id="column-new-position">
@@ -451,27 +441,32 @@
     </div>
 
     <menu class="kanban">
-        <button><i class="material-icons">settings</i></button>
-        <button><i class="material-icons">chevron_left</i></button>
-        <button class="viewkanban"><i class="material-icons ">view_column</i></button>
-        <button class="viewlist"><i class="material-icons">view_list</i></button>
-        <button><i class="material-icons">playlist_add</i> Add new Column</button>
+        <button style="font-family: 'Poppins', sans-serif;">settings</button>
+        <button style="font-family: 'Poppins', sans-serif;">chevron_left</button>
+        <button class="viewkanban" style="font-family: 'Poppins', sans-serif;">view_column</button>
+        <button class="viewlist" style="font-family: 'Poppins', sans-serif;">view_list</button>
+        <button style="font-family: 'Poppins', sans-serif;">playlist_add</button>
     </menu>
 </div>
 
-<div id="myModal" class="modal">
+<div class="modal" id="myModal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <form action="/cards" method="POST">
             <li class="dd-item" id="todo-${itemCount}">
-                <input type="hidden" id="modalColumnId" name="modalColumnId">
-                <div class="input-form-box"><span>제목 </span><input type="text" id="name" name="name"
-                                                                   class="form-control"></div>
-                <div class="input-form-box"><span>내용 </span><input type="text" id="description" name="description"
-                                                                   class="form-control">
+                <input id="modalColumnId" name="modalColumnId" type="hidden">
+                <div class="input-form-box"><span class="modalfont">제목</span><input class="form-control" id="name"
+                                                                                    name="name"
+                                                                                    type="text"></div>
+                <div class="input-form-box"><span class="modalfont">내용</span><input class="form-control"
+                                                                                    id="description"
+                                                                                    name="description"
+                                                                                    type="text">
                 </div>
                 <div class="actions">
-                    <button onclick="createCardForm()" type="button" class="btn btn-primary btn-xs" style="width:100%">
+                    <button class="btn btn-primary btn-xs" onclick="createCardForm()"
+                            style="font-family: 'Poppins', sans-serif; width : 100%;"
+                            type="button">
                         저장
                     </button>
                 </div>

@@ -20,7 +20,7 @@
 <div class="nav">
     <!-- 버튼을 클릭하면 JavaScript 함수를 호출하여 페이지 이동 -->
     <button onclick="goToBoardPage()">보드 페이지로 이동</button>
-
+    <button onclick="location.replace('/boards/newboard')">보드 생성하기</button>
     <div class="wrapper" id="boardList">
 
     </div>
@@ -51,8 +51,7 @@
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error('에러 발생:', textStatus, errorThrown);
             }
-        })
-        ;
+        });
     }
 
     $(document).ready(showBoard())
