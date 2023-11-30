@@ -115,8 +115,10 @@ public class WebSecurityConfig {
 			.permitAll() // admin 권한 확인은 Interceptor에서 수행
 			.requestMatchers("/columns/board/**")
 			.permitAll()
+			.requestMatchers("/mail/**")
+			.permitAll()
 			.anyRequest()
-			.authenticated() // 그 외 모든 요청 인증처리
+			.authenticated()// 그 외 모든 요청 인증처리
 
 		);
 
