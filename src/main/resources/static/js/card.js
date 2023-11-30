@@ -5,21 +5,14 @@ $(document).on('nestableDragStop', function (event, el) {
     const columnId = $(el).closest('.column').attr('id').split('-')[1];
     const cardId = $(el).attr('id').split('-')[1];
     const cardPos = $(el).index();
+
+    const originalColumnId = $(el).find('#originalColumnId').val();
+    const originalPosition = $(el).find('#cardPosition').val();
+
+    console.log(originalPosition);
     const authToken = getAuthorizationToken();
 
-    // // 카드 이동 요청을 위해 필요한 id와 위치
-    // console.log('columnId:' + columnId);
-    // console.log('cardId:' + cardId);
-    // console.log('cardPos:' + cardPos);
-
-    // AJAX 호출하여 DB에 카드 이동 요청
-    // let cardIdFromFront = 0;
-    // let positionFromFront = 0;
-
     // 드롭 순간의 정보를 해당 카드로부터 가져오기
-    const cardIdFromFront = $(el).data('originalCardId');
-    const positionFromFront = $(el).data('originalPosition');
-
 
     $.ajax({
         url: `/cards/${cardId}/to/${columnId}/${cardPos}`,
@@ -29,24 +22,25 @@ $(document).on('nestableDragStop', function (event, el) {
         },
         contentType: 'application/json',
         data: JSON.stringify({
-            originalColumnId: cardIdFromFront,// 드롭한 순간에 서버에서 조회한 카드 정보,
-            originalPosition: positionFromFront
+            originalColumnId: originalColumnId,// 드롭한 순간에 서버에서 조회한 카드 정보,
+            originalPosition: originalPosition
         }),
         success:
 
             function (card) {
                 console.log('카드 이동이 성공적으로 완료되었습니다. ')
-            }
+                $(el).find('originalColumnId').val(originalColumnId);
+                $(el).find('originalPosition').val(originalPosition);
 
+                console.log($(el).find('originalPosition').val());
+                location.reload();
+            }
         ,
         error: function (error) {
             console.error('카드 이동 중 오류가 발생했습니다:', error);
         }
     })
     ;
-    // 드롭한 순간의 정보를 해당 카드에 저장
-    $(el).data('originalCardId', cardId);
-    $(el).data('originalPosition', cardPos);
 
 })
 ;

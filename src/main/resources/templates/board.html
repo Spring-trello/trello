@@ -57,7 +57,8 @@
                 <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
 
                 <li class="nav-item"><a class="nav-link" href="#" onclick="Logout()">Logout</a></li>
-                <li class="nav-item"><a class="nav-link" id="openInviteBtn" href="#"><span class="material-symbols-outlined">person_add</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="openInviteBtn"><span
+                        class="material-symbols-outlined">person_add</span></a></li>
             </ul>
         </div>
     </div>
@@ -90,12 +91,12 @@
 <!--    </div>-->
 <!--</div>-->
 
-<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="commentModalLabel" class="modal fade" id="commentModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="commentModalLabel"></h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
@@ -104,13 +105,13 @@
                 </div>
                 <!-- 댓글 작성 폼 -->
                 <form>
-                    <input id="formCardId" type="hidden" />
+                    <input id="formCardId" type="hidden"/>
                     <div class="mb-3">
-                        <label for="commentContent" class="form-label">Comment</label>
-                        <textarea class="form-control" id="commentContent" rows="3" placeholder="댓글을 입력하세요"></textarea>
+                        <label class="form-label" for="commentContent">Comment</label>
+                        <textarea class="form-control" id="commentContent" placeholder="댓글을 입력하세요" rows="3"></textarea>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="button" class="btn btn-primary" onclick="createCommentForm()">submit</button>
+                        <button class="btn btn-primary" onclick="createCommentForm()" type="button">submit</button>
                     </div>
                 </form>
 
@@ -175,17 +176,17 @@
         const authToken = getAuthorizationToken();
         const urls = window.location.href.split("/");
         boardId = urls.at(urls.length - 1);
-        setInterval(loadColumns(boardId, authToken), 5000);
+        loadColumns(boardId, authToken);
+        const intervalId = setInterval(function () {
+            loadColumns(boardId, authToken);
+        }, 5000);
+
         $("#delete-button").click(function () {
             addItem();
         });
         $("#add-column").click(function () {
             addColumn(authToken);
         });
-
-        $(document).ready(function () {
-            $("#card-modify-popup").load("/cardPopup.html");
-        })
 
         $("#colorpicker").spectrum({
             showPaletteOnly: true,
@@ -287,6 +288,8 @@
         <li class="dd-item" id="card-{card_id}" >
             <div class="card-color-bar"></div>
             <input type="hidden" id="cardIdValue" name="cardIdValue">
+            <input type="hidden" id="cardPosition" name="cardPosition">
+            <input type="hidden" id="originalColumnId" name="originalColumnId">
             <img alt= ":" src="/images/icon_detail.png" width="20" height="20"  style="position: absolute; top: 40px; right: 2px;" onclick="openCardModifyModal(this)"></img>
             <span class="close" style="position: absolute; top: 10px; right: 2px;" onclick="deleteCardForm(this)">&times;</span>
             <img alt= "comment" src="/images/icon_comment.png" width="30" height="30"
@@ -437,6 +440,19 @@
     }
 
     function loadColumns(boardId, authToken) {
+
+        const allColumns = $(`#column-list`);
+
+        allColumns.empty();
+        allColumns.append(
+            '<ol class="addcolumn" id="column-new-position">' +
+            '<div class="actions">' +
+            '<button class="addbutt" id="add-column"><i class="material-icons">+</i></button>' +
+            '</div>' +
+            '</ol>');
+        $("#add-column").click(function () {
+            addColumn(authToken);
+        });
         $.ajax({
             url: '/columns/boards/' + boardId,
             type: 'GET',
@@ -476,6 +492,9 @@
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
         $(`#card-${card.id} #cardIdValue`).val(card.id);
         $(`#card-${card.id} #cardVersion`).val(card.version);
+        $(`#card-${card.id} #cardPosition`).val(card.position);
+        $(`#card-${card.id} #originalColumnId`).val(card.columnId);
+
         // 카드의 색깔 변경
         $(`#card-${card.id} .card-color-bar`).css('background-color', card.color);
         const newCard = $(`#card-${card.id}`);
@@ -838,30 +857,34 @@
     </div>
 </div>
 <!-- Invite Modal -->
-<div class="modal" id="inviteModal" style="z-index: 9999;" aria-labelledby="exampleModalLabel">
+<div aria-labelledby="exampleModalLabel" class="modal" id="inviteModal" style="z-index: 9999;">
     <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+        <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">보드 초대하기</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="inviteCloseModal()"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" onclick="inviteCloseModal()"
+                        type="button"></button>
             </div>
             <div class="modal-body">
                 <div class="row g-2">
                     <div class="col-md">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="inviteEmail" name="email">
+                            <input class="form-control" id="inviteEmail" name="email" type="email">
                             <label for="inviteEmail">Email address</label>
                         </div>
                     </div>
                     <div class="col-md justify-content-center">
                         <div class="form-floating">
-                            <button type="button" class="btn btn-secondary" id="sendMail" name="sendMail"onclick="sendMail()">초대 메일 전송</button>
+                            <button class="btn btn-secondary" id="sendMail" name="sendMail" onclick="sendMail()"
+                                    type="button">초대 메일 전송
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="closeInviteBtn" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeInviteBtn" type="button">Close
+                </button>
             </div>
         </div>
     </div>
@@ -883,27 +906,27 @@
     }
 
     // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == document.getElementById('inviteModal')) {
             closeModal();
         }
     }
 
-    function sendMail(){
+    function sendMail() {
         var invite_email = $('#inviteEmail').val();
         $.ajax({
-            url:"/mail",
-            type:"post",
+            url: "/mail",
+            type: "post",
             contentType: "application/json",
-            data:JSON.stringify({email: invite_email, url: window.location.href}),
-            success: function(data){
+            data: JSON.stringify({email: invite_email, url: window.location.href}),
+            success: function (data) {
                 alert("인증번호 발송");
                 inviteCloseModal();
-                $("#sendMail").attr("value",data);
+                $("#sendMail").attr("value", data);
 
             },
-            error: function(request, status, error){
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             }
         });
     }
