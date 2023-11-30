@@ -30,6 +30,13 @@ dependencies {
     // valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.0.5'
+    implementation 'org.springframework:spring-context:6.0.7'
+    implementation 'org.springframework:spring-context-support:6.0.7'
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
