@@ -63,7 +63,7 @@ public class Comment {
 	public Comment(Card card, User user, CommentCreateRequestDto requestDto) {
 		this.comment = requestDto.getContents();
 		this.card = card;
-		this.user = card.getUser();
+		this.user = user;
 	}
 
 	public void update(CommentModifyRequestDto requestDto) {

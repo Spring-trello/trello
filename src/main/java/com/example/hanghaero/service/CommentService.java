@@ -35,7 +35,7 @@ public class CommentService {
 
 		Comment comment = new Comment(card, user, requestDto);
 		commentRepository.save(comment);
-
+		// System.out.println(user.getEmail());
 		return new CommentResponseDto(comment);
 	}
 

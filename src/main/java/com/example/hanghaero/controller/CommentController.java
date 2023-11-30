@@ -30,10 +30,10 @@ public class CommentController {
 	// 서비스 로직에서 board, column를 알 필요 없다.
 	// 댓글 생성
 	@PostMapping("")
-	public ResponseEntity<?> createComment(
+	public CommentResponseDto createComment(
 		@RequestBody CommentCreateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.status(201).body(commentService.createComment(requestDto, userDetails));
+		return commentService.createComment(requestDto, userDetails);
 	}
 
 	// 댓글 수정
