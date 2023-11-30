@@ -803,10 +803,11 @@
             url:"/mail",
             type:"post",
             contentType: "application/json",
-            data:JSON.stringify({email: invite_email}),
+            data:JSON.stringify({email: invite_email, url: window.location.href}),
             success: function(data){
                 alert("인증번호 발송");
                 $("#sendMail").attr("value",data);
+                closeModal();
             },
             error: function(request, status, error){
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

@@ -22,12 +22,12 @@ public class MailController {
 
 	@ResponseBody
 	@PostMapping("/mail")
-	public String MailSend(@RequestBody String mail) throws JsonProcessingException {
-		JsonNode jsonNode = objectMapper.readTree(mail);
+	public String MailSend(@RequestBody String invite) throws JsonProcessingException {
+		JsonNode jsonNode = objectMapper.readTree(invite);
 		String email = jsonNode.get("email").asText();
+		String boardUrl = jsonNode.get("url").asText();
 
-
-		int number = mailService.sendMail(email);
+		int number = mailService.sendMail(email, boardUrl);
 		String num = "" + number;
 
 		return num;

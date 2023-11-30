@@ -22,11 +22,11 @@ public class MailService {
 	private static int number;
 
 	public static void createNumber(){
-		number = (int)(Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
+		number = (int)(Math.random() * (90000)) + 100000;
 	}
 
-	public MimeMessage CreateMail(String mail){
-		createNumber();
+	public MimeMessage CreateMail(String mail, String boardUrl){
+		//createNumber();
 		MimeMessage message = javaMailSender.createMimeMessage();
 
 		try {
@@ -35,7 +35,7 @@ public class MailService {
 			message.setSubject("이메일 인증");
 			String body = "";
 			body += "<h3>" + "항해로 보드 초대 메일 입니다." + "</h3>";
-			body += "<h1>" + number + "</h1>";
+			body += "<h2><a href='" + boardUrl + "'>보드로 이동하기</a></h2>";;
 			body += "<h3>" + "감사합니다." + "</h3>";
 			message.setText(body,"UTF-8", "html");
 		} catch (MessagingException e) {
@@ -45,8 +45,8 @@ public class MailService {
 		return message;
 	}
 
-	public int sendMail(String mail){
-		MimeMessage message = CreateMail(mail);
+	public int sendMail(String mail, String boardUrl){
+		MimeMessage message = CreateMail(mail, boardUrl);
 		javaMailSender.send(message);
 
 		return number;
