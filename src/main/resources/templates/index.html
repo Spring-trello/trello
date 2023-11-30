@@ -37,8 +37,9 @@
                                         onclick="goToHome()">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" id = "login" href="#" onclick="Login()">Log in</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" onclick="Logout()">Log out</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="login" onclick="Login()">Log in</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="logout" onclick="Logout()">Log out</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="signup" onclick="Signup()">Sign up</a></li>
             </ul>
         </div>
     </div>
@@ -103,7 +104,12 @@
 
 <script>
     const host = 'http://' + window.location.host;
-    const authToken = getAuthorizationToken();
+    var authToken = getAuthorizationToken();
+
+    const loginButton = document.getElementById('login');
+    const logoutButton = document.getElementById('logout');
+    const signupButton = document.getElementById('signup');
+
     function getAuthorizationToken() {
         const cookies = document.cookie.split('; ');
 
@@ -123,7 +129,7 @@
         return null;
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         showBoard();
         LoginCheck();
     });
@@ -190,6 +196,7 @@
 
     function deleteAuthToken() {
         document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        authToken = null;
     }
 
     function Logout() {
@@ -202,12 +209,20 @@
         window.location.href = "/users/signin";
     }
 
-    function LoginCheck(){
-        const loginButton = document.getElementById('login')
-        if(authToken){
+    function Signup() {
+        deleteAuthToken();
+        window.location.href = "/users/signup";
+    }
+
+    function LoginCheck() {
+        if (authToken) {
             loginButton.style.display = 'none';
-        }else{
+            signupButton.style.display = 'none';
+            logoutButton.style.display = 'block';
+        } else {
             loginButton.style.display = 'block';
+            signupButton.style.display = 'block';
+            logoutButton.style.display = 'none';
         }
     }
 </script>
