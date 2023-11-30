@@ -64,7 +64,7 @@ public class Card {
 	@Version
 	private Long version;
 
-	@OneToMany(mappedBy = "card")
+	@OneToMany(mappedBy = "card", orphanRemoval = true)
 	private List<Comment> commentList = new ArrayList<>();
 
 	public Card(CardCreateRequestDto requestDto, User user, Board board, Col column, int pos) {
