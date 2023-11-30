@@ -13,43 +13,33 @@ $(document).on('nestableDragStop', function (event, el) {
     // console.log('cardPos:' + cardPos);
 
     // AJAX 호출하여 DB에 카드 이동 요청
-    let originalColumnId = 0;
-    let originalPosition = 0;
+    let cardIdFromFront = 0;
+    let positionFromFront = 0;
+
+
     $.ajax({
-        url: '/cards/' + cardId,
-        type: 'GET',
+        url: `/cards/${cardId}/to/${columnId}/${cardPos}`,
+        method: 'PUT',
         headers: {
             'Authorization': authToken
         },
-        success: function (card) {
-            $.ajax({
-                url: `/cards/${cardId}/to/${columnId}/${cardPos}`,
-                method: 'PUT',
-                headers: {
-                    'Authorization': authToken
-                },
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    originalColumnId: card.columnId,
-                    originalPosition: card.position
-                }),
-                success:
+        contentType: 'application/json',
+        data: JSON.stringify({
+            originalColumnId: cardIdFromFront,// 드롭한 순간에 서버에서 조회한 카드 정보,
+            originalPosition: positionFromFront
+        }),
+        success:
 
-                    function (card) {
-                        console.log('카드 이동이 성공적으로 완료되었습니다. ')
-                    }
+            function (card) {
+                console.log('카드 이동이 성공적으로 완료되었습니다. ')
+            }
 
-                ,
-                error: function (error) {
-                    console.error('카드 이동 중 오류가 발생했습니다:', error);
-                }
-            })
-            ;
-        },
+        ,
         error: function (error) {
-            console.log(" 카드 이동 처리 전 카드를 db에서 조회하는 함수에서 에러");
+            console.error('카드 이동 중 오류가 발생했습니다:', error);
         }
-    });
+    })
+    ;
 
 
 })
