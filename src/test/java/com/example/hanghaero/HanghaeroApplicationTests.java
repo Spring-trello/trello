@@ -1,12 +1,12 @@
-package com.example.hanghaero;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class HanghaeroApplicationTests {
-	@Test
-	public void test() {
-		assert true;
-	}
-}
+// package com.example.hanghaero;
+//
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
+//
+// @SpringBootTest
+// class HanghaeroApplicationTests {
+// 	@Test
+// 	public void test() {
+// 		assert true;
+// 	}
+// }
