@@ -44,11 +44,11 @@ public class CardRestController {
 
 	// 카드 수정
 	@PutMapping("/{cardId}")
-	public ResponseEntity<?> updateCard(
+	public CardResponseDto updateCard(
 		@PathVariable Long cardId,
 		@RequestBody CardModifyRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.ok().body(cardService.updateCard(cardId, requestDto, userDetails));
+		return cardService.updateCard(cardId, requestDto, userDetails);
 	}
 
 	// 카드 이동
