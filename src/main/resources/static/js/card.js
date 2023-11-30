@@ -1,6 +1,6 @@
 // board.html의 card 관련 js코드
 
-$(document).on('nestableDragStop', function(event, el) {
+$(document).on('nestableDragStop', function (event, el) {
     // el을 받아와서 원하는 로직을 수행함
     const columnId = $(el).closest('.column').attr('id').split('-')[1];
     const cardId = $(el).attr('id').split('-')[1];
@@ -13,20 +13,47 @@ $(document).on('nestableDragStop', function(event, el) {
     // console.log('cardPos:' + cardPos);
 
     // AJAX 호출하여 DB에 카드 이동 요청
+    let originalColumnId = 0;
+    let originalPosition = 0;
     $.ajax({
-        url: `/cards/${cardId}/to/${columnId}/${cardPos}`,
-        method: 'PUT',
+        url: '/cards/' + cardId,
+        type: 'GET',
         headers: {
             'Authorization': authToken
         },
         success: function (card) {
-            console.log('카드 이동이 성공적으로 완료되었습니다. ')
+            $.ajax({
+                url: `/cards/${cardId}/to/${columnId}/${cardPos}`,
+                method: 'PUT',
+                headers: {
+                    'Authorization': authToken
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    originalColumnId: card.columnId,
+                    originalPosition: card.position
+                }),
+                success:
+
+                    function (card) {
+                        console.log('카드 이동이 성공적으로 완료되었습니다. ')
+                    }
+
+                ,
+                error: function (error) {
+                    console.error('카드 이동 중 오류가 발생했습니다:', error);
+                }
+            })
+            ;
         },
         error: function (error) {
-            console.error('카드 이동 중 오류가 발생했습니다:', error);
+            console.log(" 카드 이동 처리 전 카드를 db에서 조회하는 함수에서 에러");
         }
     });
-});
+
+
+})
+;
 
 // const commentTemplate =
 //     `
@@ -133,7 +160,7 @@ function createCommentForm() {
         url: '/comments',
         method: 'POST',
         headers: {
-            'Authorization' : authToken,
+            'Authorization': authToken,
         },
         contentType: 'application/json',
         data: JSON.stringify({
@@ -160,7 +187,7 @@ function deleteComment(comment) {
         $.ajax({
             url: `/comments/${commentId}`,
             method: 'DELETE',
-            headers: { 'Authorization' : authToken },
+            headers: {'Authorization': authToken},
             success: () => {
                 console.log("댓글이 성공적으로 삭제되었습니다.");
                 comment.remove();

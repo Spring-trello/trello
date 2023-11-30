@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hanghaero.dto.card.CardCreateRequestDto;
 import com.example.hanghaero.dto.card.CardModifyRequestDto;
+import com.example.hanghaero.dto.card.CardMoveRequestDto;
 import com.example.hanghaero.dto.card.CardResponseDto;
 import com.example.hanghaero.security.userdetails.UserDetailsImpl;
 import com.example.hanghaero.service.CardService;
@@ -54,8 +55,9 @@ public class CardRestController {
 	// 카드 이동
 	@PutMapping("/{cardId}/to/{toColumnId}/{newPosition}")
 	public ResponseEntity<?> moveCard(
-		@PathVariable Long cardId, @PathVariable Long toColumnId, @PathVariable int newPosition) {
-		return ResponseEntity.ok().body(cardService.moveCard(cardId, toColumnId, newPosition));
+		@PathVariable Long cardId, @PathVariable Long toColumnId, @PathVariable int newPosition,
+		@RequestBody CardMoveRequestDto cardMoveRequestDto) {
+		return ResponseEntity.ok().body(cardService.moveCard(cardId, toColumnId, newPosition, cardMoveRequestDto));
 	}
 
 	// 카드 삭제
