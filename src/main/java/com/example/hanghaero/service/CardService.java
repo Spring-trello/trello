@@ -78,8 +78,7 @@ public class CardService {
 	@Transactional
 	public CardResponseDto moveCard(Long cardId, Long toColumnId, int newPosition) {
 		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
-		Col column = colRepository.findById(toColumnId).orElseThrow(
-			() -> new ColumnNotFoundException());
+		Col column = colRepository.findById(toColumnId).orElseThrow(ColumnNotFoundException::new);
 
 		// newPosition이 옮기려는 컬럼의 포지션 범위를 벗어나면 수정
 		newPosition = Math.max(0, newPosition);

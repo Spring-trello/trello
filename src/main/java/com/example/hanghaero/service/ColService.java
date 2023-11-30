@@ -11,6 +11,7 @@ import com.example.hanghaero.dto.column.ColModifyRequestDto;
 import com.example.hanghaero.dto.column.ColResponseDto;
 import com.example.hanghaero.entity.Board;
 import com.example.hanghaero.entity.Col;
+import com.example.hanghaero.exception.entity.ColumnNotFoundException;
 import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.ColRepository;
 
@@ -22,8 +23,12 @@ public class ColService {
 	private final BoardRepository boardRepository;
 	private final ColRepository columnRepository;
 
-	public List<ColResponseDto> getColumns(Long boardId){
-		return columnRepository.getColumns(boardId).stream().map(ColResponseDto::new).sorted((c1,c2)->c1.getPosition()-c2.getPosition()).toList();
+	public List<ColResponseDto> getColumns(Long boardId) {
+		return columnRepository.getColumns(boardId)
+			.stream()
+			.map(ColResponseDto::new)
+			.sorted((c1, c2) -> c1.getPosition() - c2.getPosition())
+			.toList();
 	}
 
 	public ColResponseDto createColumn(ColCreateRequestDto requestDto) {
@@ -43,13 +48,19 @@ public class ColService {
 	@Transactional
 	public ColResponseDto updateColumn(Long columnId, ColModifyRequestDto requestDto) {
 		// 보드에 있는 칼럼 조회
-		Col findColumnObject = findColumn(requestDto.getBoardId(), columnId);
-		try {
-			findColumnObject.update(requestDto);
-		} catch (Exception e) {
-			e.getMessage();
-		}
-		return new ColResponseDto(findColumnObject);
+		// Col findColumnObject = findColumn(requestDto.getBoardId(), columnId);
+		// try {
+		// 	findColumnObject.update(requestDto);
+		// } catch (Exception e) {
+		// 	e.getMessage();
+		// }
+		// return new ColResponseDto(findColumnObject);
+
+		// OPTIMISTIC Lock 추가
+		Col findColumn = columnRepository.findWithOptimisticLockByColumnId(columnId)
+			.orElseThrow(ColumnNotFoundException::new);
+		findColumn.update(requestDto);
+		return new ColResponseDto(findColumn);
 	}
 
 	@Transactional
@@ -70,17 +81,17 @@ public class ColService {
 		Col findColumnObject = findColumn(boardId, columnId);
 		System.out.println("현재 칼럼의 위치 = " + findColumnObject.getPosition());
 
-		Col toColumns = columnRepository.getPosition(boardId,newPosition);
+		Col toColumns = columnRepository.getPosition(boardId, newPosition);
 		if (newPosition <= columnRepository.lastPosition(boardId)) {
-			System.out.println("보드의 마지막 위치 = " +  columnRepository.lastPosition(boardId));
+			System.out.println("보드의 마지막 위치 = " + columnRepository.lastPosition(boardId));
 			try {
 				toColumns.updatePosition(findColumnObject.getPosition());
 			} catch (Exception e) {
 				e.getMessage();
 			}
-			try{
+			try {
 				findColumnObject.updatePosition(newPosition);
-			} catch (Exception e){
+			} catch (Exception e) {
 				e.getMessage();
 			}
 		}
