@@ -82,13 +82,12 @@ public class CardService {
 		// Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
 		Card card = cardRepository.findWithOptimisticLockById(cardId).orElseThrow(CardNotFoundException::new);
 
-		if (card.getColumn().getColumnId() != cardMoveRequestDto.getOriginalColumnId()) {
+		if (!Objects.equals(card.getColumn().getColumnId(), cardMoveRequestDto.getOriginalColumnId())) {
 			// 이미 컬럼이 이동되었음,
 			throw new RuntimeException("이미 변경되어 요청 처리 불가");
-		} else {
-			if (card.getPosition() != cardMoveRequestDto.getOriginalPosition()) {
-				throw new RuntimeException("이미 변경되어 요청 처리 불가");
-			}
+		}
+		if (card.getPosition() != cardMoveRequestDto.getOriginalPosition()) {
+			throw new RuntimeException("이미 변경되어 요청 처리 불가");
 		}
 
 		Col column = colRepository.findById(toColumnId).orElseThrow(ColumnNotFoundException::new);
