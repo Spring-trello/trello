@@ -1,4 +1,4 @@
-package com.example.hanghaero.exception.entity.user;
+package com.example.hanghaero.exception.user;
 
 import org.springframework.security.access.AccessDeniedException;
 

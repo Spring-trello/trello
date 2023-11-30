@@ -13,7 +13,7 @@ import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.entity.UserRoleEnum;
-import com.example.hanghaero.exception.entity.comment.CardNotFoundException;
+import com.example.hanghaero.exception.entity.CardNotFoundException;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.CommentRepository;
 import com.example.hanghaero.security.userdetails.UserDetailsImpl;

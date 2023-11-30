@@ -15,6 +15,9 @@ import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Col;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.entity.UserRoleEnum;
+import com.example.hanghaero.exception.entity.AuthorityNotSufficientException;
+import com.example.hanghaero.exception.entity.CardNotFoundException;
+import com.example.hanghaero.exception.entity.ColumnNotFoundException;
 import com.example.hanghaero.repository.BoardRepository;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.ColRepository;
@@ -74,10 +77,9 @@ public class CardService {
 
 	@Transactional
 	public CardResponseDto moveCard(Long cardId, Long toColumnId, int newPosition) {
-		Card card = cardRepository.findById(cardId).orElseThrow(
-			() -> new IllegalArgumentException("존재하지 않는 카드"));
+		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
 		Col column = colRepository.findById(toColumnId).orElseThrow(
-			() -> new IllegalArgumentException("존재하지 않는 컬럼"));
+			() -> new ColumnNotFoundException());
 
 		// newPosition이 옮기려는 컬럼의 포지션 범위를 벗어나면 수정
 		newPosition = Math.max(0, newPosition);
@@ -103,13 +105,11 @@ public class CardService {
 
 	@Transactional
 	public CardResponseDto deleteCard(Long cardId, UserDetailsImpl userDetails) {
-		Card card = cardRepository.findById(cardId).orElseThrow(
-			() -> new IllegalArgumentException("존재하지 않는 카드"));
+		Card card = cardRepository.findById(cardId).orElseThrow(CardNotFoundException::new);
 
 		if (!authCheck(card, userDetails)) {
-			throw new IllegalArgumentException("카드를 삭제할 권한이 없습니다.");
+			throw new AuthorityNotSufficientException("카드", "삭제");
 		}
-
 		cardRepository.delete(card);
 
 		return new CardResponseDto(card);
