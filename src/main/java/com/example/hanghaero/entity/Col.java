@@ -15,6 +15,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +24,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "columns")
 public class Col {
 	@Id
@@ -41,6 +43,9 @@ public class Col {
 	@ManyToOne
 	@JoinColumn(name = "board_id")
 	Board board;
+
+	@Version
+	private Long version;
 
 	public Col(Board board, ColCreateRequestDto requestDto, int lastPosition) {
 		this.title = requestDto.getTitle();

@@ -1,6 +1,8 @@
 package com.example.hanghaero.service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ import com.example.hanghaero.entity.Card;
 import com.example.hanghaero.entity.Comment;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.entity.UserRoleEnum;
-import com.example.hanghaero.exception.entity.comment.CardNotFoundException;
+import com.example.hanghaero.exception.entity.CardNotFoundException;
 import com.example.hanghaero.repository.CardRepository;
 import com.example.hanghaero.repository.CommentRepository;
 import com.example.hanghaero.security.userdetails.UserDetailsImpl;
@@ -70,5 +72,12 @@ public class CommentService {
 	private boolean commentAuthCheck(Comment comment, UserDetailsImpl userDetails) {
 		return Objects.equals(userDetails.getUser(), comment.getUser()) ||
 			Objects.equals(userDetails.getUser().getRole(), UserRoleEnum.ADMIN);
+	}
+
+	public List<CommentResponseDto> getCommentsByCardId(Long cardId) {
+		return commentRepository.findAllByCard_IdOrderByModifiedAtDesc(cardId)
+			.stream()
+			.map(CommentResponseDto::new)
+			.collect(Collectors.toList());
 	}
 }

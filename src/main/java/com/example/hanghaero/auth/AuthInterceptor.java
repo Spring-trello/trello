@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.example.hanghaero.exception.entity.user.UserNotHasAdminRoleException;
+import com.example.hanghaero.exception.user.UserNotHasAdminRoleException;
 import com.example.hanghaero.repository.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;

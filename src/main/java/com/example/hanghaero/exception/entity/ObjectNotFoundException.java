@@ -1,4 +1,4 @@
-package com.example.hanghaero.exception.entity.comment;
+package com.example.hanghaero.exception.entity;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
-@Slf4j(topic = "GlobalExceptionHandler")
+@Slf4j(topic = "ValidExceptionHandler")
 public class ValidExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

@@ -10,8 +10,8 @@ import com.example.hanghaero.dto.user.SignUpRequestDto;
 import com.example.hanghaero.dto.user.UserUpdateResponseDto;
 import com.example.hanghaero.entity.User;
 import com.example.hanghaero.entity.UserRoleEnum;
-import com.example.hanghaero.exception.entity.user.DuplicateEmailException;
-import com.example.hanghaero.exception.entity.user.ManagerSecretKeyNotMatchedException;
+import com.example.hanghaero.exception.user.DuplicateEmailException;
+import com.example.hanghaero.exception.user.ManagerSecretKeyNotMatchedException;
 import com.example.hanghaero.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;

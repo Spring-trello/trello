@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.hanghaero.exception.entity.user.DuplicateEmailException;
-import com.example.hanghaero.exception.entity.user.EmailNotFoundException;
-import com.example.hanghaero.exception.entity.user.ManagerSecretKeyNotMatchedException;
-import com.example.hanghaero.exception.entity.user.PasswordNotAvailableByRuleException;
-import com.example.hanghaero.exception.entity.user.PasswordNotMatchedException;
-import com.example.hanghaero.exception.entity.user.UserNotHasAdminRoleException;
+import com.example.hanghaero.exception.user.DuplicateEmailException;
+import com.example.hanghaero.exception.user.EmailNotFoundException;
+import com.example.hanghaero.exception.user.ManagerSecretKeyNotMatchedException;
+import com.example.hanghaero.exception.user.PasswordNotAvailableByRuleException;
+import com.example.hanghaero.exception.user.PasswordNotMatchedException;
+import com.example.hanghaero.exception.user.UserNotHasAdminRoleException;
 
 @RestControllerAdvice
 public class AuthExceptionHandler {
