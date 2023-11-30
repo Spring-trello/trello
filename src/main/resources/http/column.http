@@ -1,9 +1,9 @@
 ### 1.로그인후 토큰 받기
-POST http://localhost:8080/api/user/signin
+POST http://localhost:8080/signin
 Content-Type: application/json
 
 {
-  "email":"admin@test.com",
+  "email":"pjm9673@gmail.com",
   "password":"@Qkrwjdals96"
 }
 
@@ -13,31 +13,29 @@ Content-Type: application/json
 %}
 
 ### 2. 보드에 칼럼 등록
-POST http://localhost:8080/columns
+POST http://localhost:8080/board/2/columns
 Content-Type: application/json
 Authorization: {{access_token}}
 
 {
-  "boardId": 2,
-  "title" : "화요일 TO DO"
+  "title" : "금요일"
 }
 
 ### 2. 보드에 있는 칼럼 수정
-PUT http://localhost:8080/columns/7
+PUT http://localhost:8080/board/1/columns/update/4
 Content-Type: application/json
 Authorization: {{access_token}}
 
 {
-  "boardId" : 2,
-  "title" : "수요일 TO DO"
+  "title" : "화요일"
 }
 
 ### 3. 보드에 있는 칼럼 삭제
-DELETE http://localhost:8080/columns/7?boardId=2
+DELETE http://localhost:8080/board/1/columns/drop/4
 Content-Type: application/json
 Authorization: {{access_token}}
 
 ### 4. 칼럼 이동
-PUT http://localhost:8080/columns/8/to/5?boardId=2
+PUT http://localhost:8080/borad/2/columns/move/7?position=3
 Content-Type: application/json
 Authorization: {{access_token}}
