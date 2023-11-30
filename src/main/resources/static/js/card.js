@@ -13,8 +13,12 @@ $(document).on('nestableDragStop', function (event, el) {
     // console.log('cardPos:' + cardPos);
 
     // AJAX 호출하여 DB에 카드 이동 요청
-    let cardIdFromFront = 0;
-    let positionFromFront = 0;
+    // let cardIdFromFront = 0;
+    // let positionFromFront = 0;
+
+    // 드롭 순간의 정보를 해당 카드로부터 가져오기
+    const cardIdFromFront = $(el).data('originalCardId');
+    const positionFromFront = $(el).data('originalPosition');
 
 
     $.ajax({
@@ -40,7 +44,9 @@ $(document).on('nestableDragStop', function (event, el) {
         }
     })
     ;
-
+    // 드롭한 순간의 정보를 해당 카드에 저장
+    $(el).data('originalCardId', cardId);
+    $(el).data('originalPosition', cardPos);
 
 })
 ;
