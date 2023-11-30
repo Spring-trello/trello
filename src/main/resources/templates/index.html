@@ -37,7 +37,7 @@
                                         onclick="goToHome()">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" onclick="Login()">Log in</a></li>
+                <li class="nav-item"><a class="nav-link" id = "login" href="#" onclick="Login()">Log in</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="Logout()">Log out</a></li>
             </ul>
         </div>
@@ -103,7 +103,7 @@
 
 <script>
     const host = 'http://' + window.location.host;
-
+    const authToken = getAuthorizationToken();
     function getAuthorizationToken() {
         const cookies = document.cookie.split('; ');
 
@@ -123,29 +123,10 @@
         return null;
     }
 
-    // 사용 예시
-
-    function goToBoardPage() {
-        const authToken = getAuthorizationToken();
-        console.log(authToken);
-        $.ajax({
-            url: '/boards',
-            type: 'GET',
-            headers: {
-                'Authorization': authToken
-            },
-            success:
-                function (response) {
-                    $('#boardContent').html(response);
-                }
-            ,
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('에러 발생:', textStatus, errorThrown);
-            }
-        });
-    }
-
-    $(document).ready(showBoard())
+    $(document).ready(function() {
+        showBoard();
+        LoginCheck();
+    });
 
     var boardDto = {};
     boardDto.name = name;
@@ -219,6 +200,15 @@
     function Login() {
         deleteAuthToken();
         window.location.href = "/users/signin";
+    }
+
+    function LoginCheck(){
+        const loginButton = document.getElementById('login')
+        if(authToken){
+            loginButton.style.display = 'none';
+        }else{
+            loginButton.style.display = 'block';
+        }
     }
 </script>
 </body>
