@@ -16,6 +16,13 @@
     align-items: center;
 }
 
+#modify-datepicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 #dDayDisplay {
     font-family: 'Poppins', sans-serif;
 }
@@ -48,6 +55,7 @@
     text-decoration: none;
     cursor: pointer;
 }
+
 
 Body {
     font-family: Sans-serif;
