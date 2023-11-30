@@ -19,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -59,6 +60,9 @@ public class Card {
 	@ManyToOne
 	@JoinColumn(name = "column_id")
 	private Col column;
+
+	@Version
+	private Long version;
 
 	@OneToMany(mappedBy = "card")
 	private List<Comment> commentList = new ArrayList<>();

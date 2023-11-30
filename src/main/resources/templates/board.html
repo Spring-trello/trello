@@ -61,20 +61,21 @@
 </nav>
 
 <!-- Card의 댓글을 작성하고 불러오는 오프캔버스 -->
-<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+<div aria-labelledby="offcanvasRightLabel" class="offcanvas offcanvas-end" data-bs-backdrop="static" id="offcanvasRight"
+     tabindex="-1">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="offcanvas" type="button"></button>
     </div>
     <div class="offcanvas-body">
         <!-- 댓글 작성 폼 -->
         <form>
-            <input id="formCardId" type="hidden" />
+            <input id="formCardId" type="hidden"/>
             <div class="mb-3">
-                <label for="commentContent" class="form-label">댓글</label>
-                <textarea class="form-control" id="commentContent" rows="3" placeholder="댓글을 입력하세요"></textarea>
+                <label class="form-label" for="commentContent">댓글</label>
+                <textarea class="form-control" id="commentContent" placeholder="댓글을 입력하세요" rows="3"></textarea>
             </div>
-            <button type="button" class="btn btn-primary" onclick="createCommentForm()">댓글 작성</button>
+            <button class="btn btn-primary" onclick="createCommentForm()" type="button">댓글 작성</button>
         </form>
 
         <!-- 댓글 리스트 -->
@@ -132,11 +133,12 @@
     var colresponsedto = {}
 
     let boardId = 0;
+
     $(document).ready(function () {
         const authToken = getAuthorizationToken();
         const urls = window.location.href.split("/");
         boardId = urls.at(urls.length - 1);
-        loadColumns(boardId, authToken);
+        setInterval(loadColumns(boardId, authToken), 5000);
         $("#delete-button").click(function () {
             addItem();
         });
@@ -202,8 +204,7 @@
             const value = contentElement.innerHTML.trim();
             cardModifyRequestMap[key] = value;
         });
-
-
+        //card.querySelector('.')
         const cardId = card.id.split('-')[1];
         //cardModifyRequestMap
         // AJAX 요청을 보냄
@@ -214,7 +215,7 @@
                 'Authorization': authToken
             },
             contentType: 'application/json',
-            // POST 요청
+            // dd-column 요청
             data: JSON.stringify(cardModifyRequestMap),
             success: function (card) {
             },
@@ -249,6 +250,7 @@
         <li class="dd-item" id="card-{card_id}" >
             <div class="card-color-bar"></div>
             <input type="hidden" id="cardIdValue" name="cardIdValue">
+            <input type="hidden" id="cardVersion" name="cardVersion">
             <img alt= ":" src="/images/icon_detail.png" width="20" height="20"  style="position: absolute; top: 40px; right: 2px;" onclick="openCardModifyModal(this)"></img>
             <span class="close" style="position: absolute; top: 10px; right: 2px;" onclick="deleteCardForm(this)">&times;</span>
             <img alt= "comment" src="/images/icon_comment.png" width="30" height="30"
@@ -432,9 +434,12 @@
             .replace("{card_description}", card.description.replaceAll("\n", "<br>"))
             .replace("{card_duedate}", card.dueDate);
 
+        console.log("card.version + " + card.version);
+
         // html 요소를 해당 컬럼의 가장 아래에 추가한다.
         $(newCardHtml).appendTo(`#column-${columnId} .todo-list`);
         $(`#card-${card.id} #cardIdValue`).val(card.id);
+        $(`#card-${card.id} #cardVersion`).val(card.version);
         // 카드의 색깔 변경
         $(`#card-${card.id} .card-color-bar`).css('background-color', card.color);
         const newCard = $(`#card-${card.id}`);
@@ -803,6 +808,8 @@
 <script src="/js/card.js"></script>
 
 <!--Boot Strap-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
