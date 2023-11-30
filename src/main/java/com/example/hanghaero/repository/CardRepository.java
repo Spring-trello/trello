@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.hanghaero.entity.Card;
-import org.springframework.data.repository.query.Param;
+
+import jakarta.persistence.LockModeType;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
 	@Query("SELECT c FROM Card c WHERE c.board.id = :boardId")
 	List<Card> getCards(@Param("boardId") Long boardId);
+
+	@Lock(LockModeType.OPTIMISTIC)
+	Optional<Card> findWithOptimisticLockById(Long id);
 
 	Optional<Card> findFirstByColumn_ColumnIdOrderByPositionDesc(Long columnId);
 
