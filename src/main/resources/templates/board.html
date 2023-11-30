@@ -61,30 +61,25 @@
 <!-- Card의 댓글을 작성하고 불러오는 오프캔버스 -->
 <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+        <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
         <!-- 댓글 작성 폼 -->
         <form>
-            <div class="mb-3">
-                <label for="commentName" class="form-label">이름</label>
-                <input type="text" class="form-control" id="commentName" placeholder="이름을 입력하세요">
-            </div>
+            <input id="formCardId" type="hidden" />
             <div class="mb-3">
                 <label for="commentContent" class="form-label">댓글</label>
                 <textarea class="form-control" id="commentContent" rows="3" placeholder="댓글을 입력하세요"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">댓글 작성</button>
+            <button type="button" class="btn btn-primary" onclick="createCommentForm()">댓글 작성</button>
         </form>
 
         <!-- 댓글 리스트 -->
         <div class="mt-3">
             <h6 class="small">댓글 목록</h6>
-            <ul class="list-group">
-                <li class="list-group-item small">댓글 내용 1</li>
-                <li class="list-group-item small">댓글 내용 2</li>
-                <!-- 다른 댓글들 -->
+            <ul class="list-group" id="comment-list">
+                <!-- 댓글 추가되는 곳 -->
             </ul>
         </div>
     </div>
@@ -243,7 +238,7 @@
             <img alt= "comment" src="/images/icon_comment.png" width="30" height="30"
             style="position: absolute; bottom: 5px; right: 5px; cursor: pointer"
             data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-            onclick="loadComments(this)"></img>
+            onclick="loadComments($(this).closest('.dd-item'))">
             <h3 class="title dd-handle card-content" style="text-align:center;">
                 {card_name}
             </h3>
