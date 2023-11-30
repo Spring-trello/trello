@@ -1109,7 +1109,8 @@ ol.column {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
     flex-direction: column;
     min-height: 200px;
-    z-index: 9999;
+    /*z-index: 9999;*/
+    z-index: 1;
     position: relative;
     background: #fff;
     padding: 1em;
@@ -1132,6 +1133,7 @@ ol.addcolumn {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
     flex-direction: column;
     min-height: 200px;
+    /*z-index: 1;*/
     z-index: 1;
     position: relative;
     background: #fff;
@@ -1149,7 +1151,8 @@ ol.kanban {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
     flex-direction: column;
     min-height: 200px;
-    z-index: 1;
+    /*z-index: 1;*/
+    z-index: 0;
     position: relative;
     background: #fff;
     padding: 1em;
@@ -1172,6 +1175,7 @@ ol.kanban {
     min-width: 480px;
     overflow: hidden;
     z-index: 1;
+    /*z-index: 1041;*/
     position: relative;
     background: #fff;
     border-radius: 2px;
@@ -1350,6 +1354,7 @@ ol.kanban {
 }
 
 .card-color-bar {
+    position: relative;
     height: 10px;
     background-color: transparent;
     width: 40%;
@@ -1357,3 +1362,66 @@ ol.kanban {
     margin: 5px 0;
     flex: 1;
 }
+
+.custom-badge {
+    background-color: transparent;
+    height: 25px;
+    width: 50px;
+}
+
+
+/* 모달 창 관련 CSS */
+
+.modal-content * {
+    font-family: 'Poppins', sans-serif;
+}
+
+.modal-content #modalDescriptLabel {
+    font-size: 18px;
+    color: #607D8B;
+}
+
+.modal-content #modalCardDescript {
+    font-size: 15px;
+}
+
+.form-label {
+    font-size: 18px;
+    color: #607D8B;
+}
+
+#commentContent {
+    font-size: 11px;
+}
+
+.comment-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-author {
+    font-size: 15px;
+    color: #607D8B;
+    flex: 1;
+    text-align: left;
+}
+
+.comment-time {
+    font-size: 15px;
+    color: #607D8B;
+    text-align: right;
+}
+
+.comment-contents {
+    font-size: 15px;
+}
+
+.deleteComment {
+    font-size: 25px;
+    color: #607D8B;
+    position: absolute;
+    top: 0px;
+    right: -25px;
+    cursor: pointer;
+}
+

@@ -28,29 +28,43 @@ $(document).on('nestableDragStop', function(event, el) {
     });
 });
 
+// const commentTemplate =
+//     `
+//         <li class="list-group-item" id="comment-{commentId}">
+//         <table style="width: 100%;">
+//             <tr>
+//                 <td style="width: 50%;">
+//                     <p class="comment-author">{email}</p>
+//                 </td>
+//                 <td style="width: 50%; text-align: right;">
+//                     <p class="comment-time">{modified_at}</p>
+//                 </td>
+//             </tr>
+//             <tr>
+//                 <td colspan="2">
+//                     <hr class="comment-divider">
+//                     <p class="comment-contents">{contents}</p>
+//                 </td>
+//             </tr>
+//         </table>
+//     </li>
+//     `
+
 const commentTemplate =
     `
-        <li class="list-group-item" id="comment-{commentId}">
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 50%;">
-                    <span class="comment-author" style="font-size: 15px;">{email}</span>
-                </td>
-                <td style="width: 50%; text-align: right;">
-                    <span class="comment-time" style="font-size: 15px;">{modified_at}</span>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <hr class="comment-divider">
-                    <p class="small">{contents}</p>
-                </td>
-            </tr>
-        </table>
+    <li class="list-group-item" id="comment-{comment_id}">
+        <span class="deleteComment" onclick="deleteComment($(this).closest('.list-group-item'))">&times;</span>
+        <div class="comment-info">
+            <div class="comment-author">{email}</div>
+            <div class="comment-time">{modified_at}</div>
+        </div>
+        <div class="comment-contents">
+            <p>{contents}</p>
+        </div>
     </li>
     `
 
-// comment-icon 클릭 시 card 댓글을 표시하는 사이드바 토글
+// comment-icon 클릭 시 card 댓글을 표시하는 모달 토글
 function loadComments(card) {
     const cardId = $(card).attr('id').split('-')[1];
     const cardName = $(card).find('h3').text();
@@ -62,8 +76,17 @@ function loadComments(card) {
     // 전체 코멘트 화면에서 삭제
     $('#comment-list').empty();
 
-    // 오프캔버스 제목 변경
-    $('#offcanvasRightLabel').text(cardName);
+    // 모달 제목 변경
+    $('#commentModalLabel').html('<span class="badge custom-badge"> </span>' + cardName);
+
+    // 모달 뱃지 색깔 변경
+    const cardColor = $(card).find('.card-color-bar').css('background-color');
+    $('.custom-badge').css('background-color', cardColor);
+
+    // 모달 설명 변경
+    const cardDescript = $(card).find('.card-description').text();
+    $('#modalCardDescript').text(cardDescript);
+
 
     console.log("btn click, cardId: " + cardId);
 
@@ -125,4 +148,27 @@ function createCommentForm() {
         },
         error: (error) => console.log("댓글 작성 중 오류가 발생했습니다.")
     });
+}
+
+// 코멘트 삭제 요청
+function deleteComment(comment) {
+    const authToken = getAuthorizationToken();
+    const commentId = $(comment).attr('id').split('-')[1];
+
+    const confirmDelete = confirm("이 댓글을 삭제하시겠습니까?");
+    if (confirmDelete) {
+        $.ajax({
+            url: `/comments/${commentId}`,
+            method: 'DELETE',
+            headers: { 'Authorization' : authToken },
+            success: () => {
+                console.log("댓글이 성공적으로 삭제되었습니다.");
+                comment.remove();
+            },
+            error: (error) => {
+                console.error('댓글 삭제 중 오류가 발생했습니다:', error)
+                alert(error.responseText);
+            }
+        })
+    }
 }
