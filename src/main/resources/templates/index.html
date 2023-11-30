@@ -15,6 +15,7 @@
     <!-- 외부 스타일 시트를 링크합니다. -->
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/styles2.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
     <script crossorigin="anonymous"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
@@ -26,7 +27,7 @@
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container px-5">
-        <a class="navbar-brand" href="#" onclick="goToHome()">Hanghaero</a>
+        <a class="navbar-brand" onclick="goToHome()">Hanghaero</a>
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
                 class="navbar-toggler"
                 data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button"><span
@@ -37,7 +38,7 @@
                                         onclick="goToHome()">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" id = "login" href="#" onclick="Login()">Log in</a></li>
+                <li class="nav-item"><a class="nav-link" id="login" href="#" onclick="Login()">Log in</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="Logout()">Log out</a></li>
             </ul>
         </div>
@@ -49,10 +50,13 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-lg-6">
                 <div class="text-center my-5">
-                    <h1 class="display-5 fw-bolder text-white mb-2">This is Your Board</h1>
+                    <h1 class="display-5 fw-bolder text-white mb-2" style="font-family: 'Poppins', sans-serif;">This is
+                        Your Board</h1>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">보드 리스트</a>
-                        <a class="btn btn-outline-light btn-lg px-4" onclick="location.replace('/boards/newboard')">보드
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" style="font-family: 'Poppins', sans-serif;"
+                           href="#features">보드 리스트</a>
+                        <a class="btn btn-outline-light btn-lg px-4" style="font-family: 'Poppins', sans-serif;"
+                           onclick="location.replace('/boards/newboard')">보드
                             생성하기</a>
                     </div>
                 </div>
@@ -104,6 +108,7 @@
 <script>
     const host = 'http://' + window.location.host;
     const authToken = getAuthorizationToken();
+
     function getAuthorizationToken() {
         const cookies = document.cookie.split('; ');
 
@@ -123,7 +128,7 @@
         return null;
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         showBoard();
         LoginCheck();
     });
@@ -159,9 +164,9 @@
         return `<div class="col-lg-4 mb-5 mb-lg-0">
             <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i
                 class="bi bi-check-circle"></i></div>
-            <h2 class="h4 fw-bolder">${board.name}</h2>
-            <p>${board.description}</p>
-            <a href="#" class="text-decoration-none" onclick="boardDetail('${board.boardId}'); return false;">
+            <h2 class="h4 fw-bolder" style="font-family: 'Poppins', sans-serif;">${board.name}</h2>
+            <p style="font-family: 'Poppins', sans-serif;">${board.description}</p>
+            <a href="#" class="text-decoration-none" style="font-family: 'Poppins', sans-serif;" onclick="boardDetail('${board.boardId}'); return false;">
                 보드 보러가기
                 <i class="bi bi-arrow-right"></i>
             </a>
@@ -202,11 +207,11 @@
         window.location.href = "/users/signin";
     }
 
-    function LoginCheck(){
+    function LoginCheck() {
         const loginButton = document.getElementById('login')
-        if(authToken){
+        if (authToken) {
             loginButton.style.display = 'none';
-        }else{
+        } else {
             loginButton.style.display = 'block';
         }
     }
