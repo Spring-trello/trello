@@ -74,7 +74,10 @@ function deleteColumn(columnElement) {
                 // DB에 삭제요청 성공하면 화면에서도 삭제
                 columnElement.remove();
             },
-            error: (error) => console.error('컬럼 삭제 중 오류가 발생했습니다:', error)
+            error: (error) => {
+                console.error('컬럼 삭제 중 오류가 발생했습니다:', error)
+                alert(error.responseText);
+            }
         })
     }
 }

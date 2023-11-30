@@ -343,8 +343,9 @@
 
                 },
                 error: function (error) {
-                    // 요청 중 에러가 발생했을 때 처리할 내용
-                    alert("삭제 실패하였습니다.")
+                    // 에러 응답에서 메시지를 가져와 출력
+                    console.log(error.responseText);
+                    alert(error.responseText);
                 }
             });
         }
