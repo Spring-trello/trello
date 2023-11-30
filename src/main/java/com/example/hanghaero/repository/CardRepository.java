@@ -21,6 +21,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	// 컬럼 내부에서 카드의 순서를 바꿀 때 포지션이 변경되는 카드모록 반환
 	List<Card> findAllByPositionGreaterThanEqualAndColumn_ColumnId(int pos, Long columnId);
 
-	@Query("SELECT c FROM Card c WHERE c.column.columnId = :columnId")
+	@Query("SELECT c FROM Card c WHERE c.column.columnId = :columnId ORDER BY c.position ASC")
 	List<Card> getCardsByColumnId(@Param("columnId") Long columnId);
 }

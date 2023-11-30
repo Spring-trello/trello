@@ -131,6 +131,20 @@
                 $('#colorHex').val(color.toHexString());
             }
         });
+
+        $("#modify-colorpicker").spectrum({
+            showPaletteOnly: true,
+            showPalette: true,
+            color: 'blanchedalmond',
+            palette: [
+                ['black', 'white', 'blanchedalmond',
+                    'rgb(255, 128, 0);', 'hsv 100 70 50'],
+                ['red', 'yellow', 'green', 'blue', 'violet']
+            ],
+            change: function (color) {
+                $('#colorHex').val(color.toHexString());
+            }
+        });
     });
 
     function addModifyEventListenerToCard(element) {
@@ -564,25 +578,31 @@
         } catch (error) {
             console.log("Error : " + error);
         }
-        document.getElementById("modify-cardId").value = card.id;
-        document.getElementById("modify-name").value = card.name;
-        document.getElementById("modify-description").value = card.description;
-        document.getElementById("modify-colorpicker").value = card.color;
-        document.getElementById("modify-datepicker").value = card.dueDate;
-        console.log(document.getElementById("modify-cardId").value);
-        console.log(document.getElementById("modify-name").value);
-        console.log(document.getElementById("modify-description").value);
-        console.log(document.getElementById("modify-colorpicker").value);
-        console.log(document.getElementById("modify-datepicker").value);
-        modal.style.display = "block";
-        modal.style.zIndex = 9999;
 
-        $("#datepicker-container").datepicker(); // Datepicker 초기화
 
-        $("#datepicker").datepicker({
+        $("#modify-datepicker").datepicker({
             // Datepicker를 모달 창 안에 추가하기 위해 appendTo 사용
             appendTo: modal
         });
+
+
+        document.getElementById("modify-cardId").value = card.id;
+        document.getElementById("modify-name").value = card.name;
+        document.getElementById("modify-description").value = card.description;
+        $("#modify-colorpicker").spectrum("set", card.color);
+
+        // 저장되어있는 카드의 날짜로 미리 선택
+        $("#modify-datepicker").datepicker('setDate', new Date(card.dueDate));
+
+        // console.log(document.getElementById("modify-cardId").value);
+        // console.log(document.getElementById("modify-name").value);
+        // console.log(document.getElementById("modify-description").value);
+        // console.log(document.getElementById("modify-colorpicker").value);
+
+        modal.style.display = "block";
+        modal.style.zIndex = 9999;
+
+        //$("#modify-datepicker").datepicker(); // Datepicker 초기화
     }
 
     function modifyCard() {
@@ -597,7 +617,7 @@
         var color = $("#modify-colorpicker").spectrum("get").toHexString();
 
         $.ajax({
-            url: '/cards',
+            url: '/cards/' + cardId,
             method: 'PUT',
             headers: {
                 'Authorization': authToken
@@ -625,14 +645,16 @@
                 $("#modify-name").val('');
                 $("#modify-description").val('');
                 $("#modify-datepicker").datepicker();
-                // $("#modify-colorpicker").spectrum("").toHexString();
+                $("#modify-colorpicker").spectrum("").toHexString();
+
 
             },
             error: function (error) {
                 // 요청 중 에러가 발생했을 때 처리할 내용
-                console.error('카드 생성 중 오류가 발생했습니다:', error);
+                console.error('카드 수정 중 오류가 발생했습니다:', error);
             }
         });
+        closeCardModifyModal();
     }
 
     // 모달 닫기 함수
@@ -726,7 +748,7 @@
                 </div>
                 <div>
                     <span class="modalfont">날짜</span>
-                    <div id="modify-datepicker"></div>
+                    <div id="modify-datepicker" style="margin: 0 auto;"></div>
                 </div>
                 <div class="actions">
                     <button class="btn btn-primary btn-xs" onclick="modifyCard()"
