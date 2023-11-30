@@ -786,7 +786,7 @@
                 </div>
                 <div>
                     <span class="modalfont">날짜</span>
-                    <div id="modify-datepicker" style="margin: 0 auto;"></div>
+                    <div id="modify-datepicker"></div>
                 </div>
                 <div class="actions">
                     <button class="btn btn-primary btn-xs" onclick="modifyCard()"
@@ -802,10 +802,11 @@
 <!-- Invite Modal -->
 <div class="modal" id="inviteModal" style="z-index: 9999;" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+        <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">보드 초대하기</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="inviteCloseModal()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="inviteCloseModal()"></button>
             </div>
             <div class="modal-body">
                 <div class="row g-2">
@@ -817,13 +818,16 @@
                     </div>
                     <div class="col-md justify-content-center">
                         <div class="form-floating">
-                            <button type="button" class="btn btn-secondary" id="sendMail" name="sendMail"onclick="sendMail()">초대 메일 전송</button>
+                            <button type="button" class="btn btn-secondary" id="sendMail" name="sendMail"
+                                    onclick="sendMail()">초대 메일 전송
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="closeInviteBtn" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" id="closeInviteBtn" data-bs-dismiss="modal">Close
+                </button>
             </div>
         </div>
     </div>
@@ -845,27 +849,27 @@
     }
 
     // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == document.getElementById('inviteModal')) {
             closeModal();
         }
     }
 
-    function sendMail(){
+    function sendMail() {
         var invite_email = $('#inviteEmail').val();
         $.ajax({
-            url:"/mail",
-            type:"post",
+            url: "/mail",
+            type: "post",
             contentType: "application/json",
-            data:JSON.stringify({email: invite_email, url: window.location.href}),
-            success: function(data){
+            data: JSON.stringify({email: invite_email, url: window.location.href}),
+            success: function (data) {
                 alert("인증번호 발송");
                 inviteCloseModal();
-                $("#sendMail").attr("value",data);
+                $("#sendMail").attr("value", data);
 
             },
-            error: function(request, status, error){
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             }
         });
     }
